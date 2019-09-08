@@ -1,0 +1,98 @@
+* {
+	margin: 1;
+	font-family: "Arial";
+}
+
+html, body {
+	height: 100%;
+	color: #fcfcfc;
+	background-color: #060606;
+}
+
+a {
+	color: #808080;
+}
+
+img {
+	opacity: 1.0;
+	filter: alpha(opacity=1);
+}
+
+hr {
+	border-color: #202020;
+}
+th {
+	color: #f7931a;
+	width: 900px;
+	text-align: center;
+}
+td {
+	text-align: center;
+	font-weight: bold;
+}
+td[data-value]:after {
+	content: attr(data-value);
+	color: red;
+}
+td[data-value^="-"]:after {
+	color: green;
+}
+
+.pagewrap {
+	min-height: 90%;
+	margin-bottom: -20px;
+}
+
+.centerwrap {
+	text-align: center;
+	width: 100%;
+}
+
+.wrapclass {
+	width: 100%;
+}
+
+.hoverImg > img:hover {
+	width: 1000px;
+}
+
+
+.tooltip {
+	position: relative;
+	display: inline-block;
+	border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+	visibility: hidden;
+	width: 120px;
+	background-color: black;
+	color: #fff;
+	text-align: center;
+	padding: 5px 0;
+	border-radius: 7px;
+	position: absolute;
+	z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+	visibility: visible;
+}
+
+
+#vg-tooltip-element {
+	color: #fcfcfc;
+	background-color: #060606;
+}
+
+#footer {
+	bottom: 0;
+	height: 20px;
+	width: 99%;
+}
+
+#fatfooter {
+	bottom: 0;
+	height: 300px;
+	width: 99%;
+}

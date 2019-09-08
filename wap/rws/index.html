@@ -1,0 +1,192 @@
+<html>
+<head>
+	<meta name="Keywords" content="bitcoin">
+	<meta http-equiv="refresh" content="60">
+	<title>₿itcoin → 𝔸rrows</title>
+	<link rel="stylesheet" type="text/css" href="ws/main.css">
+	<script type="text/javascript" src="ws/common.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vega-lite@3"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vega-embed@4"></script> 
+</head>
+<body id="index">
+<div class="page-wrap">
+
+
+	<div id="top-panel">
+	<table>
+		<tr>
+			<th>Bitcoin</th>
+			<th>Gold</th>
+			<th>Binance</th>
+			<th>Coinbase</th>
+			<th>Kraken</th>
+		</tr>
+		<tr>
+			<td>
+				<div class="tooltip">
+					{{spot | round(2)}}
+					<span class="tooltiptext">Grams of Gold per Bitcoin</span>
+				</div>
+			</td>
+			<td>
+				<div class="tooltip">
+					{{(10**8/spot) | round | int}}
+					<span class="tooltiptext">Sats per gram of Gold</span>
+				</div>
+			</td>
+			<td data-value="{{(binance_spot - spot)|round(2)}}"></td>
+			<td data-value="{{(coinbase_spot - spot)|round(2)}}"></td>
+			<td data-value="{{(kraken_spot - spot)|round(2)}}"></td>
+		</tr>
+	</table>
+	</div>
+
+
+	<hr/>
+	<div class="centerwrap">
+	<div class="wrapclass" id="bigpic"></div>
+	</div>
+	<script type="text/javascript">
+		var vegaSpec = {
+			"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+			"description": "Bitcoin Price History",
+			"data": {
+				"url": "arrows/spot_daily.csv"
+			},
+			"title": {
+				"text": "Bitcoin Price History",
+				"fontWeight": 360,
+				"fontSize": 16
+			},
+			"mark": {
+				"type":"line",
+				"color":"#f7931a"
+			},
+			"width": 1000,
+			"height": 280,
+			"encoding": {
+				"x": {
+					"field": "date",
+					"type": "temporal",
+					"scale": {
+						"type":"time",
+						"domain": ["2010-01-01","2020-01-02"]
+					},
+					"axis": {
+						"title": "",
+						"labelFontSize": 14,
+						"tickCount": 11,
+					}
+				},
+				"y": {
+					"field": "close",
+					"type": "quantitative",
+					"scale": {"type":"log"},
+					"axis": {
+						"title": "AU[gm]",
+						"titleFontSize": 14,
+						"titleAngle": 0,
+						"titleX": 30,
+						"titleY": 20,
+						"labelFontSize": 14,
+						"tickSize": 1,
+						"gridColor": "#666",
+						"gridDash": [2,1]
+					}
+				}
+			}
+		};
+		vegaEmbed("#bigpic", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
+	</script>
+
+
+	<div class="centerwrap">
+	<div class="wrapclass" id="scroller"></div>
+	</div>
+	<script type="text/javascript">
+		var vegaSpec = {
+			"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+			"description": "Bitcoin Price History",
+			"data": {
+				"url": "arrows/spot_minutely.csv"
+			},
+			"autosize": {
+				"type": "fit",
+				"resize": true
+			},
+			"selection": {
+				"grid": {
+					"type": "interval",
+					"bind": "scales"
+				}
+			},
+			"mark": {
+				"color": "#f7931a",
+				"type": "line",
+				"point": false,
+			},
+			"config": {
+				"point": {
+					"color": "#f7931a",
+					"size": 60
+				}
+			},
+			"width": 1040,
+			"height": 240,
+			"encoding": {
+				"x": {
+					"field": "date",
+					"type": "temporal",
+					"scale": {
+						"type":"time",
+						"domain": ["{{minute0_iso}}","{{now_iso}}"]
+					},
+					"axis": {
+						"title": "",
+						"labelFontSize": 14,
+						"tickCount": 7,
+					}
+				},
+				"y": {
+					"field": "spot",
+					"type": "quantitative",
+					"axis": {
+						"title": "AU[gm]",
+						"titleFontSize": 14,
+						"titleAngle": 0,
+						"titleX": 30,
+						"titleY": 20,
+						"labelFontSize": 14,
+						"tickSize": 1,
+						"gridDash": [2,1]
+					},
+					"scale": {"domain": [{{spot*0.99}}, {{spot*1.01}}]}
+				}
+			}
+		};
+		vegaEmbed("#scroller", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
+	</script>
+
+
+	<div id="footer">
+		<hr/>
+		<h4>
+			<div class="tooltip">
+				<span style="text-align:left;" id="date_time"></span>
+				<span class="tooltiptext">UTC</span>
+			</div>
+			<span style="float:right; color:#333;">BTC: ${{(spot * apmex_spot) | round(2)}} &nbsp;/&nbsp; AU: ${{(apmex_spot) | round(2)}}</span>
+		</h4>
+		<script type="text/javascript">window.onload = date_time('date_time');</script>
+	</div>
+	<div class="centerwrap">
+		<span style="text-align:center;">
+			<a href="/about">About</a>
+		</span>
+	</div>
+
+</div>
+</body>
+</html>
+
