@@ -26,34 +26,38 @@ def gendeviceid():
 
 @app.route("/")
 def index():
-	sources = ["apmex", "binance","coinbase","kraken"]
-	spot_keys = [f"{source}.spot" for source in sources]
-	spots = rtdb.multi_get(spot_keys, cast_func=float)
-	apmex_spot, binance_spot, coinbase_spot, kraken_spot = [spots[spot_key] for spot_key in spot_keys]
 	spot = rtdb.get("spot")
+	gold_spot = rtdb.get("gold.spot")
+	binance_spot = rtdb.get("binance.spot")
+	coinbase_spot = rtdb.get("coinbase.spot")
+	kraken_spot = rtdb.get("kraken.spot")
 	now = datetime.datetime.now().replace(second=0, microsecond=0)
 	now_iso = (now + datetime.timedelta(minutes=2)).isoformat()
 	minute0_iso = (now + datetime.timedelta(minutes=-12*60)).isoformat()
-	resp = make_response(render_template(
-		"index.html",
-		apmex_spot=apmex_spot,
-		binance_spot=binance_spot,
-		coinbase_spot=coinbase_spot,
-		kraken_spot=kraken_spot,
-		spot=spot,
-		now_iso=now_iso,
-		minute0_iso=minute0_iso
-	))
-	deviceid = request.cookies.get("deviceid")
-	if deviceid:
-		devicekey = f"deviceid.{deviceid}"
-		udat = devicedb.get(devicekey)
-		dat["visits"] += 1
-		devicedb.put(devicekey, udat)
+	content = {
+		"spot": spot,
+		"gold_spot": gold_spot,
+		"binance_spot": binance_spot,
+		"coinbase_spot": coinbase_spot,
+		"kraken_spot": kraken_spot,
+		"now_iso": now_iso,
+		"minute0_iso": minute0_iso
+	}
+	resp = make_response(render_template("index.html", **content))
+	
+	if "deviceid" in request.cookies:
+		deviceid = request.cookies.get("deviceid")
+		try:
+			udat = devicedb.get(deviceid)
+		except:
+			udat = {"visits": 0}
+		udat["visits"] += 1
+		devicedb.put(deviceid, udat)
 	else:
 		deviceid = gendeviceid()
-		devicedb.put(devicekey, {"visits":1})
+		devicedb.put(deviceid, {"visits":1})
 		resp.set_cookie("deviceid", deviceid)
+
 	return resp
 
 

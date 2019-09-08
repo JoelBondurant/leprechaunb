@@ -26,7 +26,7 @@ def ts_minutely():
 		"spot",
 		"spot.usd"
 	]
-	rtdb = rock.Rock("rt")
+	rtdb = rock.Rock("rtdb")
 	for key in keys:
 		try:
 			val = rtdb.get(key)

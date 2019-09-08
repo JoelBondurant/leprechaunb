@@ -43,7 +43,7 @@ class Rock:
 		Initalize a key-value store.
 		"""
 		self.db_name = db_name
-		self.db_path = os.path.join("/data", db_name + ".rock")
+		self.db_path = os.path.join("/data", db_name)
 
 
 	def connection(self):
@@ -52,6 +52,36 @@ class Rock:
 		"""
 		conn = rocksdb.DB(self.db_path, rocksdb.Options(create_if_missing=True))
 		return conn
+
+
+	def listkeys(self, decode=True):
+		"""
+		List all the keys in a RocksDB database.
+		"""
+		q = self.connection().iterkeys()
+		q.seek_to_first()
+		if decode:
+			return [x.decode() for x in q]
+		return list(q)
+
+
+	def listitems(self, key_decode=True, value_decode=True, value_dejson=True):
+		"""
+		List all the key-value pairs in a RocksDB database.
+		"""
+		q = self.connection().iteritems()
+		q.seek_to_first()
+		ret = []
+		for (k, v) in q:
+			kr, vr = k, v
+			if key_decode:
+				kr = k.decode()
+			if value_decode:
+				vr = v.decode()
+			if value_dejson:
+				vr = json.loads(v)
+			ret += (kr, vr)
+		return ret
 
 
 	def put(self, akey, aval, key_encode=True, value_encode=True):

@@ -44,7 +44,7 @@ def write_rt():
 			("spot", bitcoin_spot),
 			("spot.usd", bitcoin_spot_usd)
 		)
-		rtdb = rock.Rock("rt")
+		rtdb = rock.Rock("rtdb")
 		for dat in dats:
 			rtdb.put(dat[0], dat[1])
 	except Exception as ex:
