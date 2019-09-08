@@ -1,8 +1,8 @@
-# bitcoinarrows
-bitcoinarrows.com
+# bitcoinarrows.com
+[bitcoinarrows.com](https://bitcoinarrows.com)
 ==========
 
-A system for monitoring Bitcoin.
+Joel's system for monitoring Bitcoin.
 
 Be like water, arrows from nowhere to nowhere.
 
