@@ -20,6 +20,7 @@ rt_keys = [
 	"bitstamp_spot",
 	"coinbase_spot",
 	"kraken_spot",
+	"gemini_spot",
 	"apmex_spot",
 	"gold_spot",
 	"spot",

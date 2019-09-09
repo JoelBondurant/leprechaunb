@@ -18,6 +18,7 @@ import binance
 import bitfinex
 import bitstamp
 import coinbase
+import gemini
 import kraken
 
 
@@ -36,10 +37,18 @@ def write_rt():
 		bitfinex_spot = bitfinex.spot() / gold_spot
 		bitstamp_spot = bitstamp.spot() / gold_spot
 		coinbase_spot = coinbase.spot() / gold_spot
+		gemini_spot = gemini.spot() / gold_spot
 		kraken_spot = kraken.spot() / gold_spot
 
 		# Summary Stats:
-		bitcoin_spots = [binance_spot, bitfinex_spot, bitstamp_spot, coinbase_spot, kraken_spot]
+		bitcoin_spots = [
+			binance_spot,
+			bitfinex_spot,
+			bitstamp_spot,
+			coinbase_spot,
+			gemini_spot,
+			kraken_spot
+		]
 		bitcoin_spot = statistics.mean(bitcoin_spots)
 		bitcoin_spot_usd = bitcoin_spot * gold_spot
 
@@ -52,6 +61,7 @@ def write_rt():
 			("bitfinex_spot", bitfinex_spot),
 			("bitstamp_spot", bitstamp_spot),
 			("coinbase_spot", coinbase_spot),
+			("gemini_spot", gemini_spot),
 			("kraken_spot", kraken_spot),
 			("apmex_spot", apmex_spot),
 			("gold_spot", gold_spot),

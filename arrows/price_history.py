@@ -16,8 +16,9 @@ sources = [
 	"bitfinex_spot",
 	"bitstamp_spot",
 	"coinbase_spot",
-	"gold_spot",
+	"gemini_spot",
 	"kraken_spot",
+	"gold_spot",
 	"spot",
 	"spot_usd"
 ]
@@ -30,16 +31,12 @@ def spot_minutely():
 
 
 def spots_minutely():
-	df = pd.read_parquet(f"/data/tsdb/binance_spot_minutely.parq")
-	df["source"] = "binance"
-	df = pd.concat([df, pd.read_parquet(f"/data/tsdb/bitfinex_spot_minutely.parq")])
-	df.source = df.source.fillna("bitfinex")
-	df = pd.concat([df, pd.read_parquet(f"/data/tsdb/bitstamp_spot_minutely.parq")])
-	df.source = df.source.fillna("bitstamp")
-	df = pd.concat([df, pd.read_parquet(f"/data/tsdb/coinbase_spot_minutely.parq")])
-	df.source = df.source.fillna("coinbase")
-	df = pd.concat([df, pd.read_parquet(f"/data/tsdb/kraken_spot_minutely.parq")])
-	df.source = df.source.fillna("kraken")
+	sources = ("binance", "bitfinex", "bitstamp", "coinbase", "gemini", "kraken")
+	df = pd.read_parquet(f"/data/tsdb/{sources[0]}_spot_minutely.parq")
+	df["source"] = sources[0]
+	for source in sources[1:]:
+		df = pd.concat([df, pd.read_parquet(f"/data/tsdb/{source}_spot_minutely.parq")])
+		df.source = df.source.fillna(source)
 	df.to_csv("/data/arrows/spots_minutely.csv", index=False)
 
 

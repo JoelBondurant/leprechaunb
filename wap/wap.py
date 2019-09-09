@@ -34,6 +34,7 @@ def index():
 	bitfinex_spot = rtdb.get("bitfinex_spot")
 	bitstamp_spot = rtdb.get("bitstamp_spot")
 	coinbase_spot = rtdb.get("coinbase_spot")
+	gemini_spot = rtdb.get("gemini_spot")
 	kraken_spot = rtdb.get("kraken_spot")
 	now = datetime.datetime.now().replace(second=0, microsecond=0)
 	scroller_start = (now + datetime.timedelta(minutes=-72*60)).isoformat()
@@ -47,6 +48,7 @@ def index():
 		"bitfinex_spot": bitfinex_spot,
 		"bitstamp_spot": bitstamp_spot,
 		"coinbase_spot": coinbase_spot,
+		"gemini_spot": gemini_spot,
 		"kraken_spot": kraken_spot,
 		"scroller_start": scroller_start,
 		"scroller_end": scroller_end,
