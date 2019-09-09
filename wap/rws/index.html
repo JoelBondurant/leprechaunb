@@ -2,7 +2,7 @@
 <head>
 	<meta name="Keywords" content="bitcoin">
 	<meta http-equiv="refresh" content="60">
-	<title>₿itcoin → 𝔸rrows</title>
+	<title>Bitcoin Arrows</title>
 	<link rel="stylesheet" type="text/css" href="ws/main.css">
 	<script type="text/javascript" src="ws/common.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
@@ -60,8 +60,26 @@
 				"fontSize": 16
 			},
 			"mark": {
-				"type":"line",
-				"color":"#f7931a"
+				"type": "area",
+				"line": {
+					"color": "#f7931a"
+				},
+				"color": {
+					"x1": 0.3,
+					"y1": 0.3,
+					"x2": 0.3,
+					"y2": 0,
+					"gradient": "linear",
+					"stops": [
+					{
+						"offset": 0,
+						"color": "#333"
+					},
+					{
+						"offset": 1,
+						"color": "#f7931a"
+					}]
+				}
 			},
 			"width": 1000,
 			"height": 280,
@@ -80,7 +98,7 @@
 					}
 				},
 				"y": {
-					"field": "close",
+					"field": "spot",
 					"type": "quantitative",
 					"scale": {"type":"log"},
 					"axis": {
@@ -122,15 +140,11 @@
 				}
 			},
 			"mark": {
-				"color": "#f7931a",
 				"type": "line",
-				"point": false,
-			},
-			"config": {
-				"point": {
-					"color": "#f7931a",
-					"size": 60
-				}
+				"line": {
+					"color": "#f7931a"
+				},
+				"color": "#f7931a"
 			},
 			"width": 1040,
 			"height": 240,
@@ -161,30 +175,34 @@
 						"tickSize": 1,
 						"gridDash": [2,1]
 					},
-					"scale": {"domain": [{{spot*0.99}}, {{spot*1.01}}]}
+					"scale": {"domain": [{{spot*0.97}}, {{spot*1.04}}]}
 				}
 			}
 		};
 		vegaEmbed("#scroller", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
 	</script>
 
-
-	<div id="footer">
-		<hr/>
-		<h4>
-			<div class="tooltip">
-				<span style="text-align:left;" id="date_time"></span>
-				<span class="tooltiptext">UTC</span>
-			</div>
-			<span style="float:right; color:#333;">BTC: ${{(spot * gold_spot) | round(2)}} &nbsp;/&nbsp; AU: ${{(gold_spot) | round(2)}}</span>
-		</h4>
-		<script type="text/javascript">window.onload = date_time('date_time');</script>
+	<div id="bottom-panel">
+	<hr/>
+	<table>
+		<tr>
+			<td>
+				<div class="tooltip">
+					<span id="date_time"></span>
+					<span class="tooltiptext">UTC</span>
+				</div>
+			</td>
+			<td>
+				<a href="/about">About</a>
+			</td>
+			<td>
+			<span style="color:#666;">
+				BTC: ${{(spot * gold_spot) | round(2)}} &nbsp;/&nbsp; AU: ${{(gold_spot) | round(2)}}
+			</span></td>
+		</tr>
+	</table>
 	</div>
-	<div class="centerwrap">
-		<span style="text-align:center;">
-			<a href="/about">About</a>
-		</span>
-	</div>
+	<script type=text/javascript>window.onload = date_time('date_time');</script>
 
 </div>
 </body>

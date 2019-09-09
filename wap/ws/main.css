@@ -22,11 +22,12 @@ hr {
 	border-color: #202020;
 }
 th {
-	color: #f7931a;
 	width: 900px;
 	text-align: center;
+	color: #f7931a;
 }
 td {
+	width: 900px;
 	text-align: center;
 	font-weight: bold;
 }
@@ -85,14 +86,3 @@ td[data-value^="-"]:after {
 	background-color: #060606;
 }
 
-#footer {
-	bottom: 0;
-	height: 20px;
-	width: 99%;
-}
-
-#fatfooter {
-	bottom: 0;
-	height: 300px;
-	width: 99%;
-}

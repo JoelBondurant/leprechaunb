@@ -9,6 +9,9 @@ from util import logger
 from util import rock
 
 
+COOKIES = True
+
+
 logger.info("wap started.")
 app = Flask("bitcoinarrows", static_url_path="", template_folder="rws")
 app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 1
@@ -32,8 +35,8 @@ def index():
 	coinbase_spot = rtdb.get("coinbase.spot")
 	kraken_spot = rtdb.get("kraken.spot")
 	now = datetime.datetime.now().replace(second=0, microsecond=0)
-	now_iso = (now + datetime.timedelta(minutes=2)).isoformat()
-	minute0_iso = (now + datetime.timedelta(minutes=-12*60)).isoformat()
+	now_iso = (now + datetime.timedelta(minutes=61)).isoformat()
+	minute0_iso = (now + datetime.timedelta(minutes=-48*60)).isoformat()
 	content = {
 		"spot": spot,
 		"gold_spot": gold_spot,
@@ -45,18 +48,11 @@ def index():
 	}
 	resp = make_response(render_template("index.html", **content))
 	
-	if "deviceid" in request.cookies:
-		deviceid = request.cookies.get("deviceid")
-		try:
-			udat = devicedb.get(deviceid)
-		except:
-			udat = {"visits": 0}
-		udat["visits"] += 1
-		devicedb.put(deviceid, udat)
-	else:
-		deviceid = gendeviceid()
-		devicedb.put(deviceid, {"visits":1})
-		resp.set_cookie("deviceid", deviceid)
+	if COOKIES:
+		if "deviceid" not in request.cookies:
+			deviceid = gendeviceid()
+			expires = datetime.datetime.now() + datetime.timedelta(days=360)
+			resp.set_cookie("deviceid", deviceid, expires=expires)
 
 	return resp
 
