@@ -10,6 +10,7 @@ from util import rock
 
 # Realtime data sources:
 import apmex
+import blockchain
 import binance
 import coinbase
 import kraken
@@ -34,15 +35,19 @@ def write_rt():
 		bitcoin_spot = statistics.mean(bitcoin_spots)
 		bitcoin_spot_usd = bitcoin_spot * gold_spot
 
+		# Network Stats:
+		blockchain_stats = blockchain.stats()
+
 		# Storage:
 		dats = (
-			("binance.spot", binance_spot),
-			("coinbase.spot", coinbase_spot),
-			("kraken.spot", kraken_spot),
-			("apmex.spot", apmex_spot),
-			("gold.spot", gold_spot),
+			("binance_spot", binance_spot),
+			("coinbase_spot", coinbase_spot),
+			("kraken_spot", kraken_spot),
+			("apmex_spot", apmex_spot),
+			("gold_spot", gold_spot),
 			("spot", bitcoin_spot),
-			("spot.usd", bitcoin_spot_usd)
+			("spot_usd", bitcoin_spot_usd),
+			("blockchain_stats", blockchain_stats)
 		)
 		rtdb = rock.Rock("rtdb")
 		for dat in dats:

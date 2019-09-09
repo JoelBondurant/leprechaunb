@@ -15,13 +15,13 @@ from util import rock
 
 
 rt_keys = [
-	"binance.spot",
-	"coinbase.spot",
-	"kraken.spot",
-	"apmex.spot",
-	"gold.spot",
+	"binance_spot",
+	"coinbase_spot",
+	"kraken_spot",
+	"apmex_spot",
+	"gold_spot",
 	"spot",
-	"spot.usd"
+	"spot_usd"
 ]
 
 
@@ -32,18 +32,17 @@ def ts_minutely():
 	for key in rt_keys:
 		try:
 			val = rtdb.get(key)
-			fkey = key.replace(".", "_")
-			fname = f"/data/tsdb/{fkey}_minutely.parq"
+			fname = f"/data/tsdb/{key}_minutely.parq"
 			if os.path.exists(fname):
 				df = pd.read_parquet(fname)
 				nvals = len(df)
-				nowpie = {"date": now, "spot": val}
+				nowpie = {"date": now, "value": val}
 				df = df.append(nowpie, ignore_index=True)
-				df.drop_duplicates(subset=["date"], keep="first", inplace=True)
+				df.drop_duplicates(subset=["date"], keep="last", inplace=True)
 				if len(df) != nvals:
 					df.to_parquet(fname)
 			else:
-				nowpie = {"date": [now], "spot": [val]}
+				nowpie = {"date": [now], "value": [val]}
 				df = pd.DataFrame(nowpie)
 				df.to_parquet(fname)
 		except Exception as ex:
@@ -60,19 +59,18 @@ def ts_daily():
 	for key in rt_keys:
 		try:
 			val = rtdb.get(key)
-			fkey = key.replace(".", "_")
-			fname = f"/data/tsdb/{fkey}_daily.parq"
+			fname = f"/data/tsdb/{key}_daily.parq"
 			if os.path.exists(fname):
 				df = pd.read_parquet(fname)
 				nvals = len(df)
-				nowpie = {"date": now, "spot": val}
+				nowpie = {"date": now, "value": val}
 				df = df.append(nowpie, ignore_index=True)
 				df.date = pd.to_datetime(df.date)
 				df.drop_duplicates(subset=["date"], keep="first", inplace=True)
 				if len(df) != nvals:
 					df.to_parquet(fname)
 			else:
-				nowpie = {"date": [now], "spot": [val]}
+				nowpie = {"date": [now], "value": [val]}
 				df = pd.DataFrame(nowpie)
 				df.date = pd.to_datetime(df.date)
 				df.to_parquet(fname)

@@ -17,7 +17,6 @@ app = Flask("bitcoinarrows", static_url_path="", template_folder="rws")
 app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 1
 
 rtdb = rock.Rock("rtdb")
-devicedb = rock.Rock("devicedb")
 
 
 @app.errorhandler(404)
@@ -30,10 +29,10 @@ def gendeviceid():
 @app.route("/")
 def index():
 	spot = rtdb.get("spot")
-	gold_spot = rtdb.get("gold.spot")
-	binance_spot = rtdb.get("binance.spot")
-	coinbase_spot = rtdb.get("coinbase.spot")
-	kraken_spot = rtdb.get("kraken.spot")
+	gold_spot = rtdb.get("gold_spot")
+	binance_spot = rtdb.get("binance_spot")
+	coinbase_spot = rtdb.get("coinbase_spot")
+	kraken_spot = rtdb.get("kraken_spot")
 	now = datetime.datetime.now().replace(second=0, microsecond=0)
 	now_iso = (now + datetime.timedelta(minutes=61)).isoformat()
 	minute0_iso = (now + datetime.timedelta(minutes=-48*60)).isoformat()
