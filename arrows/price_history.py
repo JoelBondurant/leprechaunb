@@ -3,6 +3,7 @@ Bitcoin price history.
 """
 import datetime
 import os
+import time
 
 import pandas as pd
 
@@ -20,17 +21,31 @@ sources = [
 ]
 
 
-def minute_arrow():
+def spot_minutely():
 	for source in sources:
 		df = pd.read_parquet(f"/data/tsdb/{source}_minutely.parq")
 		df.to_csv(f"/data/arrows/{source}_minutely.csv", index=False)
+
+
+def spots_minutely():
+	df = pd.read_parquet(f"/data/tsdb/binance_spot_minutely.parq")
+	df["source"] = "binance"
+	df = pd.concat([df, pd.read_parquet(f"/data/tsdb/coinbase_spot_minutely.parq")])
+	df.source = df.source.fillna("coinbase")
+	df = pd.concat([df, pd.read_parquet(f"/data/tsdb/kraken_spot_minutely.parq")])
+	df.source = df.source.fillna("kraken")
+	df.to_csv("/data/arrows/spots_minutely.csv", index=False)
+
+
+def minute_arrow():
+	spot_minutely()
+	spots_minutely()
 
 
 def day_arrow():
 	for source in sources:
 		df = pd.read_parquet(f"/data/tsdb/{source}_daily.parq")
 		df.to_csv(f"/data/arrows/{source}_daily.csv", index=False)
-
 
 
 

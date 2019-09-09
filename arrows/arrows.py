@@ -27,7 +27,7 @@ def day_arrow():
 		time.sleep(4)
 
 
-schedule.every(10).seconds.do(minute_arrow)
+schedule.every(20).seconds.do(minute_arrow)
 schedule.every(60).seconds.do(day_arrow)
 
 

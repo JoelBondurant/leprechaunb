@@ -13,6 +13,7 @@
 <div class="page-wrap">
 
 
+
 	<div id="top-panel">
 	<table>
 		<tr>
@@ -41,6 +42,7 @@
 		</tr>
 	</table>
 	</div>
+
 
 
 	<hr/>
@@ -119,6 +121,7 @@
 	</script>
 
 
+
 	<div class="centerwrap">
 	<div class="wrapclass" id="scroller"></div>
 	</div>
@@ -175,12 +178,80 @@
 						"tickSize": 1,
 						"gridDash": [2,1]
 					},
-					"scale": {"domain": [{{spot*0.97}}, {{spot*1.04}}]}
+					"scale": {"domain": [{{spot*0.97}}, {{spot*1.06}}]}
 				}
 			}
 		};
 		vegaEmbed("#scroller", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
 	</script>
+
+
+
+	<div class="centerwrap">
+	<div class="wrapclass" id="multiscroller"></div>
+	</div>
+	<script type="text/javascript">
+		var vegaSpec = {
+			"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+			"description": "Bitcoin Price History",
+			"data": {
+				"url": "arrows/spots_minutely.csv"
+			},
+			"autosize": {
+				"type": "fit",
+				"resize": true
+			},
+			"selection": {
+				"grid": {
+					"type": "interval",
+					"bind": "scales"
+				}
+			},
+			"mark": {
+				"type": "line",
+				"line": {
+					"color": "#f7931a"
+				},
+				"color": "#f7931a"
+			},
+			"width": 1040,
+			"height": 240,
+			"encoding": {
+				"x": {
+					"field": "date",
+					"type": "temporal",
+					"scale": {
+						"type":"time",
+						"domain": ["{{minute0_iso}}","{{now_iso}}"]
+					},
+					"axis": {
+						"title": "",
+						"labelFontSize": 14,
+						"tickCount": 7,
+					}
+				},
+				"y": {
+					"field": "spot",
+					"type": "quantitative",
+					"axis": {
+						"title": "AU[gm]",
+						"titleFontSize": 14,
+						"titleAngle": 0,
+						"titleX": 30,
+						"titleY": 20,
+						"labelFontSize": 14,
+						"tickSize": 1,
+						"gridDash": [2,1]
+					},
+					"scale": {"domain": [{{spot*0.97}}, {{spot*1.06}}]}
+				},
+				"color": {"field": "source", "type": "nominal"}
+			}
+		};
+		vegaEmbed("#multiscroller", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
+	</script>
+
+
 
 	<div id="bottom-panel">
 	<hr/>
@@ -203,6 +274,8 @@
 	</table>
 	</div>
 	<script type=text/javascript>window.onload = date_time('date_time');</script>
+
+
 
 </div>
 </body>
