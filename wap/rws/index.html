@@ -161,7 +161,7 @@
 					"type": "temporal",
 					"scale": {
 						"type":"time",
-						"domain": ["{{minute0_iso}}","{{now_iso}}"]
+						"domain": ["{{scroller_start}}","{{scroller_end}}"]
 					},
 					"axis": {
 						"title": "",
@@ -222,7 +222,7 @@
 					"type": "temporal",
 					"scale": {
 						"type":"time",
-						"domain": ["{{minute0_iso}}","{{now_iso}}"]
+						"domain": ["{{multiscroller_start}}","{{multiscroller_end}}"]
 					},
 					"axis": {
 						"title": "",
@@ -243,7 +243,7 @@
 						"tickSize": 1,
 						"gridDash": [2,1]
 					},
-					"scale": {"domain": [{{spot*0.97}}, {{spot*1.06}}]}
+					"scale": {"domain": [{{spot*0.99}}, {{spot*1.01}}]}
 				},
 				"color": {"field": "source", "type": "nominal"}
 			}

@@ -36,8 +36,10 @@ def index():
 	coinbase_spot = rtdb.get("coinbase_spot")
 	kraken_spot = rtdb.get("kraken_spot")
 	now = datetime.datetime.now().replace(second=0, microsecond=0)
-	now_iso = (now + datetime.timedelta(minutes=61)).isoformat()
-	minute0_iso = (now + datetime.timedelta(minutes=-48*60)).isoformat()
+	scroller_start = (now + datetime.timedelta(minutes=-72*60)).isoformat()
+	scroller_end = (now + datetime.timedelta(minutes=61)).isoformat()
+	multiscroller_start = (now + datetime.timedelta(minutes=-4*60)).isoformat()
+	multiscroller_end = (now + datetime.timedelta(minutes=1)).isoformat()
 	content = {
 		"spot": spot,
 		"gold_spot": gold_spot,
@@ -46,8 +48,10 @@ def index():
 		"bitstamp_spot": bitstamp_spot,
 		"coinbase_spot": coinbase_spot,
 		"kraken_spot": kraken_spot,
-		"now_iso": now_iso,
-		"minute0_iso": minute0_iso
+		"scroller_start": scroller_start,
+		"scroller_end": scroller_end,
+		"multiscroller_start": multiscroller_start,
+		"multiscroller_end": multiscroller_end,
 	}
 	resp = make_response(render_template("index.html", **content))
 	
