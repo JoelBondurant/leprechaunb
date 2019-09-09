@@ -31,6 +31,8 @@ def index():
 	spot = rtdb.get("spot")
 	gold_spot = rtdb.get("gold_spot")
 	binance_spot = rtdb.get("binance_spot")
+	bitfinex_spot = rtdb.get("bitfinex_spot")
+	bitstamp_spot = rtdb.get("bitstamp_spot")
 	coinbase_spot = rtdb.get("coinbase_spot")
 	kraken_spot = rtdb.get("kraken_spot")
 	now = datetime.datetime.now().replace(second=0, microsecond=0)
@@ -40,6 +42,8 @@ def index():
 		"spot": spot,
 		"gold_spot": gold_spot,
 		"binance_spot": binance_spot,
+		"bitfinex_spot": bitfinex_spot,
+		"bitstamp_spot": bitstamp_spot,
 		"coinbase_spot": coinbase_spot,
 		"kraken_spot": kraken_spot,
 		"now_iso": now_iso,

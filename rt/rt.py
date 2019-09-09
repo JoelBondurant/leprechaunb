@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """
-Realtime/microbatch (~10 second latency) data collection.
+Realtime/microbatch (<=10 second latency) data collection.
+
+Historical patching of data will be done in ts (time series constructor service),
+rt will be ephemeral, no worries about past data here.
 """
 import statistics
 import time
@@ -12,6 +15,8 @@ from util import rock
 import apmex
 import blockchain
 import binance
+import bitfinex
+import bitstamp
 import coinbase
 import kraken
 
@@ -22,16 +27,19 @@ def write_rt():
 	"""
 	try:
 		# Gold Spots:
+		# Struggling to snatch up realtime gold data.
 		apmex_spot = apmex.spot()
 		gold_spot = apmex_spot
 
 		# Bitcoin Spots:
 		binance_spot = binance.spot() / gold_spot
+		bitfinex_spot = bitfinex.spot() / gold_spot
+		bitstamp_spot = bitstamp.spot() / gold_spot
 		coinbase_spot = coinbase.spot() / gold_spot
 		kraken_spot = kraken.spot() / gold_spot
 
 		# Summary Stats:
-		bitcoin_spots = [binance_spot, coinbase_spot, kraken_spot]
+		bitcoin_spots = [binance_spot, bitfinex_spot, bitstamp_spot, coinbase_spot, kraken_spot]
 		bitcoin_spot = statistics.mean(bitcoin_spots)
 		bitcoin_spot_usd = bitcoin_spot * gold_spot
 
@@ -41,6 +49,8 @@ def write_rt():
 		# Storage:
 		dats = (
 			("binance_spot", binance_spot),
+			("bitfinex_spot", bitfinex_spot),
+			("bitstamp_spot", bitstamp_spot),
 			("coinbase_spot", coinbase_spot),
 			("kraken_spot", kraken_spot),
 			("apmex_spot", apmex_spot),

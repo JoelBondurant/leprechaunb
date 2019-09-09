@@ -13,6 +13,8 @@ from util import logger
 sources = [
 	"apmex_spot",
 	"binance_spot",
+	"bitfinex_spot",
+	"bitstamp_spot",
 	"coinbase_spot",
 	"gold_spot",
 	"kraken_spot",
@@ -30,6 +32,10 @@ def spot_minutely():
 def spots_minutely():
 	df = pd.read_parquet(f"/data/tsdb/binance_spot_minutely.parq")
 	df["source"] = "binance"
+	df = pd.concat([df, pd.read_parquet(f"/data/tsdb/bitfinex_spot_minutely.parq")])
+	df.source = df.source.fillna("bitfinex")
+	df = pd.concat([df, pd.read_parquet(f"/data/tsdb/bitstamp_spot_minutely.parq")])
+	df.source = df.source.fillna("bitstamp")
 	df = pd.concat([df, pd.read_parquet(f"/data/tsdb/coinbase_spot_minutely.parq")])
 	df.source = df.source.fillna("coinbase")
 	df = pd.concat([df, pd.read_parquet(f"/data/tsdb/kraken_spot_minutely.parq")])

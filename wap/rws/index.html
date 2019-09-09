@@ -20,6 +20,8 @@
 			<th>Bitcoin</th>
 			<th>Gold</th>
 			<th>Binance</th>
+			<th>Bitfinex</th>
+			<th>Bitstamp</th>
 			<th>Coinbase</th>
 			<th>Kraken</th>
 		</tr>
@@ -37,6 +39,8 @@
 				</div>
 			</td>
 			<td data-value="{{(binance_spot - spot)|round(2)}}"></td>
+			<td data-value="{{(bitfinex_spot - spot)|round(2)}}"></td>
+			<td data-value="{{(bitstamp_spot - spot)|round(2)}}"></td>
 			<td data-value="{{(coinbase_spot - spot)|round(2)}}"></td>
 			<td data-value="{{(kraken_spot - spot)|round(2)}}"></td>
 		</tr>
@@ -209,10 +213,6 @@
 			},
 			"mark": {
 				"type": "line",
-				"line": {
-					"color": "#f7931a"
-				},
-				"color": "#f7931a"
 			},
 			"width": 1040,
 			"height": 240,

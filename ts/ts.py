@@ -16,6 +16,8 @@ from util import rock
 
 rt_keys = [
 	"binance_spot",
+	"bitfinex_spot",
+	"bitstamp_spot",
 	"coinbase_spot",
 	"kraken_spot",
 	"apmex_spot",
@@ -23,7 +25,6 @@ rt_keys = [
 	"spot",
 	"spot_usd"
 ]
-
 
 def ts_minutely():
 	logger.info("ts_minutely.started")
@@ -48,6 +49,24 @@ def ts_minutely():
 		except Exception as ex:
 			logger.info("ts_minutely.exception")
 			logger.exception(ex)
+	try:
+		blockchain_stats = rtdb.get("blockchain_stats")
+		blockchain_stats["date"] = now
+		fname = "/data/tsdb/blockchain_stats_minutely.parq"
+		if os.path.exists(fname):
+			df = pd.read_parquet(fname)
+			nvals = len(df)
+			dg = pd.DataFrame(blockchain_stats, index=[0])
+			df = pd.concat([df, dg], ignore_index=True)
+			df.drop_duplicates(subset=["date"], keep="last", inplace=True)
+			if len(df) != nvals:
+				df.to_parquet(fname)
+		else:
+			df = pd.DataFrame(blockchain_stats, index=[0])
+			df.to_parquet(fname)
+	except Exception as ex:
+		logger.info("ts_minutely.exception")
+		logger.exception(ex)
 	logger.info("ts_minutely.finished")
 
 
@@ -77,6 +96,24 @@ def ts_daily():
 		except Exception as ex:
 			logger.info("ts_daily.exception")
 			logger.exception(ex)
+	try:
+		blockchain_stats = rtdb.get("blockchain_stats")
+		blockchain_stats["date"] = now
+		fname = "/data/tsdb/blockchain_stats_daily.parq"
+		if os.path.exists(fname):
+			df = pd.read_parquet(fname)
+			nvals = len(df)
+			dg = pd.DataFrame(blockchain_stats, index=[0])
+			df = pd.concat([df, dg], ignore_index=True)
+			df.drop_duplicates(subset=["date"], keep="last", inplace=True)
+			if len(df) != nvals:
+				df.to_parquet(fname)
+		else:
+			df = pd.DataFrame(blockchain_stats, index=[0])
+			df.to_parquet(fname)
+	except Exception as ex:
+		logger.info("ts_daily.exception")
+		logger.exception(ex)
 	logger.info("ts_daily.finished")
 
 
