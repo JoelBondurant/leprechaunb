@@ -14,25 +14,35 @@ from util import logger
 from util import rock
 
 
-rt_keys = [
+sources = [
+	# Bitcoin spots:
 	"binance_spot",
+	"bisq_spot",
 	"bitfinex_spot",
 	"bitstamp_spot",
+	"bittrex_spot",
+	"btse_spot",
+	"cex_spot",
 	"coinbase_spot",
-	"huobi_spot",
-	"kraken_spot",
 	"gemini_spot",
+	"huobi_spot",
+	"itbit_spot",
+	"kraken_spot",
+	"poloniex_spot",
+	# Gold spots:
 	"apmex_spot",
 	"gold_spot",
+	# Bitcoin:
 	"spot",
 	"spot_usd"
 ]
+
 
 def ts_minutely():
 	logger.info("ts_minutely.started")
 	now = datetime.datetime.now().replace(second=0, microsecond=0)
 	rtdb = rock.Rock("rtdb")
-	for key in rt_keys:
+	for key in sources:
 		try:
 			val = rtdb.get(key)
 			fname = f"/data/tsdb/{key}_minutely.parq"
@@ -77,7 +87,7 @@ def ts_daily():
 	logger.info("ts_daily.started")
 	now = datetime.datetime.now().date()
 	rtdb = rock.Rock("rtdb")
-	for key in rt_keys:
+	for key in sources:
 		try:
 			val = rtdb.get(key)
 			fname = f"/data/tsdb/{key}_daily.parq"

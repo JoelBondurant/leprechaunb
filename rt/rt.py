@@ -35,7 +35,7 @@ from sources import blockchain
 
 
 # The period of the rt phase, collection must complete within the rt PERIOD:
-PERIOD = 10
+PERIOD = 12
 
 # A ge:
 SUBPERIODS = 2

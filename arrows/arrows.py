@@ -31,7 +31,18 @@ schedule.every(20).seconds.do(minute_arrow)
 schedule.every(60).seconds.do(day_arrow)
 
 
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+def main():
+	"""
+	Main entry to arrows.
+	"""
+	t0 = time.time()
+	while True:
+		schedule.run_pending()
+		time.sleep(1)
+		if time.time() - t0 > 120:
+			t0 = time.time()
+			logger.info("heartbeat")
 
+
+if __name__ == "__main__":
+	main()

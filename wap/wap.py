@@ -18,6 +18,29 @@ app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 1
 
 rtdb = rock.Rock("rtdb")
 
+sources = [
+	# Bitcoin spots:
+	"binance_spot",
+	"bisq_spot",
+	"bitfinex_spot",
+	"bitstamp_spot",
+	"bittrex_spot",
+	"btse_spot",
+	"cex_spot",
+	"coinbase_spot",
+	"gemini_spot",
+	"huobi_spot",
+	"itbit_spot",
+	"kraken_spot",
+	"poloniex_spot",
+	# Gold spots:
+	"apmex_spot",
+	"gold_spot",
+	# Bitcoin:
+	"spot",
+	"spot_usd"
+]
+
 
 @app.errorhandler(404)
 def awol(err):
@@ -28,35 +51,29 @@ def gendeviceid():
 
 @app.route("/")
 def index():
-	spot = rtdb.get("spot")
-	gold_spot = rtdb.get("gold_spot")
-	binance_spot = rtdb.get("binance_spot")
-	bitfinex_spot = rtdb.get("bitfinex_spot")
-	bitstamp_spot = rtdb.get("bitstamp_spot")
-	coinbase_spot = rtdb.get("coinbase_spot")
-	gemini_spot = rtdb.get("gemini_spot")
-	huobi_spot = rtdb.get("huobi_spot")
-	kraken_spot = rtdb.get("kraken_spot")
+	"""
+	https://bitcoinarrows.com
+	"""
+
+	content = {}
+	for source in sources:
+		val = rtdb.get(source)
+		content[source] = val
+
+	# Time windowing for charts, this should go in some vega json format:
 	now = datetime.datetime.now().replace(second=0, microsecond=0)
 	scroller_start = (now + datetime.timedelta(minutes=-72*60)).isoformat()
 	scroller_end = (now + datetime.timedelta(minutes=61)).isoformat()
 	multiscroller_start = (now + datetime.timedelta(minutes=-1*60)).isoformat()
 	multiscroller_end = (now + datetime.timedelta(minutes=1)).isoformat()
-	content = {
-		"spot": spot,
-		"gold_spot": gold_spot,
-		"binance_spot": binance_spot,
-		"bitfinex_spot": bitfinex_spot,
-		"bitstamp_spot": bitstamp_spot,
-		"coinbase_spot": coinbase_spot,
-		"gemini_spot": gemini_spot,
-		"huobi_spot": huobi_spot,
-		"kraken_spot": kraken_spot,
+
+	content.update({
 		"scroller_start": scroller_start,
 		"scroller_end": scroller_end,
 		"multiscroller_start": multiscroller_start,
 		"multiscroller_end": multiscroller_end,
-	}
+	})
+
 	resp = make_response(render_template("index.html", **content))
 	
 	if COOKIES:
