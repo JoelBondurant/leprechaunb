@@ -24,6 +24,7 @@
 			<th>Bitstamp</th>
 			<th>Coinbase</th>
 			<th>Gemini</th>
+			<th>Huobi</th>
 			<th>Kraken</th>
 		</tr>
 		<tr>
@@ -44,6 +45,7 @@
 			<td data-value="{{(bitstamp_spot - spot)|round(2)}}"></td>
 			<td data-value="{{(coinbase_spot - spot)|round(2)}}"></td>
 			<td data-value="{{(gemini_spot - spot)|round(2)}}"></td>
+			<td data-value="{{(huobi_spot - spot)|round(2)}}"></td>
 			<td data-value="{{(kraken_spot - spot)|round(2)}}"></td>
 		</tr>
 	</table>
@@ -184,7 +186,7 @@
 						"tickSize": 1,
 						"gridDash": [2,1]
 					},
-					"scale": {"domain": [{{spot*0.97}}, {{spot*1.06}}]}
+					"scale": {"domain": [{{spot*0.96}}, {{spot*1.04}}]}
 				}
 			}
 		};

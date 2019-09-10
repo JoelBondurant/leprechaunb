@@ -19,6 +19,7 @@ rt_keys = [
 	"bitfinex_spot",
 	"bitstamp_spot",
 	"coinbase_spot",
+	"huobi_spot",
 	"kraken_spot",
 	"gemini_spot",
 	"apmex_spot",

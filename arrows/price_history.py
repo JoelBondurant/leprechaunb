@@ -17,6 +17,7 @@ sources = [
 	"bitstamp_spot",
 	"coinbase_spot",
 	"gemini_spot",
+	"huobi_spot",
 	"kraken_spot",
 	"gold_spot",
 	"spot",
@@ -31,7 +32,7 @@ def spot_minutely():
 
 
 def spots_minutely():
-	sources = ("binance", "bitfinex", "bitstamp", "coinbase", "gemini", "kraken")
+	sources = ("binance", "bitfinex", "bitstamp", "coinbase", "gemini", "kraken", "huobi")
 	df = pd.read_parquet(f"/data/tsdb/{sources[0]}_spot_minutely.parq")
 	df["source"] = sources[0]
 	for source in sources[1:]:

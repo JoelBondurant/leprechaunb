@@ -35,11 +35,12 @@ def index():
 	bitstamp_spot = rtdb.get("bitstamp_spot")
 	coinbase_spot = rtdb.get("coinbase_spot")
 	gemini_spot = rtdb.get("gemini_spot")
+	huobi_spot = rtdb.get("huobi_spot")
 	kraken_spot = rtdb.get("kraken_spot")
 	now = datetime.datetime.now().replace(second=0, microsecond=0)
 	scroller_start = (now + datetime.timedelta(minutes=-72*60)).isoformat()
 	scroller_end = (now + datetime.timedelta(minutes=61)).isoformat()
-	multiscroller_start = (now + datetime.timedelta(minutes=-4*60)).isoformat()
+	multiscroller_start = (now + datetime.timedelta(minutes=-1*60)).isoformat()
 	multiscroller_end = (now + datetime.timedelta(minutes=1)).isoformat()
 	content = {
 		"spot": spot,
@@ -49,6 +50,7 @@ def index():
 		"bitstamp_spot": bitstamp_spot,
 		"coinbase_spot": coinbase_spot,
 		"gemini_spot": gemini_spot,
+		"huobi_spot": huobi_spot,
 		"kraken_spot": kraken_spot,
 		"scroller_start": scroller_start,
 		"scroller_end": scroller_end,
