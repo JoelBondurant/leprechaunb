@@ -16,7 +16,9 @@ logger.info("wap started.")
 app = Flask("bitcoinarrows", static_url_path="", template_folder="rws")
 app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 1
 
+
 rtdb = rock.Rock("rtdb")
+
 
 sources = [
 	# Bitcoin spots:
@@ -46,8 +48,25 @@ sources = [
 def awol(err):
 	return render_template("404.html"), 404
 
+
 def gendeviceid():
 	return str(uuid.uuid4())
+
+
+def to_table(adict, table_id=None):
+	if table_id:
+		res = f'<table id="{table_id}">'
+	else:
+		res = "<table>"
+	res += "<tr>"
+	for key in adict.keys():
+		res += f"<th>{key}</th>"
+	res += "</tr><tr>"
+	for val in adict.values():
+		res += f"<td>{val}</td>"
+	res += "</tr></table>"
+	return res
+
 
 @app.route("/")
 def index():
@@ -56,13 +75,20 @@ def index():
 	"""
 
 	content = {}
+
+	stats = rtdb.get("blockchain_stats")
+	keep_stats = ["trade_volume_btc", "blocks_size", "hash_rate", "miners_revenue_btc", "n_blocks_total", "minutes_between_blocks"]
+	stats = {k: stats[k] for k in keep_stats}
+	stats = to_table(stats, table_id="stats")
+	content["stats"] = stats
+
 	for source in sources:
 		val = rtdb.get(source)
 		content[source] = val
 
 	# Time windowing for charts, this should go in some vega json format:
 	now = datetime.datetime.now().replace(second=0, microsecond=0)
-	scroller_start = (now + datetime.timedelta(minutes=-72*60)).isoformat()
+	scroller_start = (now + datetime.timedelta(minutes=-7*24*60)).isoformat()
 	scroller_end = (now + datetime.timedelta(minutes=61)).isoformat()
 	multiscroller_start = (now + datetime.timedelta(minutes=-1*60)).isoformat()
 	multiscroller_end = (now + datetime.timedelta(minutes=1)).isoformat()
@@ -85,10 +111,18 @@ def index():
 	return resp
 
 
+@app.route("/exchange")
+def exchange():
+	return render_template("exchange.html")
+
+
 @app.route("/about")
 def about():
 	return render_template("about.html")
 
+@app.route("/favicon.ico")
+def favicon():
+	return send_from_directory("ws", "favicon.ico", mimetype="image/vnd.microsoft.icon")
 
 @app.route("/ws/<file_name>")
 def ws(file_name):

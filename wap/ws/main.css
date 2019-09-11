@@ -21,23 +21,6 @@ img {
 hr {
 	border-color: #202020;
 }
-th {
-	width: 900px;
-	text-align: center;
-	color: #f7931a;
-}
-td {
-	width: 900px;
-	text-align: center;
-	font-weight: bold;
-}
-td[data-value]:after {
-	content: attr(data-value);
-	color: red;
-}
-td[data-value^="-"]:after {
-	color: green;
-}
 
 .pagewrap {
 	min-height: 90%;
@@ -52,6 +35,31 @@ td[data-value^="-"]:after {
 .wrapclass {
 	width: 100%;
 }
+
+
+
+th {
+	width: 900px;
+	text-align: center;
+	color: #f7931a;
+}
+
+td {
+	width: 900px;
+	text-align: center;
+	font-weight: bold;
+}
+
+td[data-value]:after {
+	content: attr(data-value);
+	color: red;
+}
+
+td[data-value^="-"]:after {
+	color: green;
+}
+
+
 
 .hoverImg > img:hover {
 	width: 1000px;
@@ -79,6 +87,7 @@ td[data-value^="-"]:after {
 .tooltip:hover .tooltiptext {
 	visibility: visible;
 }
+
 
 
 #vg-tooltip-element {

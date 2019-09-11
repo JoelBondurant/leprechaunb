@@ -3,6 +3,7 @@
 	<meta name="Keywords" content="bitcoin">
 	<meta http-equiv="refresh" content="120">
 	<title>Bitcoin Arrows</title>
+	<link rel="shortcut icon" href="ws/favicon.ico">
 	<link rel="stylesheet" type="text/css" href="ws/main.css">
 	<script type="text/javascript" src="ws/common.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
@@ -13,8 +14,7 @@
 <div class="page-wrap">
 
 
-
-	<div id="top-panel">
+	<div id="panel0">
 	<table>
 		<tr>
 			<th>Bitcoin</th>
@@ -62,8 +62,9 @@
 		</tr>
 	</table>
 	</div>
+	<hr/>
 
-
+	{{stats|safe}}
 
 	<hr/>
 	<div class="centerwrap">
@@ -198,7 +199,7 @@
 						"tickSize": 1,
 						"gridDash": [2,1]
 					},
-					"scale": {"domain": [{{spot*0.96}}, {{spot*1.04}}]}
+					"scale": {"domain": [{{spot*0.95}}, {{spot*1.05}}]}
 				}
 			}
 		};
@@ -259,7 +260,7 @@
 						"tickSize": 1,
 						"gridDash": [2,1]
 					},
-					"scale": {"domain": [{{spot*0.99}}, {{spot*1.01}}]}
+					"scale": {"domain": [{{spot*0.98}}, {{spot*1.02}}]}
 				},
 				"color": {"field": "source", "type": "nominal"}
 			}
@@ -281,6 +282,8 @@
 			</td>
 			<td>
 				<a href="/about">About</a>
+				&nbsp;|&nbsp;
+				<a href="/exchange">Exchange</a>
 			</td>
 			<td>
 			<span style="color:#666;">

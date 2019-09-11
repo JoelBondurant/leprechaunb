@@ -35,9 +35,10 @@ from sources import blockchain
 
 
 # The period of the rt phase, collection must complete within the rt PERIOD:
-PERIOD = 12
+# Light can circle the planet almost twice, but not quite in this time:
+PERIOD = 14
 
-# A ge:
+# Break the Period into this many sub intervals:
 SUBPERIODS = 2
 
 # A subperiod/timeout for retry loops:
@@ -62,6 +63,7 @@ _spot_sources = {
 	"kraken": kraken,
 	"poloniex": poloniex,
 }
+
 
 def get_spot_source_names():
 	"""
