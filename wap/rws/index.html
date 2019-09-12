@@ -201,7 +201,17 @@
 						"tickSize": 1,
 						"gridDash": [2,1]
 					},
-					"scale": {"domain": [{{spot*0.95}}, {{spot*1.05}}]}
+					"scale": {
+						"type": "linear",
+						"clamp": true,
+						"nice": true,
+						"zero": false,
+					},
+				}
+			},
+			"config": {
+				"scale": {
+					"continuousPadding": 10
 				}
 			}
 		};
@@ -264,12 +274,22 @@
 						"tickSize": 1,
 						"gridDash": [2,1]
 					},
-					"scale": {"domain": [{{spot*0.98}}, {{spot*1.02}}]}
+					"scale": {
+						"type": "linear",
+						"clamp": true,
+						"nice": true,
+						"zero": false,
+					},
 				},
 				"color": {
 					"field": "source",
 					"type": "nominal",
 					"scale": {"scheme": "goldorange"}
+				}
+			},
+			"config": {
+				"scale": {
+					"continuousPadding": 10
 				}
 			}
 		};
@@ -288,24 +308,24 @@
 			"height": 240,
 			"padding": 8,
 			"data": {
-				"url": "arrows/spots_minutely_tail.csv"
+				"url": "arrows/spots_minutely.csv"
 			},
 			"autosize": {
 				"type": "fit",
 				"resize": true
 			},
 			"mark": {
-				"type": "bar",
+				"type": "boxplot",
+				"extent": "min-max",
 			},
 			"encoding": {
 				"y": {
 					"field": "source",
-					"type": "ordinal",
+					"type": "nominal",
 					"sort": "-x",
 					"axis": {
 						"title": "",
 						"labelFontSize": 14,
-						"tickCount": 7,
 					},
 				},
 				"x": {
@@ -314,14 +334,24 @@
 					"axis": {
 						"title": "",
 						"labelFontSize": 14,
-						"tickCount": 7,
 					},
-					"scale": {"domain": [{{spot*0.99}}, {{spot*1.01}}]}
+					"scale": {
+						"type": "linear",
+						"clamp": true,
+						"nice": true,
+						"zero": false,
+					},
 				},
 				"color": {
+					"legend": false,
 					"field": "source",
 					"type": "nominal",
 					"scale": {"scheme": "goldorange"}
+				}
+			},
+			"config": {
+				"scale": {
+					"continuousPadding": 10
 				}
 			}
 		};

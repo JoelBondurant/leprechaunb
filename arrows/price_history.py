@@ -52,7 +52,9 @@ def spots_minutely():
 		df = pd.concat([df, pd.read_parquet(f"/data/tsdb/{source}_spot_minutely.parq")])
 		df.source = df.source.fillna(source)
 	df.to_csv("/data/arrows/spots_minutely.csv", index=False)
-	df.drop_duplicates(subset=["source"], keep="last").to_csv("/data/arrows/spots_minutely_tail.csv", index=False)
+	df = df.drop_duplicates(subset=["source"], keep="last")
+	df = df[df.source != "bisq"].sort_values("value", ascending=True, axis=0)
+	df.to_csv("/data/arrows/spots_minutely_tail.csv", index=False)
 
 
 def minute_arrow():
