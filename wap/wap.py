@@ -122,15 +122,33 @@ def about():
 
 @app.route("/favicon.ico")
 def favicon():
-	return send_from_directory("ws", "favicon.ico", mimetype="image/vnd.microsoft.icon")
+	return send_from_directory("ws/img", "favicon.ico", mimetype="image/vnd.microsoft.icon")
 
-@app.route("/ws/<file_name>")
-def ws(file_name):
+@app.route("/ws/js/<file_name>")
+def js(file_name):
 	"""
 	web site resources (js/css/etc) loader.
 	file_name - the filename to load.
 	"""
-	return send_from_directory("ws", file_name)
+	return send_from_directory("ws/js", file_name)
+
+@app.route("/ws/css/<file_name>")
+def css(file_name):
+	"""
+	web site resources (js/css/etc) loader.
+	file_name - the filename to load.
+	"""
+	return send_from_directory("ws/css", file_name)
+
+
+@app.route("/ws/img/<file_name>")
+def img(file_name):
+	"""
+	web site resources (js/css/etc) loader.
+	file_name - the filename to load.
+	"""
+	return send_from_directory("ws/img", file_name)
+
 
 
 @app.route("/arrows/<arrow_name>")

@@ -3,9 +3,9 @@
 	<meta name="Keywords" content="bitcoin">
 	<meta http-equiv="refresh" content="120">
 	<title>Bitcoin Arrows</title>
-	<link rel="icon" href="ws/favicon.ico">
-	<link rel="stylesheet" type="text/css" href="ws/main.css">
-	<script type="text/javascript" src="ws/common.js"></script>
+	<link rel="icon" href="/favicon.ico">
+	<link rel="stylesheet" type="text/css" href="ws/css/main.css">
+	<script type="text/javascript" src="ws/js/common.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vega-lite@3"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vega-embed@4"></script> 
@@ -74,11 +74,14 @@
 		var vegaSpec = {
 			"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
 			"description": "Bitcoin Price History",
+			"width": 1000,
+			"height": 280,
+			"padding": 8,
 			"data": {
 				"url": "arrows/spot_daily.csv"
 			},
 			"title": {
-				"text": "Bitcoin Price History",
+				"xtext": "Bitcoin Price History",
 				"fontWeight": 360,
 				"fontSize": 16
 			},
@@ -104,8 +107,6 @@
 					}]
 				}
 			},
-			"width": 1000,
-			"height": 280,
 			"encoding": {
 				"x": {
 					"field": "date",
@@ -150,6 +151,9 @@
 		var vegaSpec = {
 			"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
 			"description": "Bitcoin Price History",
+			"width": 1040,
+			"height": 240,
+			"padding": 8,
 			"data": {
 				"url": "arrows/spot_minutely.csv"
 			},
@@ -170,8 +174,6 @@
 				},
 				"color": "#f7931a"
 			},
-			"width": 1040,
-			"height": 240,
 			"encoding": {
 				"x": {
 					"field": "date",
@@ -215,7 +217,11 @@
 		var vegaSpec = {
 			"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
 			"description": "Bitcoin Price History",
+			"width": 1040,
+			"height": 240,
+			"padding": 8,
 			"data": {
+				"name": "spots_minutely",
 				"url": "arrows/spots_minutely.csv"
 			},
 			"autosize": {
@@ -231,8 +237,6 @@
 			"mark": {
 				"type": "line",
 			},
-			"width": 1040,
-			"height": 240,
 			"encoding": {
 				"x": {
 					"field": "date",
@@ -262,10 +266,66 @@
 					},
 					"scale": {"domain": [{{spot*0.98}}, {{spot*1.02}}]}
 				},
-				"color": {"field": "source", "type": "nominal"}
+				"color": {
+					"field": "source",
+					"type": "nominal",
+					"scale": {"scheme": "goldorange"}
+				}
 			}
 		};
 		vegaEmbed("#multiscroller", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
+	</script>
+
+
+	<div class="centerwrap">
+	<div class="wrapclass" id="spot_bars"></div>
+	</div>
+	<script type="text/javascript">
+		var vegaSpec = {
+			"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+			"description": "Bitcoin Spot Bars",
+			"width": 1040,
+			"height": 240,
+			"padding": 8,
+			"data": {
+				"url": "arrows/spots_minutely_tail.csv"
+			},
+			"autosize": {
+				"type": "fit",
+				"resize": true
+			},
+			"mark": {
+				"type": "bar",
+			},
+			"encoding": {
+				"y": {
+					"field": "source",
+					"type": "ordinal",
+					"sort": "-x",
+					"axis": {
+						"title": "",
+						"labelFontSize": 14,
+						"tickCount": 7,
+					},
+				},
+				"x": {
+					"field": "value",
+					"type": "quantitative",
+					"axis": {
+						"title": "",
+						"labelFontSize": 14,
+						"tickCount": 7,
+					},
+					"scale": {"domain": [{{spot*0.99}}, {{spot*1.01}}]}
+				},
+				"color": {
+					"field": "source",
+					"type": "nominal",
+					"scale": {"scheme": "goldorange"}
+				}
+			}
+		};
+		vegaEmbed("#spot_bars", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
 	</script>
 
 
