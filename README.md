@@ -4,3 +4,6 @@
 
 Joel's system for monitoring Bitcoin.
 
+
+ScreenShot:
+![ScreenShot](https://raw.github.com/JoelBondurant/bitcoinarrows/master/doc/img/bitcoin_arrows.png)

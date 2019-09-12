@@ -56,7 +56,7 @@ def spots_minutely():
 		df = pd.concat([df, pd.read_parquet(f"/data/tsdb/{source}_spot_minutely.parq")], ignore_index=True)
 		df.source = df.source.fillna(source)
 	cutoff = datetime.datetime.utcnow().replace(second=0, microsecond=0)
-	cutoff = cutoff - datetime.timedelta(hours=24)
+	cutoff = cutoff - datetime.timedelta(hours=3*24)
 	cutoff = datetime.datetime(*cutoff.timetuple()[:6])
 	df = df[df.date >= cutoff]
 	df.to_csv("/data/arrows/spots_minutely.csv", index=False)
