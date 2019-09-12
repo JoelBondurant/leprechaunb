@@ -7,7 +7,6 @@ import time
 import datetime
 from multiprocessing import Process
 
-import schedule
 import pandas as pd
 
 from util import logger
@@ -129,15 +128,20 @@ def ts_daily():
 	logger.info("ts_daily.finished")
 
 
-
-schedule.every(30).seconds.do(ts_minutely)
-schedule.every(20*60).seconds.do(ts_daily)
+def main():
+	"""
+	Main entry to ts.
+	"""
+	logger.info("ts started.")
+	import schedule
+	schedule.every(30).seconds.do(ts_minutely)
+	schedule.every(20*60).seconds.do(ts_daily)
+	while True:
+		schedule.run_pending()
+		time.sleep(1)
 
 
 
 if __name__ == "__main__":
-	logger.info("ts started.")
-	while True:
-		schedule.run_pending()
-		time.sleep(1)
+	main()
 

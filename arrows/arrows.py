@@ -3,7 +3,6 @@
 Currency crisis center.
 """
 import time
-import schedule
 import concurrent.futures
 
 from util import logger
@@ -27,14 +26,16 @@ def day_arrow():
 		time.sleep(4)
 
 
-schedule.every(20).seconds.do(minute_arrow)
-schedule.every(60).seconds.do(day_arrow)
 
 
 def main():
 	"""
 	Main entry to arrows.
 	"""
+	logger.info("arrows started.")
+	import schedule
+	schedule.every(20).seconds.do(minute_arrow)
+	schedule.every(120).seconds.do(day_arrow)
 	t0 = time.time()
 	while True:
 		schedule.run_pending()
@@ -46,3 +47,4 @@ def main():
 
 if __name__ == "__main__":
 	main()
+
