@@ -67,9 +67,9 @@
 	{{stats|safe}}
 
 	<hr/>
+
 	<div class="centerwrap">
-	<div class="wrapclass" id="bigpic"></div>
-	</div>
+	<div id="bigpic"></div>
 	<script type="text/javascript">
 		var vegaSpec = {
 			"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
@@ -142,11 +142,7 @@
 		vegaEmbed("#bigpic", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
 	</script>
 
-
-
-	<div class="centerwrap">
-	<div class="wrapclass" id="scroller"></div>
-	</div>
+	<div id="scroller"></div>
 	<script type="text/javascript">
 		var vegaSpec = {
 			"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
@@ -217,16 +213,18 @@
 		};
 		vegaEmbed("#scroller", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
 	</script>
-
-
-	<div class="centerwrap">
-	<div class="wrapclass" id="spot_bars"></div>
 	</div>
+
+
+
+	<div class="centerwrap" style="font-size: 0;">
+
+	<div class="blockswrap" id="spotbars"></div>
 	<script type="text/javascript">
 		var vegaSpec = {
 			"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
 			"description": "Bitcoin Spot Bars",
-			"width": 1040,
+			"width": 500,
 			"height": 240,
 			"padding": 8,
 			"data": {
@@ -277,18 +275,16 @@
 				}
 			}
 		};
-		vegaEmbed("#spot_bars", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
+		vegaEmbed("#spotbars", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
 	</script>
 
 
-	<div class="centerwrap">
-	<div class="wrapclass" id="multiscroller"></div>
-	</div>
+	<div class="blockswrap" id="multiscroller"></div>
 	<script type="text/javascript">
 		var vegaSpec = {
 			"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
 			"description": "Bitcoin Price History",
-			"width": 1040,
+			"width": 500,
 			"height": 240,
 			"padding": 8,
 			"data": {
@@ -345,6 +341,7 @@
 				"color": {
 					"field": "source",
 					"type": "nominal",
+					"legend": false,
 					"scale": {"scheme": "goldorange"}
 				}
 			},
@@ -356,6 +353,8 @@
 		};
 		vegaEmbed("#multiscroller", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
 	</script>
+
+	</div>
 
 
 	<div id="bottom-panel">

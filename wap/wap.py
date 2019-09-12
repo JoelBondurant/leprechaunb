@@ -15,7 +15,6 @@ COOKIES = True
 
 logger.info("wap started.")
 app = Flask("bitcoinarrows", static_url_path="", template_folder="rws")
-app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 1
 
 
 rtdb = rock.Rock("rtdb")
@@ -78,7 +77,7 @@ def index():
 	content = {}
 
 	stats = rtdb.get("blockchain_stats")
-	keep_stats = ["trade_volume_btc", "blocks_size", "hash_rate", "miners_revenue_btc", "n_blocks_total", "minutes_between_blocks"]
+	keep_stats = ["trade_volume_btc", "blocks_size", "hash_rate", "difficulty", "miners_revenue_btc", "n_blocks_total", "minutes_between_blocks"]
 	stats = {k: stats[k] for k in keep_stats}
 	stats = to_table(stats, table_id="stats")
 	content["stats"] = stats
@@ -91,7 +90,7 @@ def index():
 	now = datetime.datetime.now().replace(second=0, microsecond=0)
 	scroller_start = (now + datetime.timedelta(minutes=-7*24*60)).isoformat()
 	scroller_end = (now + datetime.timedelta(minutes=61)).isoformat()
-	multiscroller_start = (now + datetime.timedelta(minutes=-1*60)).isoformat()
+	multiscroller_start = (now + datetime.timedelta(minutes=-24*60)).isoformat()
 	multiscroller_end = (now + datetime.timedelta(minutes=1)).isoformat()
 
 	content.update({
@@ -183,9 +182,9 @@ def arrow(arrow_name):
 
 @app.after_request
 def add_header(response):
-	response.headers["Cache-Control"] = "public, max-age=0"
+	response.headers["Cache-Control"] = "public, min-fresh=10, max-age=3600"
 	response.headers["Pragma"] = "no-cache"
-	response.headers["Expires"] = "-1"
+	response.headers["Expires"] = "10"
 	return response
 
 

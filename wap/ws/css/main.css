@@ -28,14 +28,19 @@ hr {
 }
 
 .centerwrap {
+	align: center;
 	text-align: center;
 	width: 100%;
+	margin: 0;
 }
 
-.wrapclass {
-	width: 100%;
+.blockswrap {
+	display: inline-block;
+	margin: 0;
+	border: 0;
+	padding: 0;
+	width: 501px;
 }
-
 
 
 th {
