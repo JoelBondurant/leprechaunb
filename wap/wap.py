@@ -2,8 +2,9 @@
 import datetime
 import json
 import uuid
+import time
 
-from flask import Flask, request, send_from_directory, render_template, make_response
+from flask import Flask, request, redirect, send_from_directory, render_template, make_response
 
 from util import logger
 from util import rock
@@ -116,13 +117,33 @@ def exchange():
 	return render_template("exchange.html")
 
 
+@app.route("/drill")
+def drill():
+	return render_template("drill.html")
+
+
+@app.route("/contact")
+def contact():
+	if "message" in request.args:
+		ts = datetime.datetime.now().isoformat()
+		msg = f"Message:{ts}:\n"
+		msg += request.args.get("message")[:10000]
+		with open("/data/messages/msg.txt", "a") as fout:
+			fout.write(msg + "\n\n")
+		time.sleep(1)
+		return redirect(request.path, code=302)
+	return render_template("contact.html")
+
+
 @app.route("/about")
 def about():
 	return render_template("about.html")
 
+
 @app.route("/favicon.ico")
 def favicon():
 	return send_from_directory("ws/img", "favicon.ico", mimetype="image/vnd.microsoft.icon")
+
 
 @app.route("/ws/js/<file_name>")
 def js(file_name):
@@ -131,6 +152,7 @@ def js(file_name):
 	file_name - the filename to load.
 	"""
 	return send_from_directory("ws/js", file_name)
+
 
 @app.route("/ws/css/<file_name>")
 def css(file_name):
@@ -148,7 +170,6 @@ def img(file_name):
 	file_name - the filename to load.
 	"""
 	return send_from_directory("ws/img", file_name)
-
 
 
 @app.route("/arrows/<arrow_name>")

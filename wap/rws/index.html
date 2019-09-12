@@ -219,6 +219,67 @@
 	</script>
 
 
+	<div class="centerwrap">
+	<div class="wrapclass" id="spot_bars"></div>
+	</div>
+	<script type="text/javascript">
+		var vegaSpec = {
+			"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+			"description": "Bitcoin Spot Bars",
+			"width": 1040,
+			"height": 240,
+			"padding": 8,
+			"data": {
+				"url": "arrows/spots_minutely.csv"
+			},
+			"autosize": {
+				"type": "fit",
+				"resize": true
+			},
+			"mark": {
+				"type": "boxplot",
+				"extent": "min-max",
+			},
+			"encoding": {
+				"y": {
+					"field": "source",
+					"type": "nominal",
+					"sort": "-x",
+					"axis": {
+						"title": "",
+						"labelFontSize": 14,
+					},
+				},
+				"x": {
+					"field": "value",
+					"type": "quantitative",
+					"axis": {
+						"title": "",
+						"labelFontSize": 14,
+					},
+					"scale": {
+						"type": "linear",
+						"clamp": true,
+						"nice": true,
+						"zero": false,
+					},
+				},
+				"color": {
+					"legend": false,
+					"field": "source",
+					"type": "nominal",
+					"scale": {"scheme": "goldorange"}
+				}
+			},
+			"config": {
+				"scale": {
+					"continuousPadding": 10
+				}
+			}
+		};
+		vegaEmbed("#spot_bars", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
+	</script>
+
 
 	<div class="centerwrap">
 	<div class="wrapclass" id="multiscroller"></div>
@@ -297,69 +358,6 @@
 	</script>
 
 
-	<div class="centerwrap">
-	<div class="wrapclass" id="spot_bars"></div>
-	</div>
-	<script type="text/javascript">
-		var vegaSpec = {
-			"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-			"description": "Bitcoin Spot Bars",
-			"width": 1040,
-			"height": 240,
-			"padding": 8,
-			"data": {
-				"url": "arrows/spots_minutely.csv"
-			},
-			"autosize": {
-				"type": "fit",
-				"resize": true
-			},
-			"mark": {
-				"type": "boxplot",
-				"extent": "min-max",
-			},
-			"encoding": {
-				"y": {
-					"field": "source",
-					"type": "nominal",
-					"sort": "-x",
-					"axis": {
-						"title": "",
-						"labelFontSize": 14,
-					},
-				},
-				"x": {
-					"field": "value",
-					"type": "quantitative",
-					"axis": {
-						"title": "",
-						"labelFontSize": 14,
-					},
-					"scale": {
-						"type": "linear",
-						"clamp": true,
-						"nice": true,
-						"zero": false,
-					},
-				},
-				"color": {
-					"legend": false,
-					"field": "source",
-					"type": "nominal",
-					"scale": {"scheme": "goldorange"}
-				}
-			},
-			"config": {
-				"scale": {
-					"continuousPadding": 10
-				}
-			}
-		};
-		vegaEmbed("#spot_bars", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
-	</script>
-
-
-
 	<div id="bottom-panel">
 	<hr/>
 	<table>
@@ -373,7 +371,11 @@
 			<td>
 				<a href="/about">About</a>
 				&nbsp;|&nbsp;
+				<a href="/drill">Drill</a>
+				&nbsp;|&nbsp;
 				<a href="/exchange">Exchange</a>
+				&nbsp;|&nbsp;
+				<a href="/contact">Contact</a>
 			</td>
 			<td>
 			<span style="color:#666;">
