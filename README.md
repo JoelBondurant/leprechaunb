@@ -1,6 +1,4 @@
-# bitcoinarrows.com
-[bitcoinarrows.com](https://bitcoinarrows.com)
-==========
+# [bitcoinarrows.com](https://bitcoinarrows.com)
 
 A system for monitoring Bitcoin.
 
