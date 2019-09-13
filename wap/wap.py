@@ -121,6 +121,11 @@ def drill():
 	return render_template("drill.html")
 
 
+@app.route("/wallet")
+def wallet():
+	return render_template("wallet.html")
+
+
 @app.route("/contact")
 def contact():
 	if "message" in request.args:

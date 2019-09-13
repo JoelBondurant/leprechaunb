@@ -66,6 +66,15 @@ td[data-value^="-"]:after {
 
 
 
+input[type=submit] {
+	border-radius: 5px;
+	border: 0;
+	height: 26px;
+	width: 80px;
+	font-size: 18;
+}
+
+
 .hoverImg > img:hover {
 	width: 1000px;
 }
