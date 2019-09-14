@@ -2,6 +2,7 @@
 Bitcoin price history.
 """
 import datetime
+import math
 import os
 import time
 
@@ -77,8 +78,20 @@ def stats_minutely():
 	Maintain stats_minutely.csv.
 	"""
 	df = pd.read_parquet("/data/tsdb/blockchain_stats_minutely.parq")
-	keep_stats = ["timestamp", "market_price_usd", "trade_volume_btc", "blocks_size", "hash_rate", "difficulty", "miners_revenue_btc", "n_blocks_total", "minutes_between_blocks"]
+	keep_stats = [
+		"date",
+		"timestamp",
+		"market_price_usd",
+		"trade_volume_btc",
+		"blocks_size",
+		"hash_rate",
+		"difficulty",
+		"miners_revenue_btc",
+		"n_blocks_total",
+		"minutes_between_blocks"
+	]
 	df = df[keep_stats]
+	df["log_hash_rate"] = df.hash_rate.apply(math.log10)
 	df.to_csv("/data/arrows/stats_minutely.csv", index=False)
 	logger.info("stats minutely finished.")
 

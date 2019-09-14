@@ -1,7 +1,7 @@
 <html>
 <head>
 	<meta name="Keywords" content="bitcoin">
-	<meta http-equiv="refresh" content="120">
+	<meta http-equiv="refresh" content="180">
 	<title>Arrows</title>
 	<link rel="icon" href="/favicon.ico">
 	<link rel="stylesheet" type="text/css" href="ws/css/main.css">
@@ -68,14 +68,16 @@
 
 	<hr/>
 
-	<div class="centerwrap">
+
+	<div class="chartrow">
 	<div id="bigpic"></div>
+
 	<script type="text/javascript">
 		var vegaSpec = {
 			"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
 			"description": "Bitcoin Price History",
-			"width": 1000,
-			"height": 280,
+			"width": 560,
+			"height": 230,
 			"padding": 8,
 			"data": {
 				"url": "arrows/spot_daily.csv"
@@ -142,13 +144,15 @@
 		vegaEmbed("#bigpic", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
 	</script>
 
+
 	<div id="scroller"></div>
+
 	<script type="text/javascript">
 		var vegaSpec = {
 			"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
 			"description": "Bitcoin Price History",
-			"width": 1040,
-			"height": 240,
+			"width": 500,
+			"height": 260,
 			"padding": 8,
 			"data": {
 				"url": "arrows/spot_minutely.csv"
@@ -216,15 +220,13 @@
 	</div>
 
 
-
-	<div class="centerwrap" style="font-size: 0;">
-
-	<div class="blockswrap" id="spotbars"></div>
+	<div class="chartrow">
+	<div id="spotbars"></div>
 	<script type="text/javascript">
 		var vegaSpec = {
 			"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
 			"description": "Bitcoin Spot Bars",
-			"width": 500,
+			"width": 600,
 			"height": 240,
 			"padding": 8,
 			"data": {
@@ -282,7 +284,7 @@
 	</script>
 
 
-	<div class="blockswrap" id="multiscroller"></div>
+	<div id="multiscroller"></div>
 	<script type="text/javascript">
 		var vegaSpec = {
 			"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
@@ -359,16 +361,15 @@
 
 	</div>
 
-	<br/>
-	<div class="centerwrap" style="font-size: 0;">
+	<div class="chartrow">
+	<div id="volume"></div>
 
-	<div class="blockswrap" id="statslice"></div>
 	<script type="text/javascript">
 		var vegaSpec = {
 			"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-			"description": "Bitcoin Stats Slice",
-			"width": 800,
-			"height": 600,
+			"description": "Bitcoin Volume History",
+			"width": 600,
+			"height": 240,
 			"padding": 8,
 			"data": {
 				"url": "arrows/stats_minutely.csv"
@@ -377,41 +378,142 @@
 				"type": "fit",
 				"resize": true
 			},
-			"mark": {
-				"type": "point",
-			},
 			"selection": {
-				"brush": {
+				"grid": {
 					"type": "interval",
-					"resolve": "union",
-					"on: "[mousedown[event.shiftKey], window:mouseup] > window:mousemove!",
-					"translate": "[mousedown[event.shiftKey], window:mouseup] > window:mousemove!]",
-					"zoom": "wheel![!event.shiftKey]"
+					"bind": "scales"
 				}
+			},
+			"mark": {
+				"type": "line",
+				"line": {
+					"color": "#f7931a"
+				},
+				"color": "#f7931a"
 			},
 			"encoding": {
 				"x": {
-					"field": {"repeat": "column"},
-					"type": "quantitative",
+					"field": "date",
+					"type": "temporal",
+					"scale": {
+						"type":"time",
+						"domain": ["{{scroller_start}}","{{scroller_end}}"]
+					},
 					"axis": {
 						"title": "",
 						"labelFontSize": 14,
-					},
+						"tickCount": 7,
+					}
 				},
-				"x": {
-					"field": {"repeat": "row"},
+				"y": {
+					"field": "trade_volume_btc",
 					"type": "quantitative",
 					"axis": {
-						"minExtent": 30
+						"title": "Volume",
+						"titleFontSize": 14,
+						"titleAngle": 0,
+						"titleX": 36,
+						"titleY": 20,
+						"labelFontSize": 14,
+						"tickSize": 1,
+						"gridDash": [2,1]
 					},
-				},
+					"scale": {
+						"type": "linear",
+						"clamp": true,
+						"nice": true,
+						"zero": false,
+					},
+				}
 			},
+			"config": {
+				"scale": {
+					"continuousPadding": 10
+				}
+			}
 		};
-		vegaEmbed("#statslice", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
+		vegaEmbed("#volume", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
 	</script>
 
+
+	<div id="hashrate"></div>
+
+	<script type="text/javascript">
+		var vegaSpec = {
+			"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+			"description": "Bitcoin Hash Rate History",
+			"width": 500,
+			"height": 240,
+			"padding": 8,
+			"data": {
+				"url": "arrows/stats_minutely.csv"
+			},
+			"autosize": {
+				"type": "fit",
+				"resize": true
+			},
+			"selection": {
+				"grid": {
+					"type": "interval",
+					"bind": "scales"
+				}
+			},
+			"mark": {
+				"type": "line",
+				"line": {
+					"color": "#f7931a"
+				},
+				"color": "#f7931a"
+			},
+			"encoding": {
+				"x": {
+					"field": "date",
+					"type": "temporal",
+					"scale": {
+						"type":"time",
+						"domain": ["{{scroller_start}}","{{scroller_end}}"]
+					},
+					"axis": {
+						"title": "",
+						"labelFontSize": 14,
+						"tickCount": 7,
+					}
+				},
+				"y": {
+					"field": "log_hash_rate",
+					"type": "quantitative",
+					"axis": {
+						"title": "Log Hash Rate",
+						"titleFontSize": 14,
+						"titleAngle": 0,
+						"titleX": 56,
+						"titleY": 20,
+						"labelFontSize": 14,
+						"tickSize": 1,
+						"gridDash": [2,1]
+					},
+					"scale": {
+						"type": "linear",
+						"clamp": true,
+						"nice": true,
+						"zero": false,
+					},
+				}
+			},
+			"config": {
+				"scale": {
+					"continuousPadding": 10
+				}
+			}
+		};
+		vegaEmbed("#hashrate", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
+	</script>
 	</div>
 
+
+
+
+	<br/>
 	<div id="bottom-panel">
 	<hr/>
 	<table>
