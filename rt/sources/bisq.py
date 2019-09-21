@@ -7,11 +7,11 @@ from util import logger
 base_uri = "https://markets.bisq.network/api/"
 
 
-"""
-Bisq realtime prices.
-	market - [btc_usd]
-"""
 def spot(market="btc_usd"):
+	"""
+	Bisq realtime prices.
+		market - [btc_usd]
+	"""
 	resp = requests.get(base_uri + f"ticker?market={market}").json()
 	return float(resp[0]["last"])
 

@@ -1,21 +1,22 @@
 # APMEX Data Ingress
-import requests
 
+from . import lhtml
 from util import logger
 from util import rock
+
 
 # APMEX API Endpoints:
 base_uri = "https://widgets.apmex.com/widget/spotprice/"
 
 
-"""
-APMEX realtime prices.
-"""
 def spot():
-	resp = requests.get(base_uri).text
-	trim = resp[resp.lower().find("gold"):][:200]
-	trim = trim[trim.find("$"):]
-	usd_per_toz = float(trim.split()[0][1:].replace(",",""))
+	"""
+	APMEX realtime prices.
+	"""
+	htm = lhtml.parse_url(base_uri)
+	spot_dom = htm.xpath("/html/body/div/div/table/tbody/tr[1]/td[2]")[0]
+	spot_txt = spot_dom.text.strip().strip("$").replace(",", "")
+	usd_per_toz = float(spot_txt)
 	usd_per_gram = (usd_per_toz / rock.grams_per_toz)
 	return usd_per_gram
 
