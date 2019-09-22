@@ -4,7 +4,7 @@ Stack stats for apps.
 import statistics
 
 
-def filter_outliers(alist, m=2):
+def filter_outliers(alist, m=1.5):
 	"""
 	Don't include crazy screw-ups in price averaging, etc.
 	"""
@@ -12,4 +12,8 @@ def filter_outliers(alist, m=2):
 	mean = statistics.mean(alist)
 	avg = (mean + med)/2.0
 	std = statistics.stdev(alist)
-	return [x for x in alist if (x - avg) < m * std]
+	result = [x for x in alist if x > avg - m*std]
+	result = [x for x in result if x < avg + m*std]
+	return result
+
+

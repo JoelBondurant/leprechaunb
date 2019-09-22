@@ -1,7 +1,6 @@
 # Binance Data Ingress
-import datetime
-import requests
 
+from util import web
 
 # Binance API Endpoints:
 base_uri = "https://api.binance.com/api/v1/"
@@ -12,6 +11,6 @@ def spot(symbol="BTCUSDT"):
 	Binance realtime prices.
 		symbol- [BTCUSDT]
 	"""
-	resp = requests.get(base_uri + f"ticker/price?symbol={symbol}").json()
+	resp = web.get(base_uri + f"ticker/price?symbol={symbol}")
 	return float(resp["price"])
 

@@ -1,7 +1,9 @@
-# Kraken Data Ingress
-import requests
+"""
+Kraken Data Ingress
+"""
 
-from util import logger
+from util import web
+
 
 # Kraken API Endpoints:
 base_uri = "https://api.kraken.com/0/public/"
@@ -12,6 +14,6 @@ def spot(pair="XBTUSD", full_pair="XXBTZUSD"):
 	Kraken realtime prices.
 		pair - [XBTUSD]
 	"""
-	resp = requests.get(base_uri + f"Ticker?pair={pair}").json()
+	resp = web.get(base_uri + f"Ticker?pair={pair}")
 	return float(resp["result"][full_pair]["c"][0])
 

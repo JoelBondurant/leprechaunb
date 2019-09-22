@@ -1,8 +1,9 @@
-# KITCO Data Ingress
+"""
+KITCO Data Ingress
+"""
 
-from . import lhtml
-from util import logger
 from util import rock
+from util import web
 
 
 # KITCO API Endpoints:
@@ -11,9 +12,9 @@ base_uri = "https://www.kitco.com/"
 
 def spot():
 	"""
-	KITCO realtime prices.
+	KITCO USD/XAU spot.
 	"""
-	htm = lhtml.parse_url(base_uri + "charts/livegold.html")
+	htm = web.parse_url(base_uri + "charts/livegold.html")
 	bid_usd_per_toz = float(htm.xpath("""//*[@id="sp-bid"]""")[0].text.replace(",",""))
 	ask_usd_per_toz = float(htm.xpath("""//*[@id="sp-ask"]""")[0].text.replace(",",""))
 	usd_per_toz = (bid_usd_per_toz + ask_usd_per_toz)/2.0

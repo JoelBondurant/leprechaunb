@@ -2,10 +2,10 @@
 """
 Time series builder.
 """
+
 import os
 import time
 import datetime
-from multiprocessing import Process
 
 import pandas as pd
 
@@ -13,35 +13,14 @@ from util import logger
 from util import rock
 
 
-sources = [
-	# Bitcoin spots:
-	"binance_spot",
-	"bisq_spot",
-	"bitfinex_spot",
-	"bitstamp_spot",
-	"bittrex_spot",
-	"btse_spot",
-	"cex_spot",
-	"coinbase_spot",
-	"gemini_spot",
-	"huobi_spot",
-	"itbit_spot",
-	"kraken_spot",
-	"poloniex_spot",
-	# Gold spots:
-	"apmex_spot",
-	"gold_spot",
-	# Bitcoin:
-	"spot",
-	"spot_usd"
-]
+rtdb = rock.Rock("rtdb")
+rtdb_keys = rtdb.get("keys")
 
 
 def ts_minutely():
 	logger.info("ts_minutely.started")
 	now = datetime.datetime.now().replace(second=0, microsecond=0)
-	rtdb = rock.Rock("rtdb")
-	for key in sources:
+	for key in rtdb_keys:
 		try:
 			val = rtdb.get(key)
 			fname = f"/data/tsdb/{key}_minutely.parq"
@@ -60,24 +39,6 @@ def ts_minutely():
 		except Exception as ex:
 			logger.info("ts_minutely.exception")
 			logger.exception(ex)
-	try:
-		blockchain_stats = rtdb.get("blockchain_stats")
-		blockchain_stats["date"] = now
-		fname = "/data/tsdb/blockchain_stats_minutely.parq"
-		if os.path.exists(fname):
-			df = pd.read_parquet(fname)
-			nvals = len(df)
-			dg = pd.DataFrame(blockchain_stats, index=[0])
-			df = pd.concat([df, dg], ignore_index=True)
-			df.drop_duplicates(subset=["date"], keep="last", inplace=True)
-			if len(df) != nvals:
-				df.to_parquet(fname)
-		else:
-			df = pd.DataFrame(blockchain_stats, index=[0])
-			df.to_parquet(fname)
-	except Exception as ex:
-		logger.info("ts_minutely.exception")
-		logger.exception(ex)
 	logger.info("ts_minutely.finished")
 
 
@@ -85,8 +46,7 @@ def ts_minutely():
 def ts_daily():
 	logger.info("ts_daily.started")
 	now = datetime.datetime.now().date()
-	rtdb = rock.Rock("rtdb")
-	for key in sources:
+	for key in rtdb_keys:
 		try:
 			val = rtdb.get(key)
 			fname = f"/data/tsdb/{key}_daily.parq"
@@ -107,24 +67,6 @@ def ts_daily():
 		except Exception as ex:
 			logger.info("ts_daily.exception")
 			logger.exception(ex)
-	try:
-		blockchain_stats = rtdb.get("blockchain_stats")
-		blockchain_stats["date"] = now
-		fname = "/data/tsdb/blockchain_stats_daily.parq"
-		if os.path.exists(fname):
-			df = pd.read_parquet(fname)
-			nvals = len(df)
-			dg = pd.DataFrame(blockchain_stats, index=[0])
-			df = pd.concat([df, dg], ignore_index=True)
-			df.drop_duplicates(subset=["date"], keep="last", inplace=True)
-			if len(df) != nvals:
-				df.to_parquet(fname)
-		else:
-			df = pd.DataFrame(blockchain_stats, index=[0])
-			df.to_parquet(fname)
-	except Exception as ex:
-		logger.info("ts_daily.exception")
-		logger.exception(ex)
 	logger.info("ts_daily.finished")
 
 
@@ -139,7 +81,6 @@ def main():
 	while True:
 		schedule.run_pending()
 		time.sleep(1)
-
 
 
 if __name__ == "__main__":

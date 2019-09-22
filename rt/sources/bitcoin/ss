@@ -6,17 +6,16 @@ Historical patching of data will be done in ts (time series constructor service)
 rt will be ephemeral, no worries about past data here.
 """
 import concurrent.futures
+import statistics
 import time
 
 from util import logger
 from util import rock
+from util import stats
 
 # Data sources:
 from sources import gold
 from sources import bitcoin
-
-
-rtdb = rock.Rock("rtdb")
 
 
 # The period of the rt phase, collection must complete within the rt PERIOD:
@@ -33,10 +32,33 @@ SUBPERIOD = max(1, PERIOD // SUBPERIODS)
 NETHREADS = 16
 
 
+_spot_sources = {
+	"binance": binance,
+	"bisq": bisq,
+	"bitfinex": bitfinex,
+	"bitstamp": bitstamp,
+	"bittrex": bittrex,
+	"btse": btse,
+	"cex": cex,
+	"coinbase": coinbase,
+	"gemini": gemini,
+	"huobi": huobi,
+	"itbit": itbit,
+	"kraken": kraken,
+	"poloniex": poloniex,
+}
 
-def get_spots(spot_source_modules, timeout=SUBPERIOD, max_tries=SUBPERIODS):
+
+def get_spot_source_names():
 	"""
-	Returns a list of the spot prices (calls .spot() on modules)
+	List of names for Bitcoin spot price source data.
+	"""
+	return list(_spot_sources.keys())
+
+
+def get_spots(timeout=SUBPERIOD, max_tries=SUBPERIODS):
+	"""
+	Returns a list of the spot prices
 	"""
 	tries = 0
 	while True:
@@ -45,7 +67,7 @@ def get_spots(spot_source_modules, timeout=SUBPERIOD, max_tries=SUBPERIODS):
 			break
 		try:
 			with concurrent.futures.ThreadPoolExecutor(max_workers=NETHREADS) as executor:
-				res = executor.map(lambda x: x.spot(), spot_source_modules, timeout=timeout)
+				res = executor.map(lambda x: x.spot(), _spot_sources.values(), timeout=timeout)
 			return res
 		except Exception as ex:
 			logger.exception(ex)
@@ -59,38 +81,39 @@ def write_rt():
 	"""
 	try:
 		# Gold Spots:
-		spots_usdxau = get_spots(gold.spot_source_modules)
+		# Struggling to snatch up realtime gold data.
+		apmex_spot = apmex.spot()
+		gold_spot = apmex_spot
 
 		# Bitcoin Spots:
-		spots_usdbtc = get_spots(bitcoin.spot_source_modules)
+		spot_source_names = get_spot_source_names()
+		spots_usd = get_spots()
+		spots = [s / gold_spot for s in spots_usd]
+		spot = statistics.mean(stats.filter_outliers(spots))
+		spot_usd = spot * gold_spot
 
 		# Network Stats:
-		blockchain_stats = bitcoin.blockchain.stats()
+		blockchain_stats = blockchain.stats()
 
 		# Storage:
 		dats = []
-		keys = []
+		for source, source_spot in zip(spot_source_names, spots):
+			dats += [(f"{source}_spot", source_spot)]
 
-		for source, source_spot in zip(gold.spot_source_names, spots_usdxau):
-			key = f"{source}_spot_usdxau"
-			keys += [key]
-			dats += [(key, source_spot)]
-
-		for source, source_spot in zip(bitcoin.spot_source_names, spots_usdbtc):
-			key = f"{source}_spot_usdbtc"
-			keys += [key]
-			dats += [(key, source_spot)]
-
-		keys += ["blockchain_stats", "rtdb_timestamp"]
 		dats += [
-			("blockchain_stats", blockchain_stats),
-			("rtdb_timestamp", int(time.time())),
-			("keys", keys),
+			# Gold:
+			("apmex_spot", apmex_spot),
+			("gold_spot", gold_spot),
+
+			# Bitcoin:
+			("spot", spot),
+			("spot_usd", spot_usd),
+			("blockchain_stats", blockchain_stats)
 		]
 
+		rtdb = rock.Rock("rtdb")
 		for dat in dats:
 			rtdb.put(dat[0], dat[1])
-
 	except Exception as ex:
 		time.sleep(4)
 		logger.exception(ex)

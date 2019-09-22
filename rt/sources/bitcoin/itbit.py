@@ -1,7 +1,9 @@
-# itBit Data Ingress
-import requests
+"""
+itBit Data Ingress
+"""
 
-from util import logger
+from util import web
+
 
 # itBit API Endpoints:
 base_uri = "https://api.itbit.com/v1/"
@@ -12,6 +14,6 @@ def spot(symbol="XBTUSD"):
 	itBit realtime prices.
 		symbol - [XBTUSD]
 	"""
-	resp = requests.get(base_uri + f"markets/{symbol}/ticker").json()
+	resp = web.get(base_uri + f"markets/{symbol}/ticker")
 	return float(resp["lastPrice"])
 

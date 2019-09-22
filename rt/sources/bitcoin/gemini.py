@@ -1,7 +1,9 @@
-# Gemini Data Ingress
-import requests
+"""
+Gemini Data Ingress
+"""
 
-from util import logger
+from util import web
+
 
 # Gemini API Endpoints:
 base_uri = "https://api.gemini.com/v1/"
@@ -12,6 +14,6 @@ def spot(symbol="btcusd"):
 	Gemini realtime prices.
 		symbol - [btcusd]
 	"""
-	resp = requests.get(base_uri + f"pubticker/{symbol}").json()
+	resp = web.get(base_uri + f"pubticker/{symbol}")
 	return float(resp["last"])
 
