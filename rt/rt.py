@@ -20,8 +20,7 @@ rtdb = rock.Rock("rtdb")
 
 
 # The period of the rt phase, collection must complete within the rt PERIOD:
-# Light can circle the planet almost twice, but not quite in this time:
-PERIOD = 14
+PERIOD = 8
 
 # Break the Period into this many sub intervals:
 SUBPERIODS = 2
@@ -100,6 +99,7 @@ def main():
 	"""
 	Main rt entry point.
 	"""
+	logger.info("rt started")
 	started = int(time.time())
 	while True:
 		try:
@@ -108,7 +108,9 @@ def main():
 			if int(time.time()) - started > 600:
 				logger.info("heartbeat")
 				started = int(time.time())
+			logger.info("<write_rt>")
 			write_rt()
+			logger.info("</write_rt>")
 			elapsed = int(time.time()) - elapsed
 			time.sleep(max(0, PERIOD - elapsed))
 		except Exception as ex:

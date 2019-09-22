@@ -46,20 +46,16 @@ class Rock:
 		self.db_name = db_name
 		self.db_path = os.path.join("/data", db_name)
 		self.conn = None
-		self.conn_start = 0
 
 
 	def connection(self):
 		"""
 		Store connection semi-ephemerally to avoid locks.
 		"""
-		max_conn_age = 8 # [seconds]
-		conn_age = int(time.time()) - self.conn_start
-		if (self.conn is None) or (conn_age > max_conn_age):
+		if self.conn is None:
 			conn_opts = rocksdb.Options(create_if_missing=True)
 			conn = rocksdb.DB(self.db_path, conn_opts)
 			self.conn = conn
-			self.conn_start = int(time.time())
 		return self.conn
 
 

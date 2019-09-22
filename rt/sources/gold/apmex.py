@@ -2,6 +2,8 @@
 APMEX Data Ingress
 """
 
+import cachetools.func
+
 from util import rock
 from util import web
 
@@ -10,6 +12,7 @@ from util import web
 base_uri = "https://widgets.apmex.com/widget/spotprice/"
 
 
+@cachetools.func.ttl_cache(ttl=60)
 def spot():
 	"""
 	APMEX USD/XAU spot.

@@ -7,6 +7,8 @@ script_src=http://www.lbma.org.uk/js/feeds.js
 feed_url=https://lbma.datanauts.co.uk/api/today/both.json
 """
 
+import cachetools.func
+
 from util import rock
 from util import web
 
@@ -15,6 +17,7 @@ from util import web
 base_uri = "https://lbma.datanauts.co.uk/api/"
 
 
+@cachetools.func.ttl_cache(ttl=3600)
 def spot():
 	"""
 	LBMA USD/XAU spot.

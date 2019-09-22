@@ -2,6 +2,8 @@
 KITCO Data Ingress
 """
 
+import cachetools.func
+
 from util import rock
 from util import web
 
@@ -10,6 +12,7 @@ from util import web
 base_uri = "https://www.kitco.com/"
 
 
+@cachetools.func.ttl_cache(ttl=600)
 def spot():
 	"""
 	KITCO USD/XAU spot.

@@ -11,7 +11,7 @@ _user_agent  = fake_useragent.UserAgent()
 
 # The timeout to start a response, not to finish:
 # Make slow apis explicit.
-DEFAULT_TIMEOUT = 1
+DEFAULT_TIMEOUT = 2
 
 
 def get(aurl, timeout=DEFAULT_TIMEOUT, headers=None, jsonify=True):

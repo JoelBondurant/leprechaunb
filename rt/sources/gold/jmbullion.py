@@ -2,6 +2,8 @@
 JM Bullion Data Ingress
 """
 
+import cachetools.func
+
 from util import rock
 from util import web
 
@@ -10,6 +12,7 @@ from util import web
 base_uri = "https://www.jmbullion.com/utilities/calculators/forex.json"
 
 
+@cachetools.func.ttl_cache(ttl=1200)
 def spot(symbol="USDXAU"):
 	"""
 	JM Bullion USD/XAU spot.
