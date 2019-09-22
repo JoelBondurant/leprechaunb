@@ -21,6 +21,13 @@ rtdb = rock.Rock("rtdb")
 rtdb_keys = rtdb.get("keys")
 
 
+periods = ["minutely", "daily"]
+for period in periods:
+	path = f"/data/tsdb/{period}"
+	if not os.path.exists(path):
+		os.makedirs(path)
+
+
 def ts_minutely():
 	logger.info("ts_minutely.started")
 	now = datetime.datetime.now().replace(second=0, microsecond=0)
@@ -29,15 +36,25 @@ def ts_minutely():
 			val = rtdb.get(key)
 			fname = f"/data/tsdb/minutely/{key}.parq"
 			if os.path.exists(fname):
+				logger.info("Append to: " + fname)
 				df = pd.read_parquet(fname)
 				nvals = len(df)
-				nowpie = {"date": now, "value": val}
+				if type(val) == dict:
+					nowpie = val
+					nowpie["date"] = now
+				else:
+					nowpie = {"date": now, "value": val}
 				df = df.append(nowpie, ignore_index=True)
 				df.drop_duplicates(subset=["date"], keep="last", inplace=True)
 				if len(df) != nvals:
 					df.to_parquet(fname)
 			else:
-				nowpie = {"date": [now], "value": [val]}
+				logger.info("Create: " + fname)
+				if type(val) == dict:
+					nowpie = {k:[v] for k,v in val.items()}
+					nowpie["date"] = [now]
+				else:
+					nowpie = {"date": [now], "value": [val]}
 				df = pd.DataFrame(nowpie)
 				df.to_parquet(fname)
 		except Exception as ex:
@@ -57,14 +74,23 @@ def ts_daily():
 			if os.path.exists(fname):
 				df = pd.read_parquet(fname)
 				nvals = len(df)
-				nowpie = {"date": now, "value": val}
+				if type(val) == dict:
+					nowpie = val
+					nowpie["date"] = now
+				else:
+					nowpie = {"date": now, "value": val}
 				df = df.append(nowpie, ignore_index=True)
 				df.date = pd.to_datetime(df.date)
 				df.drop_duplicates(subset=["date"], keep="first", inplace=True)
 				if len(df) != nvals:
 					df.to_parquet(fname)
 			else:
-				nowpie = {"date": [now], "value": [val]}
+				logger.info("Create: " + fname)
+				if type(val) == dict:
+					nowpie = {k:[v] for k,v in val.items()}
+					nowpie["date"] = [now]
+				else:
+					nowpie = {"date": [now], "value": [val]}
 				df = pd.DataFrame(nowpie)
 				df.date = pd.to_datetime(df.date)
 				df.to_parquet(fname)
@@ -79,7 +105,7 @@ def main():
 	"""
 	Main ts entry point.
 	"""
-	started = int(time.time())
+	started = int(time.time()) - 3600
 	while True:
 		try:
 			elapsed = int(time.time())
