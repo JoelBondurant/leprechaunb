@@ -13,6 +13,10 @@ from util import logger
 from util import rock
 
 
+# The period of the ts phase, time series writes must complete within the ts PERIOD:
+PERIOD = 30
+
+
 rtdb = rock.Rock("rtdb")
 rtdb_keys = rtdb.get("keys")
 
@@ -23,7 +27,7 @@ def ts_minutely():
 	for key in rtdb_keys:
 		try:
 			val = rtdb.get(key)
-			fname = f"/data/tsdb/{key}_minutely.parq"
+			fname = f"/data/tsdb/minutely/{key}.parq"
 			if os.path.exists(fname):
 				df = pd.read_parquet(fname)
 				nvals = len(df)
@@ -49,7 +53,7 @@ def ts_daily():
 	for key in rtdb_keys:
 		try:
 			val = rtdb.get(key)
-			fname = f"/data/tsdb/{key}_daily.parq"
+			fname = f"/data/tsdb/daily/{key}.parq"
 			if os.path.exists(fname):
 				df = pd.read_parquet(fname)
 				nvals = len(df)
@@ -70,17 +74,25 @@ def ts_daily():
 	logger.info("ts_daily.finished")
 
 
+
 def main():
 	"""
-	Main entry to ts.
+	Main ts entry point.
 	"""
-	logger.info("ts started.")
-	import schedule
-	schedule.every(30).seconds.do(ts_minutely)
-	schedule.every(20*60).seconds.do(ts_daily)
+	started = int(time.time())
 	while True:
-		schedule.run_pending()
-		time.sleep(1)
+		try:
+			elapsed = int(time.time())
+			time.sleep(1)
+			if int(time.time()) - started > 600:
+				logger.info("heartbeat")
+				ts_daily()
+				started = int(time.time())
+			ts_minutely()
+			elapsed = int(time.time()) - elapsed
+			time.sleep(max(0, PERIOD - elapsed))
+		except Exception as ex:
+			logger.exception(ex)
 
 
 if __name__ == "__main__":

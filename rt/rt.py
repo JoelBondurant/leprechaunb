@@ -100,14 +100,19 @@ def main():
 	"""
 	Main rt entry point.
 	"""
-	tcounter = 0
+	started = int(time.time())
 	while True:
-		time.sleep(PERIOD)
-		tcounter += PERIOD
-		if tcounter > 600:
-			tcounter = 0
-			logger.info("heartbeat")
-		write_rt()
+		try:
+			elapsed = int(time.time())
+			time.sleep(1)
+			if int(time.time()) - started > 600:
+				logger.info("heartbeat")
+				started = int(time.time())
+			write_rt()
+			elapsed = int(time.time()) - elapsed
+			time.sleep(max(0, PERIOD - elapsed))
+		except Exception as ex:
+			logger.exception(ex)
 
 
 if __name__ == "__main__":

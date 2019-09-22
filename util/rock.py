@@ -4,7 +4,8 @@ Generic key-value wrapper, implemented on RocksDB.
 import datetime
 import os
 import json
-from time import sleep
+import time
+
 
 import rocksdb
 
@@ -44,14 +45,22 @@ class Rock:
 		"""
 		self.db_name = db_name
 		self.db_path = os.path.join("/data", db_name)
+		self.conn = None
+		self.conn_start = 0
 
 
 	def connection(self):
 		"""
-		Store connection ephemerally to avoid locks.
+		Store connection semi-ephemerally to avoid locks.
 		"""
-		conn = rocksdb.DB(self.db_path, rocksdb.Options(create_if_missing=True))
-		return conn
+		max_conn_age = 8 # [seconds]
+		conn_age = int(time.time()) - self.conn_start
+		if (self.conn is None) or (conn_age > max_conn_age):
+			conn_opts = rocksdb.Options(create_if_missing=True)
+			conn = rocksdb.DB(self.db_path, conn_opts)
+			self.conn = conn
+			self.conn_start = int(time.time())
+		return self.conn
 
 
 	def listkeys(self, decode=True):
@@ -107,7 +116,7 @@ class Rock:
 				tries += 1
 				return self._get(akey, key_encode=key_encode, value_decode=value_decode)
 			except:
-				sleep(1)
+				time.sleep(1)
 				if tries > max_tries - 1:
 					raise
 
@@ -136,7 +145,7 @@ class Rock:
 				tries += 1
 				return self._multi_get(akeys, key_encode=key_encode, cast_func=cast_func)
 			except:
-				sleep(1)
+				time.sleep(1)
 				if tries > max_tries - 1:
 					raise
 
