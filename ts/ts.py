@@ -20,6 +20,9 @@ PERIOD = 30
 rtdb = rock.Rock("rtdb")
 rtdb_keys = rtdb.get("keys")
 
+with open("/data/tsdb/keys.json", "w") as fout:
+	json.dump(rtdb_keys, fout)
+
 
 periods = ["minutely", "daily"]
 for period in periods:
@@ -114,7 +117,9 @@ def main():
 				logger.info("heartbeat")
 				ts_daily()
 				started = int(time.time())
+			logger.info("<ts_minutely>")
 			ts_minutely()
+			logger.info("</ts_minutely>")
 			elapsed = int(time.time()) - elapsed
 			time.sleep(max(0, PERIOD - elapsed))
 		except Exception as ex:

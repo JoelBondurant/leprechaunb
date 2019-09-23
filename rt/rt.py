@@ -28,10 +28,6 @@ SUBPERIODS = 2
 # A subperiod/timeout for retry loops:
 SUBPERIOD = max(1, PERIOD // SUBPERIODS)
 
-# How bandy is the cloudness:
-NETHREADS = 16
-
-
 
 def get_spots(spot_source_modules, timeout=SUBPERIOD, max_tries=SUBPERIODS):
 	"""
@@ -43,7 +39,8 @@ def get_spots(spot_source_modules, timeout=SUBPERIOD, max_tries=SUBPERIODS):
 		if tries > max_tries:
 			break
 		try:
-			with concurrent.futures.ThreadPoolExecutor(max_workers=NETHREADS) as executor:
+			mw = len(spot_source_modules)
+			with concurrent.futures.ThreadPoolExecutor(max_workers=mw) as executor:
 				res = executor.map(lambda x: x.spot(), spot_source_modules, timeout=timeout)
 			return res
 		except Exception as ex:
