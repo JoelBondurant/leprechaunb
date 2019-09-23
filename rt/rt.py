@@ -10,6 +10,7 @@ import time
 
 from util import logger
 from util import rock
+from util import stats
 
 # Data sources:
 from sources import gold
@@ -57,9 +58,15 @@ def write_rt():
 	try:
 		# Gold Spots:
 		spots_usdxau = get_spots(gold.spot_source_modules)
+		spot_usdxau = stats.robust_mean(spots_usdxau)
 
 		# Bitcoin Spots:
 		spots_usdbtc = get_spots(bitcoin.spot_source_modules)
+		spot_usdbtc = stats.robust_mean(spots_usdbtc)
+
+		spot_btcxau = spot_usdbtc / spot_usdxau
+		spot_xaubtc = spot_usdxau / spot_usdbtc
+
 
 		# Network Stats:
 		blockchain_stats = bitcoin.blockchain.stats()
@@ -78,10 +85,18 @@ def write_rt():
 			keys += [key]
 			dats += [(key, source_spot)]
 
-		keys += ["blockchain_stats", "rtdb_timestamp"]
-		dats += [
+		extra_dats += [
+			("spot_usdxau", spot_usdxau),
+			("spot_usdbtc",spot_usdbtc),
+			("spot_btcxau", spot_btcxau),
+			("spot_xaubtc", spot_xaubtc),
 			("blockchain_stats", blockchain_stats),
 			("rtdb_timestamp", int(time.time())),
+		]
+
+		dats += extra_dats
+		keys += [x[0] for x in extra_dats]
+		dats += [
 			("keys", keys),
 		]
 

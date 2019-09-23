@@ -26,7 +26,7 @@ def rtdb():
 rtdb_keys = rtdb().get("keys")
 
 
-with open("/data/tsdb/keys.json", "w") as fout:
+with open("/data/tsdb/rtdb_keys.json", "w") as fout:
 	json.dump(rtdb_keys, fout)
 
 

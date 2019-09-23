@@ -12,7 +12,7 @@ import pandas as pd
 from util import logger
 
 
-with open("/data/tsdb/keys.json", "r") as fin:
+with open("/data/tsdb/rtdb_keys.json", "r") as fin:
 	rtdb_keys = json.load(fin)
 
 
@@ -20,7 +20,7 @@ spot_keys = [x for x in rtdb_keys if "spot" in x]
 keys = rtdb_keys.copy()
 
 
-def key_minutely():
+def keys_minutely():
 	"""
 	Maintain the minutely key files.
 	"""
@@ -79,7 +79,7 @@ def stats_minutely():
 
 def minute_arrow():
 	stats_minutely()
-	spot_minutely()
+	keys_minutely()
 	spots_minutely()
 
 
