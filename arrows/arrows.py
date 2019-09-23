@@ -59,6 +59,10 @@ def main():
 	Main entry to arrows.
 	"""
 	logger.info("arrows started.")
+	time.sleep(1)
+	rt_arrow()
+	minute_arrow()
+	day_arrow()
 	import schedule
 	schedule.every(10).seconds.do(rt_arrow)
 	schedule.every(20).seconds.do(minute_arrow)
@@ -67,9 +71,6 @@ def main():
 	while True:
 		schedule.run_pending()
 		time.sleep(1)
-		if time.time() - t0 > 120:
-			t0 = time.time()
-			logger.info("heartbeat")
 
 
 if __name__ == "__main__":

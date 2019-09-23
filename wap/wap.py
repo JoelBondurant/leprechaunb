@@ -75,9 +75,13 @@ def index():
 
 	# Time windowing for charts, this should go in some vega json format:
 	now = datetime.datetime.now().replace(second=0, microsecond=0)
-	scroller_start = (now + datetime.timedelta(minutes=-7*24*60)).isoformat()
-	scroller_end = (now + datetime.timedelta(minutes=61)).isoformat()
-	multiscroller_start = (now + datetime.timedelta(hours=-25)).isoformat()
+	#scroller_start = (now + datetime.timedelta(minutes=-7*24*60)).isoformat()
+	#scroller_end = (now + datetime.timedelta(minutes=61)).isoformat()
+	#multiscroller_start = (now + datetime.timedelta(hours=-25)).isoformat()
+	#multiscroller_end = (now + datetime.timedelta(minutes=1)).isoformat()
+	scroller_start = (now + datetime.timedelta(minutes=-60)).isoformat()
+	scroller_end = (now + datetime.timedelta(minutes=1)).isoformat()
+	multiscroller_start = (now + datetime.timedelta(minutes=-60)).isoformat()
 	multiscroller_end = (now + datetime.timedelta(minutes=1)).isoformat()
 
 	content.update({

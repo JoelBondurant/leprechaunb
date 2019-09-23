@@ -141,9 +141,9 @@ def main():
 	"""
 	logger.info("ts started.")
 	import schedule
-	schedule.every(10).seconds(ts_rt)
-	schedule.every(20).seconds(ts_minutely)
-	schedule.every(600).seconds(ts_daily)
+	schedule.every(10).seconds.do(ts_rt)
+	schedule.every(20).seconds.do(ts_minutely)
+	schedule.every(600).seconds.do(ts_daily)
 	t0 = time.time()
 	while True:
 		time.sleep(1)

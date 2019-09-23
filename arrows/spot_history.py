@@ -46,7 +46,7 @@ def spots_minutely():
 	##############
 	gold_spot_keys = gold_spot_keys.copy()
 	df = pd.read_parquet(f"/data/tsdb/minutely/{gold_spot_keys[0]}.parq")
-	df["source"] = gold_spot_keys[0]
+	df["source"] = gold_spot_keys[0].split("_")[0]
 	for spot_key in gold_spot_keys[1:]:
 		df = pd.concat([df, pd.read_parquet(f"/data/tsdb/minutely/{spot_key}.parq")], ignore_index=True, sort=True)
 		source = spot_key.split("_")[0]
@@ -65,7 +65,7 @@ def spots_minutely():
 	bitcoin_spot_keys = bitcoin_spot_keys.copy()
 	bitcoin_spot_keys = [x for x in bitcoin_spot_keys if "bisq" not in x]
 	df = pd.read_parquet(f"/data/tsdb/minutely/{bitcoin_spot_keys[0]}.parq")
-	df["source"] = bitcoin_spot_keys[0]
+	df["source"] = bitcoin_spot_keys[0].split("_")[0]
 	for spot_key in bitcoin_spot_keys[1:]:
 		df = pd.concat([df, pd.read_parquet(f"/data/tsdb/minutely/{spot_key}.parq")], ignore_index=True, sort=True)
 		source = spot_key.split("_")[0]
@@ -86,7 +86,7 @@ def stats_minutely():
 	Maintain stats_minutely.csv.
 	"""
 	logger.info("<stats_minutely>")
-	df = pd.read_parquet("/data/tsdb/blockchain_stats_minutely.parq")
+	df = pd.read_parquet("/data/tsdb/minutely/blockchain_stats.parq")
 	keep_stats = [
 		"date",
 		"timestamp",

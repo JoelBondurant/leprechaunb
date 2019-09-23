@@ -43,7 +43,7 @@
 			<td>
 				<div class="tooltip">
 					{{(10**8 * spot_btcxau) | round | int}}
-					<span class="tooltiptext">Sats per gram of Gold</span>
+					<span class="tooltiptext">Sats per Gram of Gold</span>
 				</div>
 			</td>
 			<td data-value="{{(binance_spot_xaubtc - spot_xaubtc)|round(2)}}"></td>
@@ -80,7 +80,7 @@
 			"height": 230,
 			"padding": 8,
 			"data": {
-				"url": "arrows/spot_daily.csv"
+				"url": "arrows/spot_xaubtc_daily.csv"
 			},
 			"title": {
 				"xtext": "Bitcoin Price History",
@@ -128,7 +128,7 @@
 					"type": "quantitative",
 					"scale": {"type":"log"},
 					"axis": {
-						"title": "AU[gm]",
+						"title": "gm{AU}",
 						"titleFontSize": 14,
 						"titleAngle": 0,
 						"titleX": 30,
@@ -155,7 +155,7 @@
 			"height": 260,
 			"padding": 8,
 			"data": {
-				"url": "arrows/spot_minutely.csv"
+				"url": "arrows/spot_xaubtc_minutely.csv"
 			},
 			"autosize": {
 				"type": "fit",
@@ -192,7 +192,7 @@
 					"field": "value",
 					"type": "quantitative",
 					"axis": {
-						"title": "AU[gm]",
+						"title": "gm{AU}",
 						"titleFontSize": 14,
 						"titleAngle": 0,
 						"titleX": 30,
@@ -230,7 +230,7 @@
 			"height": 240,
 			"padding": 8,
 			"data": {
-				"url": "arrows/spots_minutely.csv"
+				"url": "arrows/spots_xaubtc_minutely.csv"
 			},
 			"autosize": {
 				"type": "fit",
@@ -254,7 +254,7 @@
 					"field": "value",
 					"type": "quantitative",
 					"axis": {
-						"title": "AU[gm]",
+						"title": "gm{AU}",
 						"titleFontSize": 14,
 						"titleAngle": 0,
 						"titleX": 30,
@@ -294,7 +294,7 @@
 			"padding": 8,
 			"data": {
 				"name": "spots_minutely",
-				"url": "arrows/spots_minutely.csv"
+				"url": "arrows/spots_xaubtc_minutely.csv"
 			},
 			"autosize": {
 				"type": "fit",
@@ -327,7 +327,7 @@
 					"field": "value",
 					"type": "quantitative",
 					"axis": {
-						"title": "AU[gm]",
+						"title": "gm{AU}",
 						"titleFontSize": 14,
 						"titleAngle": 0,
 						"titleX": 30,
@@ -532,7 +532,7 @@
 			</td>
 			<td>
 			<span style="color:#666;">
-				BTC: ${{(spot_xaubtc) | round(2)}} &nbsp;/&nbsp; AU: ${{(spot_btcxau) | round(2)}}
+				BTC: ${{(spot_usdbtc) | round(2)}} &nbsp;/&nbsp; AU: ${{(spot_usdxau) | round(2)}}
 			</span></td>
 		</tr>
 	</table>
