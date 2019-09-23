@@ -6,8 +6,29 @@ import time
 import concurrent.futures
 
 from util import logger
+from util import rock
 
 import spot_history
+
+
+
+def tsdbrocks():
+	return rock.Rock("tsdbrocks")
+
+
+def adbrocks():
+	return rock.Rock("adbrocks")
+
+
+def rt_arrow():
+	logger.info("<rt_arrow>")
+	try:
+		rtdb_data = tsdbrocks().get("rtdb_data")
+		adbrocks().put("rtdb_data", rtdb_data)
+	except Exception as ex:
+		logger.exception(ex, "Root rt_arrow exception handler:")
+		time.sleep(4)
+	logger.info("</rt_arrow>")
 
 
 def minute_arrow():
@@ -39,6 +60,7 @@ def main():
 	"""
 	logger.info("arrows started.")
 	import schedule
+	schedule.every(10).seconds.do(rt_arrow)
 	schedule.every(20).seconds.do(minute_arrow)
 	schedule.every(120).seconds.do(day_arrow)
 	t0 = time.time()

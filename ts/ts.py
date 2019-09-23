@@ -15,12 +15,23 @@ from util import rock
 
 
 # The period of the ts phase, time series writes must complete within the ts PERIOD:
-PERIOD = 30
+PERIOD = 20
 
 
 def rtdb():
-	rtdb = rock.Rock("rtdb")
-	return rtdb
+	"""
+	Get a connection to rtdb.
+	"""
+	db = rock.Rock("rtdb")
+	return db
+
+
+def tsdbrocks():
+	"""
+	Get a connection to tsdbrocks.
+	"""
+	db = rock.Rock("tsdbrocks")
+	return db
 
 
 rtdb_keys = rtdb().get("keys")
@@ -37,8 +48,22 @@ for period in periods:
 		os.makedirs(path)
 
 
+def ts_rt():
+	"""
+	Pump rt data down the pipeline.
+	"""
+	logger.info("<ts_rt>")
+	global rtdb_keys
+	rtdb_data = {}
+	for key in rtdb_keys:
+		rtdb_data[key] = rtdb().get(key)
+	rtdb_data["timestamp"] = int(time.time())
+	tsdbrocks().put("rtdb_data", rtdb_data)
+	logger.info("</ts_rt>")
+
+
 def ts_minutely():
-	logger.info("ts_minutely.started")
+	logger.info("<ts_minutely>")
 	now = datetime.datetime.now().replace(second=0, microsecond=0)
 	for key in rtdb_keys:
 		try:
@@ -69,12 +94,12 @@ def ts_minutely():
 		except Exception as ex:
 			logger.info("ts_minutely.exception")
 			logger.exception(ex)
-	logger.info("ts_minutely.finished")
+	logger.info("</ts_minutely>")
 
 
 
 def ts_daily():
-	logger.info("ts_daily.started")
+	logger.info("<ts_daily>")
 	now = datetime.datetime.now().date()
 	for key in rtdb_keys:
 		try:
@@ -106,7 +131,7 @@ def ts_daily():
 		except Exception as ex:
 			logger.info("ts_daily.exception")
 			logger.exception(ex)
-	logger.info("ts_daily.finished")
+	logger.info("</ts_daily>")
 
 
 
@@ -114,22 +139,18 @@ def main():
 	"""
 	Main ts entry point.
 	"""
-	started = int(time.time()) - 3600
+	logger.info("ts started.")
+	import schedule
+	schedule.every(10).seconds(ts_rt)
+	schedule.every(20).seconds(ts_minutely)
+	schedule.every(600).seconds(ts_daily)
+	t0 = time.time()
 	while True:
-		try:
-			elapsed = int(time.time())
-			time.sleep(1)
-			if int(time.time()) - started > 600:
-				logger.info("heartbeat")
-				ts_daily()
-				started = int(time.time())
-			logger.info("<ts_minutely>")
-			ts_minutely()
-			logger.info("</ts_minutely>")
-			elapsed = int(time.time()) - elapsed
-			time.sleep(max(0, PERIOD - elapsed))
-		except Exception as ex:
-			logger.exception(ex)
+		time.sleep(1)
+		schedule.run_pending()
+		if time.time() - t0 > 120:
+			t0 = time.time()
+			logger.info("heartbeat")
 
 
 if __name__ == "__main__":

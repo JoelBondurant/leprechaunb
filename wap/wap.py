@@ -4,7 +4,15 @@ import json
 import uuid
 import time
 
-from flask import Flask, request, redirect, send_from_directory, render_template, make_response
+from flask import (
+	Flask,
+	request,
+	redirect,
+	send_from_directory,
+	render_template,
+	make_response,
+)
+from flask.logging import default_handler
 
 from util import logger
 from util import rock
@@ -12,10 +20,14 @@ from util import rock
 
 COOKIES = True
 
-
+logger.addHandler(default_handler)
 logger.info("wap started.")
 app = Flask("bitcoinarrows", static_url_path="", template_folder="rws")
 
+
+
+def adbrocks():
+	return rock.Rock("adbrocks")
 
 
 @app.errorhandler(404)
@@ -50,15 +62,16 @@ def index():
 
 	content = {}
 
-	stats = rtdb.get("blockchain_stats")
+	# RT Data:
+	rtdb_data = adbrocks().get("rtdb_data")
+	content.update(rtdb_data)
+
+	stats = rtdb_data["blockchain_stats"]
 	keep_stats = ["trade_volume_btc", "blocks_size", "hash_rate", "difficulty", "miners_revenue_btc", "n_blocks_total", "minutes_between_blocks"]
 	stats = {k: stats[k] for k in keep_stats}
 	stats = to_table(stats, table_id="stats")
 	content["stats"] = stats
-
-	for source in sources:
-		val = rtdb.get(source)
-		content[source] = val
+	app.logger.info("content:" + str(content))
 
 	# Time windowing for charts, this should go in some vega json format:
 	now = datetime.datetime.now().replace(second=0, microsecond=0)
@@ -164,9 +177,13 @@ def arrow(arrow_name):
 
 @app.after_request
 def add_header(response):
+	"""
+	Cache middleware for nginx.
+	"""
 	response.headers["Cache-Control"] = "public, min-fresh=10, max-age=3600"
 	response.headers["Pragma"] = "no-cache"
 	response.headers["Expires"] = "10"
 	return response
+
 
 

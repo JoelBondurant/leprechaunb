@@ -36,29 +36,29 @@
 		<tr>
 			<td>
 				<div class="tooltip">
-					{{spot | round(2)}}
+					{{spot_xaubtc | round(2)}}
 					<span class="tooltiptext">Grams of Gold per Bitcoin</span>
 				</div>
 			</td>
 			<td>
 				<div class="tooltip">
-					{{(10**8/spot) | round | int}}
+					{{(10**8 * spot_btcxau) | round | int}}
 					<span class="tooltiptext">Sats per gram of Gold</span>
 				</div>
 			</td>
-			<td data-value="{{(binance_spot - spot)|round(2)}}"></td>
-			<td data-value="{{(bisq_spot - spot)|round(2)}}"></td>
-			<td data-value="{{(bitfinex_spot - spot)|round(2)}}"></td>
-			<td data-value="{{(bitstamp_spot - spot)|round(2)}}"></td>
-			<td data-value="{{(bittrex_spot - spot)|round(2)}}"></td>
-			<td data-value="{{(btse_spot - spot)|round(2)}}"></td>
-			<td data-value="{{(cex_spot - spot)|round(2)}}"></td>
-			<td data-value="{{(coinbase_spot - spot)|round(2)}}"></td>
-			<td data-value="{{(gemini_spot - spot)|round(2)}}"></td>
-			<td data-value="{{(huobi_spot - spot)|round(2)}}"></td>
-			<td data-value="{{(itbit_spot - spot)|round(2)}}"></td>
-			<td data-value="{{(kraken_spot - spot)|round(2)}}"></td>
-			<td data-value="{{(poloniex_spot - spot)|round(2)}}"></td>
+			<td data-value="{{(binance_spot_xaubtc - spot_xaubtc)|round(2)}}"></td>
+			<td data-value="{{(bisq_spot_xaubtc - spot_xaubtc)|round(2)}}"></td>
+			<td data-value="{{(bitfinex_spot_xaubtc - spot_xaubtc)|round(2)}}"></td>
+			<td data-value="{{(bitstamp_spot_xaubtc - spot_xaubtc)|round(2)}}"></td>
+			<td data-value="{{(bittrex_spot_xaubtc - spot_xaubtc)|round(2)}}"></td>
+			<td data-value="{{(btse_spot_xaubtc - spot_xaubtc)|round(2)}}"></td>
+			<td data-value="{{(cex_spot_xaubtc - spot_xaubtc)|round(2)}}"></td>
+			<td data-value="{{(coinbase_spot_xaubtc - spot_xaubtc)|round(2)}}"></td>
+			<td data-value="{{(gemini_spot_xaubtc - spot_xaubtc)|round(2)}}"></td>
+			<td data-value="{{(huobi_spot_xaubtc - spot_xaubtc)|round(2)}}"></td>
+			<td data-value="{{(itbit_spot_xaubtc - spot_xaubtc)|round(2)}}"></td>
+			<td data-value="{{(kraken_spot_xaubtc - spot_xaubtc)|round(2)}}"></td>
+			<td data-value="{{(poloniex_spot_xaubtc - spot_xaubtc)|round(2)}}"></td>
 		</tr>
 	</table>
 	</div>
@@ -532,7 +532,7 @@
 			</td>
 			<td>
 			<span style="color:#666;">
-				BTC: ${{(spot * gold_spot) | round(2)}} &nbsp;/&nbsp; AU: ${{(gold_spot) | round(2)}}
+				BTC: ${{(spot_xaubtc) | round(2)}} &nbsp;/&nbsp; AU: ${{(spot_btcxau) | round(2)}}
 			</span></td>
 		</tr>
 	</table>

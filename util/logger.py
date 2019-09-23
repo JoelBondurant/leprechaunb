@@ -38,7 +38,7 @@ class Logger:
 		return caller
 
 	def __init__(self, level = None):
-		#print(TermColor.BOLD+'NOTICE:'+TermColor.WARNING+' analyticobjects.util.logger.init called.'+TermColor.ENDC)
+		#print(TermColor.BOLD+'NOTICE:'+TermColor.WARNING+' util.logger.init called.'+TermColor.ENDC)
 		self.datestamp = datetime.datetime.today().date()
 		caller = Logger.introspect_caller()
 		logr = logging.getLogger(caller)
@@ -62,6 +62,9 @@ class Logger:
 		consolehandler.setFormatter(formatter)
 		logr.addHandler(consolehandler)
 		self.logr = logr
+
+	def addHandler(self, ahandler):
+		self.logr.addHandler(ahandler)
 
 	def info(self, msg):
 		self.logr.info(str(msg))
@@ -119,6 +122,9 @@ def pre():
 			_logr.logr.setLevel(logging.DEBUG)
 		elif env_level == 'NOTSET':
 			_logr.logr.setLevel(logging.NOTSET)
+
+def addHandler(ahandler):
+	_logr.addHandler(ahandler)
 
 def info(msg):
 	pre()
