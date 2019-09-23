@@ -20,6 +20,7 @@ def minute_arrow():
 		time.sleep(4)
 	logger.info("</minute_arrow>")
 
+
 def day_arrow():
 	logger.info("<day_arrow>")
 	try:
@@ -29,7 +30,6 @@ def day_arrow():
 		logger.exception(ex, "Root day_arrow exception handler:")
 		time.sleep(4)
 	logger.info("</day_arrow>")
-
 
 
 

@@ -65,8 +65,13 @@ def write_rt():
 		#logger.info("spots_usdbtc" + str(spots_usdbtc))
 		spot_usdbtc = stats.robust_mean(spots_usdbtc)
 
+		# Average Spot:
 		spot_xaubtc = spot_usdbtc / spot_usdxau
-		spot_btcxau = spot_usdxau / spot_usdbtc
+		spot_btcxau = 1.0 / spot_xaubtc
+
+		# Purge terrorism units:
+		spots_xaubtc = [x/spot_usdxau for x in spots_usdbtc]
+		spots_btcxau = [1.0/x for x in spots_xaubtc]
 
 		# Network Stats:
 		blockchain_stats = bitcoin.blockchain.stats()
@@ -75,13 +80,13 @@ def write_rt():
 		dats = []
 		keys = []
 
-		for source, source_spot in zip(gold.spot_source_names, spots_usdxau):
-			key = f"{source}_spot_usdxau"
+		for source, source_spot in zip(gold.spot_source_names, spots_btcxau):
+			key = f"{source}_spot_btcxau"
 			keys += [key]
 			dats += [(key, source_spot)]
 
-		for source, source_spot in zip(bitcoin.spot_source_names, spots_usdbtc):
-			key = f"{source}_spot_usdbtc"
+		for source, source_spot in zip(bitcoin.spot_source_names, spots_xaubtc):
+			key = f"{source}_spot_xaubtc"
 			keys += [key]
 			dats += [(key, source_spot)]
 
