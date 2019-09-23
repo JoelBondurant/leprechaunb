@@ -18,7 +18,7 @@ from sources import bitcoin
 
 
 def rtdb():
-	return rock.Rock("rtdb") 
+	return rock.Rock("rtdb")
 
 
 # The period of the rt phase, collection must complete within the rt PERIOD:
@@ -44,11 +44,10 @@ def get_spots(spot_source_modules, timeout=SUBPERIOD, max_tries=SUBPERIODS):
 			mw = len(spot_source_modules)
 			with concurrent.futures.ThreadPoolExecutor(max_workers=mw) as executor:
 				res = executor.map(lambda x: x.spot(), spot_source_modules, timeout=timeout)
-			return res
+			return list(res)
 		except Exception as ex:
 			logger.exception(ex)
 			time.sleep(1)
-		
 
 
 def write_rt():
@@ -58,15 +57,16 @@ def write_rt():
 	try:
 		# Gold Spots:
 		spots_usdxau = get_spots(gold.spot_source_modules)
+		#logger.info("spots_usdxau" + str(spots_usdxau))
 		spot_usdxau = stats.robust_mean(spots_usdxau)
 
 		# Bitcoin Spots:
 		spots_usdbtc = get_spots(bitcoin.spot_source_modules)
+		#logger.info("spots_usdbtc" + str(spots_usdbtc))
 		spot_usdbtc = stats.robust_mean(spots_usdbtc)
 
-		spot_btcxau = spot_usdbtc / spot_usdxau
-		spot_xaubtc = spot_usdxau / spot_usdbtc
-
+		spot_xaubtc = spot_usdbtc / spot_usdxau
+		spot_btcxau = spot_usdxau / spot_usdbtc
 
 		# Network Stats:
 		blockchain_stats = bitcoin.blockchain.stats()
@@ -85,7 +85,7 @@ def write_rt():
 			keys += [key]
 			dats += [(key, source_spot)]
 
-		extra_dats += [
+		extra_dats = [
 			("spot_usdxau", spot_usdxau),
 			("spot_usdbtc",spot_usdbtc),
 			("spot_btcxau", spot_btcxau),
@@ -102,6 +102,7 @@ def write_rt():
 
 		db = rtdb()
 		for dat in dats:
+			#logger.info("rtdb.put: " + dat[0])
 			db.put(dat[0], dat[1])
 
 	except Exception as ex:

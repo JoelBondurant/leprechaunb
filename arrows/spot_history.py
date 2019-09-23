@@ -73,7 +73,7 @@ def stats_minutely():
 	]
 	df = df[keep_stats]
 	df["log_hash_rate"] = df.hash_rate.apply(math.log10)
-	df.to_csv("/data/arrows/stats_minutely.csv", index=False)
+	df.to_csv("/data/adbcsv/stats_minutely.csv", index=False)
 	logger.info("stats minutely finished.")
 
 
