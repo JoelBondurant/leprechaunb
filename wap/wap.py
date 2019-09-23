@@ -71,7 +71,7 @@ def index():
 	stats = {k: stats[k] for k in keep_stats}
 	stats = to_table(stats, table_id="stats")
 	content["stats"] = stats
-	app.logger.info("content:" + str(content))
+	#app.logger.info("content:" + str(content))
 
 	# Time windowing for charts, this should go in some vega json format:
 	now = datetime.datetime.now().replace(second=0, microsecond=0)
