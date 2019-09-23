@@ -106,13 +106,13 @@ class Rock:
 
 	def get(self, akey, key_encode=True, value_decode=True):
 		tries = 0
-		max_tries = 10
+		max_tries = 30
 		while tries < max_tries:
 			try:
 				tries += 1
 				return self._get(akey, key_encode=key_encode, value_decode=value_decode)
 			except:
-				time.sleep(1)
+				time.sleep(0.1)
 				if tries > max_tries - 1:
 					raise
 
@@ -135,13 +135,13 @@ class Rock:
 
 	def multi_get(self, akeys, key_encode=True, cast_func=None):
 		tries = 0
-		max_tries = 10
+		max_tries = 30
 		while tries < max_tries:
 			try:
 				tries += 1
 				return self._multi_get(akeys, key_encode=key_encode, cast_func=cast_func)
 			except:
-				time.sleep(1)
+				time.sleep(0.1)
 				if tries > max_tries - 1:
 					raise
 

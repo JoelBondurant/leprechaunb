@@ -16,11 +16,12 @@ from sources import gold
 from sources import bitcoin
 
 
-rtdb = rock.Rock("rtdb")
+def rtdb():
+	return rock.Rock("rtdb") 
 
 
 # The period of the rt phase, collection must complete within the rt PERIOD:
-PERIOD = 8
+PERIOD = 10
 
 # Break the Period into this many sub intervals:
 SUBPERIODS = 2
@@ -84,8 +85,9 @@ def write_rt():
 			("keys", keys),
 		]
 
+		db = rtdb()
 		for dat in dats:
-			rtdb.put(dat[0], dat[1])
+			db.put(dat[0], dat[1])
 
 	except Exception as ex:
 		time.sleep(4)

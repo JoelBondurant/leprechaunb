@@ -10,7 +10,7 @@ from util import rock
 class TestRock(unittest.TestCase):
 
 	def test_hammer(self):
-		tr = rock.Rock("tr")
+		tr = rock.Rock("testrock")
 		N = 1000
 		for idx in range(N):
 			tr.put(f"key{idx}", idx)

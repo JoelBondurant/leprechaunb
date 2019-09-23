@@ -6,24 +6,29 @@ import time
 import concurrent.futures
 
 from util import logger
-import price_history
+
+import spot_history
 
 
 def minute_arrow():
+	logger.info("<minute_arrow>")
 	try:
 		with concurrent.futures.ProcessPoolExecutor() as executor:
-			executor.submit(price_history.minute_arrow)
+			executor.submit(spot_history.minute_arrow)
 	except Exception as ex:
 		logger.exception(ex, "Root minute_arrow exception handler:")
 		time.sleep(4)
+	logger.info("</minute_arrow>")
 
 def day_arrow():
+	logger.info("<day_arrow>")
 	try:
 		with concurrent.futures.ProcessPoolExecutor() as executor:
-			executor.submit(price_history.day_arrow)
+			executor.submit(spot_history.day_arrow)
 	except Exception as ex:
 		logger.exception(ex, "Root day_arrow exception handler:")
 		time.sleep(4)
+	logger.info("</day_arrow>")
 
 
 

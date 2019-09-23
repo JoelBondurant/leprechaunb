@@ -17,32 +17,6 @@ logger.info("wap started.")
 app = Flask("bitcoinarrows", static_url_path="", template_folder="rws")
 
 
-rtdb = rock.Rock("rtdb")
-
-
-sources = [
-	# Bitcoin spots:
-	"binance_spot",
-	"bisq_spot",
-	"bitfinex_spot",
-	"bitstamp_spot",
-	"bittrex_spot",
-	"btse_spot",
-	"cex_spot",
-	"coinbase_spot",
-	"gemini_spot",
-	"huobi_spot",
-	"itbit_spot",
-	"kraken_spot",
-	"poloniex_spot",
-	# Gold spots:
-	"apmex_spot",
-	"gold_spot",
-	# Bitcoin:
-	"spot",
-	"spot_usd"
-]
-
 
 @app.errorhandler(404)
 def awol(err):
@@ -182,7 +156,10 @@ def arrow(arrow_name):
 	arrow loader (png/html).
 	arrow_name - the filename to load.
 	"""
-	return send_from_directory("/data/arrows", arrow_name)
+	if arrow_name.endswith(".csv"):
+		return send_from_directory("/data/adbcsv", arrow_name)
+	else:
+		return render_template("404.html"), 404
 
 
 @app.after_request

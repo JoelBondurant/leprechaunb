@@ -4,6 +4,7 @@ Time series builder.
 """
 
 import os
+import json
 import time
 import datetime
 
@@ -17,8 +18,13 @@ from util import rock
 PERIOD = 30
 
 
-rtdb = rock.Rock("rtdb")
-rtdb_keys = rtdb.get("keys")
+def rtdb():
+	rtdb = rock.Rock("rtdb")
+	return rtdb
+
+
+rtdb_keys = rtdb().get("keys")
+
 
 with open("/data/tsdb/keys.json", "w") as fout:
 	json.dump(rtdb_keys, fout)
@@ -36,7 +42,7 @@ def ts_minutely():
 	now = datetime.datetime.now().replace(second=0, microsecond=0)
 	for key in rtdb_keys:
 		try:
-			val = rtdb.get(key)
+			val = rtdb().get(key)
 			fname = f"/data/tsdb/minutely/{key}.parq"
 			if os.path.exists(fname):
 				logger.info("Append to: " + fname)
@@ -72,7 +78,7 @@ def ts_daily():
 	now = datetime.datetime.now().date()
 	for key in rtdb_keys:
 		try:
-			val = rtdb.get(key)
+			val = rtdb().get(key)
 			fname = f"/data/tsdb/daily/{key}.parq"
 			if os.path.exists(fname):
 				df = pd.read_parquet(fname)
