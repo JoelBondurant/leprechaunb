@@ -2,6 +2,8 @@
 Coinbase Data Ingress
 """
 
+import cachetools.func
+
 from util import web
 
 
@@ -9,6 +11,7 @@ from util import web
 base_uri = "https://api.coinbase.com/v2/"
 
 
+@cachetools.func.ttl_cache(ttl=10)
 def spot(endpoint="spot", currency="USD"):
 	"""
 	Coinbase realtime prices.

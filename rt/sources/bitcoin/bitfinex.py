@@ -1,5 +1,7 @@
 # Bitfinex Data Ingress
 
+import cachetools.func
+
 from util import web
 
 
@@ -7,6 +9,7 @@ from util import web
 base_uri = "https://api-pub.bitfinex.com/v2/"
 
 
+@cachetools.func.ttl_cache(ttl=10)
 def spot(ticker="tBTCUSD"):
 	"""
 	Bitfinex realtime prices.

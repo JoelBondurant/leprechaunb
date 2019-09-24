@@ -2,6 +2,8 @@
 Gemini Data Ingress
 """
 
+import cachetools.func
+
 from util import web
 
 
@@ -9,6 +11,7 @@ from util import web
 base_uri = "https://api.gemini.com/v1/"
 
 
+@cachetools.func.ttl_cache(ttl=10)
 def spot(symbol="btcusd"):
 	"""
 	Gemini realtime prices.

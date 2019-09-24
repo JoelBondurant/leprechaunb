@@ -2,6 +2,8 @@
 Poloniex Data Ingress
 """
 
+import cachetools.func
+
 from util import web
 
 
@@ -9,6 +11,7 @@ from util import web
 base_uri = "https://poloniex.com/public"
 
 
+@cachetools.func.ttl_cache(ttl=10)
 def spot(symbol="USDT_BTC"):
 	"""
 	Poloniex realtime prices.

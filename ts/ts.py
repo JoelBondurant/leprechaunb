@@ -14,10 +14,6 @@ from util import logger
 from util import rock
 
 
-# The period of the ts phase, time series writes must complete within the ts PERIOD:
-PERIOD = 20
-
-
 def peek():
 	"""
 	Interactive debugging in prod...
@@ -128,16 +124,13 @@ def main():
 	"""
 	logger.info("ts started.")
 	import schedule
-	schedule.every(10).seconds.do(ts_rt)
-	schedule.every(20).seconds.do(ts_minutely)
-	schedule.every(600).seconds.do(ts_daily)
+	schedule.every(11).seconds.do(ts_rt)
+	schedule.every(21).seconds.do(ts_minutely)
+	schedule.every(601).seconds.do(ts_daily)
 	t0 = time.time()
 	while True:
 		time.sleep(1)
 		schedule.run_pending()
-		if time.time() - t0 > 120:
-			t0 = time.time()
-			logger.info("heartbeat")
 
 
 if __name__ == "__main__":

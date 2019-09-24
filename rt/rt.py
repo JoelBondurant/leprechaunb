@@ -119,7 +119,7 @@ def write_rt():
 			rock.rocks("rtdb").put(dat[0], dat[1])
 
 	except Exception as ex:
-		time.sleep(4)
+		time.sleep(2)
 		logger.exception(ex)
 
 

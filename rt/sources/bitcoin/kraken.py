@@ -2,6 +2,8 @@
 Kraken Data Ingress
 """
 
+import cachetools.func
+
 from util import web
 
 
@@ -9,6 +11,7 @@ from util import web
 base_uri = "https://api.kraken.com/0/public/"
 
 
+@cachetools.func.ttl_cache(ttl=10)
 def spot(pair="XBTUSD", full_pair="XXBTZUSD"):
 	"""
 	Kraken realtime prices.
