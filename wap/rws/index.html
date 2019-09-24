@@ -13,6 +13,19 @@
 <body id="index">
 <div class="page-wrap">
 
+	<table>
+		<tr>
+			<th>rtdb_timestamp</th>
+			<th>tsdb_timestamp</th>
+			<th>adb_timestamp</th>
+		</tr>
+		<tr>
+			<td>{{rtdb_timestamp | strtime}}</td>
+			<td>{{tsdb_timestamp | strtime}}</td>
+			<td>{{adb_timestamp | strtime}}</td>
+		</tr>
+	</table>
+	<hr/>
 
 	<div id="panel0">
 	<table>

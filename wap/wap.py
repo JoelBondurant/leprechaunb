@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 import datetime
 import json
-import uuid
 import time
+import uuid
+
+import cachetools.func
 
 from flask import (
 	Flask,
@@ -23,6 +25,11 @@ COOKIES = True
 logger.addHandler(default_handler)
 logger.info("wap started.")
 app = Flask("bitcoinarrows", static_url_path="", template_folder="rws")
+
+
+@app.template_filter("strtime")
+def strtime(s):
+	return datetime.datetime.fromtimestamp(s).isoformat().replace("T","_")
 
 
 @app.errorhandler(404)
@@ -49,6 +56,15 @@ def to_table(adict, table_id=None):
 	return res
 
 
+@cachetools.func.ttl_cache(ttl=10)
+def get_rtdb_data():
+	"""
+	Rate limit the hit squad.
+	"""
+	rtdb_data = rock.rocks("adbrocks").get("rtdb_data")
+	return rtdb_data
+
+
 @app.route("/")
 def index():
 	"""
@@ -58,7 +74,7 @@ def index():
 	content = {}
 
 	# RT Data:
-	rtdb_data = rock.rocks("adbrocks").get("rtdb_data")
+	rtdb_data = get_rtdb_data()
 	content.update(rtdb_data)
 
 	stats = rtdb_data["blockchain_stats"]

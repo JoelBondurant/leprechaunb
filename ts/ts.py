@@ -39,7 +39,7 @@ def ts_rt():
 	rtdb_data = {}
 	for key in rtdb_keys:
 		rtdb_data[key] = rock.rocks("rtdb").get(key)
-	rtdb_data["timestamp"] = int(time.time())
+	rtdb_data["tsdb_timestamp"] = int(time.time())
 	rock.rocks("tsdbrocks").put("rtdb_data", rtdb_data)
 	logger.info("</ts_rt>")
 

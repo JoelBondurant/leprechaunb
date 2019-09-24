@@ -13,7 +13,7 @@ from util import rock
 
 
 
-rtdb_keys = list(rock.rocks("asdbrocks").get("rtdb_data").keys())
+rtdb_keys = list(rock.rocks("tsdbrocks").get("rtdb_data").keys())
 
 gold_spot_keys = [x for x in rtdb_keys if "_spot_btcxau" in x]
 bitcoin_spot_keys = [x for x in rtdb_keys if "_spot_xaubtc" in x]
@@ -28,6 +28,8 @@ def keys_minutely():
 	"""
 	logger.info("<keys_minutely>")
 	for key in keys:
+		if key.endswith("_timestamp"):
+			continue
 		df = pd.read_parquet(f"/data/tsdb/minutely/{key}.parq")
 		df.to_csv(f"/data/adbcsv/{key}_minutely.csv", index=False)
 	logger.info("</keys_minutely>")
@@ -113,8 +115,12 @@ def minute_arrow():
 def day_arrow():
 	logger.info("<day_arrow>")
 	for key in keys:
-		df = pd.read_parquet(f"/data/tsdb/daily/{key}.parq")
-		df.to_csv(f"/data/adbcsv/{key}_daily.csv", index=False)
+		fn = f"/data/tsdb/daily/{key}.parq"
+		if os.path.exists(fn):
+			df = pd.read_parquet(fn)
+			df.to_csv(f"/data/adbcsv/{key}_daily.csv", index=False)
+		else:
+			logger.warn("/data/tsdb/daily/key.parq files are missing.")
 	logger.info("</day_arrow>")
 
 

@@ -16,18 +16,18 @@ def rt_arrow():
 	logger.info("<rt_arrow>")
 	try:
 		rtdb_data = rock.rocks("tsdbrocks").get("rtdb_data")
+		rtdb_data["adb_timestamp"] = int(time.time())
 		rock.rocks("adbrocks").put("rtdb_data", rtdb_data)
 	except Exception as ex:
 		logger.exception(ex, "Root rt_arrow exception handler:")
-		time.sleep(4)
+		time.sleep(2)
 	logger.info("</rt_arrow>")
 
 
 def minute_arrow():
 	logger.info("<minute_arrow>")
 	try:
-		with concurrent.futures.ProcessPoolExecutor() as executor:
-			executor.submit(spot_history.minute_arrow)
+		spot_history.minute_arrow()
 	except Exception as ex:
 		logger.exception(ex, "Root minute_arrow exception handler:")
 		time.sleep(4)
@@ -37,11 +37,10 @@ def minute_arrow():
 def day_arrow():
 	logger.info("<day_arrow>")
 	try:
-		with concurrent.futures.ProcessPoolExecutor() as executor:
-			executor.submit(spot_history.day_arrow)
+		spot_history.day_arrow()
 	except Exception as ex:
 		logger.exception(ex, "Root day_arrow exception handler:")
-		time.sleep(4)
+		time.sleep(8)
 	logger.info("</day_arrow>")
 
 
