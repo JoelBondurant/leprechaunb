@@ -13,13 +13,21 @@
 <body id="index">
 <div class="page-wrap">
 
+
 	<table>
 		<tr>
+			<th>now</th>
 			<th>rtdb_timestamp</th>
 			<th>tsdb_timestamp</th>
 			<th>adb_timestamp</th>
 		</tr>
 		<tr>
+			<td>
+				<div class="tooltip">
+					<span id="date_time"></span>
+					<span class="tooltiptext">UTC</span>
+				</div>
+			</td>
 			<td>{{rtdb_timestamp | strtime}}</td>
 			<td>{{tsdb_timestamp | strtime}}</td>
 			<td>{{adb_timestamp | strtime}}</td>
@@ -27,11 +35,36 @@
 	</table>
 	<hr/>
 
-	<div id="panel0">
+
+	<table>
+		<tr>
+			<th>Gold</th>
+			<th>APMEX</th>
+			<th>Forex</th>
+			<th>JMBullion</th>
+			<th>Kitco</th>
+			<th>LBMA</th>
+		</tr>
+		<tr>
+			<td>
+				<div class="tooltip">
+					{{(10**8 * spot_btcxau) | round | int}}
+					<span class="tooltiptext">Sats per Gram of Gold</span>
+				</div>
+			</td>
+			<td data-value="{{((10**8*apmex_spot_btcxau) - (10**8*spot_btcxau))|round|int}}"></td>
+			<td data-value="{{((10**8*freeforexapi_spot_btcxau) - (10**8*spot_btcxau))|round|int}}"></td>
+			<td data-value="{{((10**8*jmbullion_spot_btcxau) - (10**8*spot_btcxau))|round|int}}"></td>
+			<td data-value="{{((10**8*kitco_spot_btcxau) - (10**8*spot_btcxau))|round|int}}"></td>
+			<td data-value="{{((10**8*lbma_spot_btcxau) - (10**8*spot_btcxau))|round|int}}"></td>
+		</tr>
+	</table>
+	<hr/>
+
+
 	<table>
 		<tr>
 			<th>Bitcoin</th>
-			<th>Gold</th>
 			<th>Binance</th>
 			<th>Bisq</th>
 			<th>Bitfinex</th>
@@ -53,12 +86,6 @@
 					<span class="tooltiptext">Grams of Gold per Bitcoin</span>
 				</div>
 			</td>
-			<td>
-				<div class="tooltip">
-					{{(10**8 * spot_btcxau) | round | int}}
-					<span class="tooltiptext">Sats per Gram of Gold</span>
-				</div>
-			</td>
 			<td data-value="{{(binance_spot_xaubtc - spot_xaubtc)|round(2)}}"></td>
 			<td data-value="{{(bisq_spot_xaubtc - spot_xaubtc)|round(2)}}"></td>
 			<td data-value="{{(bitfinex_spot_xaubtc - spot_xaubtc)|round(2)}}"></td>
@@ -74,11 +101,10 @@
 			<td data-value="{{(poloniex_spot_xaubtc - spot_xaubtc)|round(2)}}"></td>
 		</tr>
 	</table>
-	</div>
 	<hr/>
 
-	{{stats|safe}}
 
+	{{stats|safe}}
 	<hr/>
 
 
@@ -527,10 +553,9 @@
 	<table>
 		<tr>
 			<td>
-				<div class="tooltip">
-					<span id="date_time"></span>
-					<span class="tooltiptext">UTC</span>
-				</div>
+			<span style="color:#666;">
+				BTC: ${{(spot_usdbtc) | round(2)}}
+			</span>
 			</td>
 			<td>
 				<a href="/about">About</a>
@@ -545,8 +570,9 @@
 			</td>
 			<td>
 			<span style="color:#666;">
-				BTC: ${{(spot_usdbtc) | round(2)}} &nbsp;/&nbsp; AU: ${{(spot_usdxau) | round(2)}}
-			</span></td>
+				AU: ${{(spot_usdxau) | round(2)}}
+			</span>
+			</td>
 		</tr>
 	</table>
 	</div>
