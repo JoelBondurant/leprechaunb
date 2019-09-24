@@ -18,27 +18,14 @@ from util import rock
 PERIOD = 20
 
 
-def rtdb():
+def peek():
 	"""
-	Get a connection to rtdb.
+	Interactive debugging in prod...
 	"""
-	db = rock.Rock("rtdb")
-	return db
+	return rock.rocks("tsdbrocks").get("rtdb_data")
 
 
-def tsdbrocks():
-	"""
-	Get a connection to tsdbrocks.
-	"""
-	db = rock.Rock("tsdbrocks")
-	return db
-
-
-rtdb_keys = rtdb().get("keys")
-
-
-with open("/data/tsdb/rtdb_keys.json", "w") as fout:
-	json.dump(rtdb_keys, fout)
+rtdb_keys = rock.rocks("rtdb").get("keys")
 
 
 periods = ["minutely", "daily"]
@@ -56,9 +43,9 @@ def ts_rt():
 	global rtdb_keys
 	rtdb_data = {}
 	for key in rtdb_keys:
-		rtdb_data[key] = rtdb().get(key)
+		rtdb_data[key] = rock.rocks("rtdb").get(key)
 	rtdb_data["timestamp"] = int(time.time())
-	tsdbrocks().put("rtdb_data", rtdb_data)
+	rock.rocks("tsdbrocks").put("rtdb_data", rtdb_data)
 	logger.info("</ts_rt>")
 
 
@@ -67,7 +54,7 @@ def ts_minutely():
 	now = datetime.datetime.now().replace(second=0, microsecond=0)
 	for key in rtdb_keys:
 		try:
-			val = rtdb().get(key)
+			val = rock.rocks("rtdb").get(key)
 			fname = f"/data/tsdb/minutely/{key}.parq"
 			if os.path.exists(fname):
 				logger.info("Append to: " + fname)
@@ -103,7 +90,7 @@ def ts_daily():
 	now = datetime.datetime.now().date()
 	for key in rtdb_keys:
 		try:
-			val = rtdb().get(key)
+			val = rock.rocks("rtdb").get(key)
 			fname = f"/data/tsdb/daily/{key}.parq"
 			if os.path.exists(fname):
 				df = pd.read_parquet(fname)

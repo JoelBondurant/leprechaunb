@@ -17,10 +17,6 @@ from sources import gold
 from sources import bitcoin
 
 
-def rtdb():
-	return rock.Rock("rtdb")
-
-
 # The period of the rt phase, collection must complete within the rt PERIOD:
 PERIOD = 10
 
@@ -31,10 +27,23 @@ SUBPERIODS = 2
 SUBPERIOD = max(1, PERIOD // SUBPERIODS)
 
 
-def get_spots(spot_source_modules, timeout=SUBPERIOD, max_tries=SUBPERIODS):
+def peek():
+	"""
+	Interactive debugging in prod...
+	"""
+	return rock.rocks("rtdb").get("spot_xaubtc")
+
+
+def get_spots(spot_type, timeout=SUBPERIOD, max_tries=SUBPERIODS):
 	"""
 	Returns a list of the spot prices (calls .spot() on modules)
 	"""
+	if spot_type == "gold":
+		spot_source_modules = gold.spot_source_modules
+	elif spot_type == "bitcoin":
+		spot_source_modules = bitcoin.spot_source_modules
+	else:
+		raise NotImplementedError("spot_type="+str(spot_type)+"not implemented")
 	tries = 0
 	while True:
 		tries += 1
@@ -56,12 +65,12 @@ def write_rt():
 	"""
 	try:
 		# Gold Spots:
-		spots_usdxau = get_spots(gold.spot_source_modules)
+		spots_usdxau = get_spots("gold")
 		#logger.info("spots_usdxau" + str(spots_usdxau))
 		spot_usdxau = stats.robust_mean(spots_usdxau)
 
 		# Bitcoin Spots:
-		spots_usdbtc = get_spots(bitcoin.spot_source_modules)
+		spots_usdbtc = get_spots("bitcoin")
 		#logger.info("spots_usdbtc" + str(spots_usdbtc))
 		spot_usdbtc = stats.robust_mean(spots_usdbtc)
 
@@ -105,10 +114,9 @@ def write_rt():
 			("keys", keys),
 		]
 
-		db = rtdb()
 		for dat in dats:
 			#logger.info("rtdb.put: " + dat[0])
-			db.put(dat[0], dat[1])
+			rock.rocks("rtdb").put(dat[0], dat[1])
 
 	except Exception as ex:
 		time.sleep(4)

@@ -25,11 +25,6 @@ logger.info("wap started.")
 app = Flask("bitcoinarrows", static_url_path="", template_folder="rws")
 
 
-
-def adbrocks():
-	return rock.Rock("adbrocks")
-
-
 @app.errorhandler(404)
 def awol(err):
 	return render_template("404.html"), 404
@@ -63,7 +58,7 @@ def index():
 	content = {}
 
 	# RT Data:
-	rtdb_data = adbrocks().get("rtdb_data")
+	rtdb_data = rock.rocks("adbrocks").get("rtdb_data")
 	content.update(rtdb_data)
 
 	stats = rtdb_data["blockchain_stats"]

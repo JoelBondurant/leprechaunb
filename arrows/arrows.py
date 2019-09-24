@@ -11,20 +11,11 @@ from util import rock
 import spot_history
 
 
-
-def tsdbrocks():
-	return rock.Rock("tsdbrocks")
-
-
-def adbrocks():
-	return rock.Rock("adbrocks")
-
-
 def rt_arrow():
 	logger.info("<rt_arrow>")
 	try:
-		rtdb_data = tsdbrocks().get("rtdb_data")
-		adbrocks().put("rtdb_data", rtdb_data)
+		rtdb_data = rock.rocks("tsdbrocks").get("rtdb_data")
+		rock.rocks("adbrocks").put("rtdb_data", rtdb_data)
 	except Exception as ex:
 		logger.exception(ex, "Root rt_arrow exception handler:")
 		time.sleep(4)

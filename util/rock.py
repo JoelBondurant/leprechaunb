@@ -106,7 +106,7 @@ class Rock:
 
 	def get(self, akey, key_encode=True, value_decode=True):
 		tries = 0
-		max_tries = 30
+		max_tries = 40
 		while tries < max_tries:
 			try:
 				tries += 1
@@ -161,4 +161,9 @@ class Rock:
 			avals = bvals
 		return avals
 
+def rocks(rocks_db_name):
+	"""
+	Get a connection to RocksDB.
+	"""
+	return Rock(rocks_db_name)
 
