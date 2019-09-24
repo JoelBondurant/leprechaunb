@@ -4,19 +4,16 @@ Bitcoin price history.
 import datetime
 import math
 import os
-import json
 import time
 
 import pandas as pd
 
 from util import logger
+from util import rock
 
 
 
-
-with open("/data/tsdb/rtdb_keys.json", "r") as fin:
-	rtdb_keys = json.load(fin)
-
+rtdb_keys = list(rock.rocks("asdbrocks").get("rtdb_data").keys())
 
 gold_spot_keys = [x for x in rtdb_keys if "_spot_btcxau" in x]
 bitcoin_spot_keys = [x for x in rtdb_keys if "_spot_xaubtc" in x]

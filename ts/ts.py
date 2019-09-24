@@ -4,7 +4,6 @@ Time series builder.
 """
 
 import os
-import json
 import time
 import datetime
 
@@ -123,14 +122,21 @@ def main():
 	Main ts entry point.
 	"""
 	logger.info("ts started.")
+	time.sleep(1)
+	ts_rt()
+	ts_minutely()
+	ts_daily()
 	import schedule
 	schedule.every(11).seconds.do(ts_rt)
 	schedule.every(21).seconds.do(ts_minutely)
 	schedule.every(601).seconds.do(ts_daily)
-	t0 = time.time()
 	while True:
-		time.sleep(1)
-		schedule.run_pending()
+		try:
+			time.sleep(2)
+			schedule.run_pending()
+		except Exception as ex:
+			time.sleep(2)
+			logger.exception(ex)
 
 
 if __name__ == "__main__":

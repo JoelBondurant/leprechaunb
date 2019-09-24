@@ -11,6 +11,7 @@ from util import rock
 import spot_history
 
 
+
 def rt_arrow():
 	logger.info("<rt_arrow>")
 	try:
