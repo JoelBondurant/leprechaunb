@@ -29,6 +29,7 @@ def rt_arrow():
 def minute_arrow():
 	try:
 		logger.info("<minute_arrow>")
+		importlib.reload(spot_history)
 		spot_history.minute_arrow()
 		logger.info("</minute_arrow>")
 	except Exception as ex:

@@ -1,1 +1,1 @@
-pytest --capture=sys
+pytest -s test

@@ -7,8 +7,8 @@
 	<link rel="stylesheet" type="text/css" href="ws/css/main.css">
 	<script type="text/javascript" src="ws/js/common.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-	<script src="https://cdn.jsdelivr.net/npm/vega-lite@3"></script>
-	<script src="https://cdn.jsdelivr.net/npm/vega-embed@4"></script> 
+	<script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.0-beta.2"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vega-embed@5"></script>
 </head>
 <body id="index">
 <div class="page-wrap">
@@ -126,60 +126,79 @@
 				"fontWeight": 360,
 				"fontSize": 16
 			},
-			"mark": {
-				"type": "area",
-				"line": {
-					"color": "#f7931a"
-				},
-				"color": {
-					"x1": 0.3,
-					"y1": 0.3,
-					"x2": 0.3,
-					"y2": 0,
-					"gradient": "linear",
-					"stops": [
-					{
-						"offset": 0,
-						"color": "#333"
-					},
-					{
-						"offset": 1,
+			"layer": [
+				{"mark": {
+					"type": "area",
+					"line": {
 						"color": "#f7931a"
-					}]
-				}
-			},
-			"encoding": {
-				"x": {
-					"field": "date",
-					"type": "temporal",
-					"scale": {
-						"type":"time",
-						"domain": ["2010-01-01","2020-01-02"]
 					},
-					"axis": {
-						"title": "",
-						"labelFontSize": 14,
-						"tickCount": 11,
+					"color": {
+						"x1": 0.3,
+						"y1": 0.3,
+						"x2": 0.3,
+						"y2": 0,
+						"gradient": "linear",
+						"stops": [
+						{
+							"offset": 0,
+							"color": "#333"
+						},
+						{
+							"offset": 1,
+							"color": "#f7931a"
+						}]
 					}
 				},
-				"y": {
-					"field": "spot",
-					"type": "quantitative",
-					"scale": {"type":"log"},
-					"axis": {
-						"orient": "right",
-						"title": "gm{AU}",
-						"titleFontSize": 14,
-						"titleAngle": 0,
-						"titleX": -530,
-						"titleY": 20,
-						"labelFontSize": 14,
-						"tickSize": 1,
-						"gridColor": "#666",
-						"gridDash": [2,1]
+				"encoding": {
+					"x": {
+						"field": "date",
+						"type": "temporal",
+						"scale": {
+							"type":"time",
+							"domain": ["2010-01-01","2020-01-02"]
+						},
+						"axis": {
+							"title": "",
+							"labelFontSize": 14,
+							"tickCount": 11,
+						}
+					},
+					"y": {
+						"field": "spot",
+						"type": "quantitative",
+						"scale": {"type": "log"},
+						"axis": {
+							"orient": "right",
+							"title": "gm{AU}",
+							"titleFontSize": 14,
+							"titleAngle": 0,
+							"titleX": -530,
+							"titleY": 20,
+							"labelFontSize": 14,
+							"tickSize": 1,
+							"gridColor": "#666",
+							"gridDash": [2,1]
+						}
+					}
+				}},
+				{
+					"mark": {
+						"type": "line",
+						"color": "#111",
+						"strokeWidth": 3,
+					},
+					"encoding": {
+						"x": {
+							"field": "date",
+							"type": "temporal",
+						},
+						"y": {
+							"field": "spot_model",
+							"type": "quantitative",
+						},
 					}
 				}
-			}
+			]
 		};
 		vegaEmbed("#bigpic", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
 	</script>

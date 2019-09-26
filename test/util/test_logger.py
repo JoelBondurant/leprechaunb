@@ -30,7 +30,7 @@ class TestLogger:
 
 	def test_logger(self):
 		try:
-			for idx in range(30):
+			for idx in range(3):
 				logger.info(f"testing, testing, 1, 2, 3.  {idx}")
 		except Exception as ex:
 			print(ex)

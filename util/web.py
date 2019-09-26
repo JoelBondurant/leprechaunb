@@ -24,6 +24,8 @@ def get(aurl, timeout=DEFAULT_TIMEOUT, headers=None, jsonify=True):
 	### ^^^ Pre Request ^^^ ###
 	resp = requests.get(aurl, timeout=timeout, headers=headers, allow_redirects=True)
 	### ``` Post Request ``` ###
+	if resp.status_code != 200:
+		print(resp.text)
 	if jsonify:
 		resp = resp.json()
 	return resp

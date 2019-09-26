@@ -127,9 +127,10 @@ def day_spot_model():
 	df.columns = ["date", "spot"]
 	df["time"] = range(len(df))
 	df["log_spot"] = df.spot.apply(np.log1p)
-	pa, pb, pc = np.polyfit(df.time, df.log_spot, 2)
-	log_spot_model = pa*df.time**2 + pb*df.time + pc - 0.9
+	aa, bb, cc, dd, ee = np.polyfit(df.time, df.log_spot, 4)
+	log_spot_model = aa*df.time**4 + bb*df.time**3 + cc*df.time**2 + dd*df.time + ee
 	spot_model = np.exp(log_spot_model)
+	spot_model = spot_model - spot_model[0] + 0.001
 	df["spot_model"] = spot_model
 	df.to_csv("/data/adbcsv/spot_model_xaubtc_daily.csv", index=False)
 	logger.info("</day_spot_model>")
