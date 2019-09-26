@@ -115,12 +115,14 @@ def minute_arrow():
 def day_arrow():
 	logger.info("<day_arrow>")
 	for key in keys:
+		if "timestamp" in key:
+			continue
 		fn = f"/data/tsdb/daily/{key}.parq"
 		if os.path.exists(fn):
 			df = pd.read_parquet(fn)
 			df.to_csv(f"/data/adbcsv/{key}_daily.csv", index=False)
 		else:
-			logger.warn("/data/tsdb/daily/key.parq files are missing.")
+			logger.warn(f"/data/tsdb/daily/{key}.parq files are missing.")
 	logger.info("</day_arrow>")
 
 
