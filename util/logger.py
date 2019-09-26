@@ -2,7 +2,13 @@
 A module to centralize logging settings.
 """
 
-import os, sys, logging, datetime, inspect, traceback
+import datetime
+import inspect
+import logging
+import os
+import sys
+import traceback
+
 
 LOGGING_ROOT = '/data/log'
 
@@ -47,10 +53,11 @@ class Logger:
 		logr.setLevel(level)
 		formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 		filepath = os.path.join(LOGGING_ROOT, caller)
+		self.filepath = filepath
 		datestr = datetime.datetime.strftime(self.datestamp, '%Y%m%d')
 		filename = caller + '_' + datestr + '.log'
 		try:
-			os.makedirs(filepath)
+			os.makedirs(filepath, exist_ok=True)
 		except:
 			pass
 		logpath = os.path.join(filepath, filename)
@@ -100,13 +107,26 @@ class Logger:
 
 _logr = Logger()
 
+
 def rollover():
 	global _logr
 	today = datetime.datetime.today().date()
 	if today != _logr.datestamp:
 		_logr = Logger()
 
+
+def makedirs():
+	global _logr
+	if not os.path.exists(_logr.filepath):
+		try:
+			os.makedirs(_logr.filepath, exist_ok=True)
+			_logr = Logger()
+		except:
+			pass
+
+
 def pre():
+	makedirs()
 	rollover()
 	env_level = os.getenv('LOGGING_LEVEL')
 	if env_level:
