@@ -115,6 +115,11 @@ def exchange():
 	return render_template("exchange.html")
 
 
+@app.route("/alert")
+def alert():
+	return render_template("alert.html")
+
+
 @app.route("/drill")
 def drill():
 	return render_template("drill.html")
