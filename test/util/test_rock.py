@@ -22,7 +22,7 @@ class TestRock:
 		N = 30
 		try:
 			started = time.time()
-			os.makedirs("/data/" + TestRock.DBNAME, exist_ok=True)
+			os.makedirs("/data/" + TestRock.DBNAME, mode=0o770, exist_ok=True)
 			for idx in range(N):
 				rock.rocks(TestRock.DBNAME).put(f"key{idx}", idx)
 			test_result = True

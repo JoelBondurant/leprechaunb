@@ -29,7 +29,7 @@ periods = ["minutely", "daily"]
 for period in periods:
 	path = f"/data/tsdb/{period}"
 	if not os.path.exists(path):
-		os.makedirs(path)
+		os.makedirs(path, mode=0o770, exist_ok=True)
 
 
 def ts_rt():

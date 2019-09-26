@@ -56,10 +56,6 @@ class Logger:
 		self.filepath = filepath
 		datestr = datetime.datetime.strftime(self.datestamp, '%Y%m%d')
 		filename = caller + '_' + datestr + '.log'
-		try:
-			os.makedirs(filepath, exist_ok=True)
-		except:
-			pass
 		logpath = os.path.join(filepath, filename)
 		filehandler = logging.FileHandler(logpath)
 		filehandler.setFormatter(formatter)
@@ -119,7 +115,7 @@ def makedirs():
 	global _logr
 	if not os.path.exists(_logr.filepath):
 		try:
-			os.makedirs(_logr.filepath, exist_ok=True)
+			os.makedirs(_logr.filepath, mode=0o770, exist_ok=True)
 			_logr = Logger()
 		except:
 			pass
