@@ -59,8 +59,7 @@ def main():
 
 	while True:
 		try:
-			# Something in schedule.run_pending propagates
-			# application crash outside the try block.
+			# schedule crash guard.
 			importlib.reload(schedule)
 			schedule.every(10).seconds.do(rt_arrow)
 			schedule.every(20).seconds.do(minute_arrow)

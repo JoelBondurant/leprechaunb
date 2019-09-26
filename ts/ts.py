@@ -3,11 +3,13 @@
 Time series builder.
 """
 
+import datetime
+import importlib
 import os
 import time
-import datetime
 
 import pandas as pd
+import schedule
 
 from util import logger
 from util import rock
@@ -122,21 +124,29 @@ def main():
 	Main ts entry point.
 	"""
 	logger.info("ts started.")
+
 	time.sleep(1)
 	ts_rt()
 	ts_minutely()
 	ts_daily()
-	import schedule
-	schedule.every(11).seconds.do(ts_rt)
-	schedule.every(21).seconds.do(ts_minutely)
-	schedule.every(601).seconds.do(ts_daily)
+
 	while True:
 		try:
-			time.sleep(2)
-			schedule.run_pending()
+			# schedule crash guard:
+			importlib.reload(schedule)
+			schedule.every(11).seconds.do(ts_rt)
+			schedule.every(21).seconds.do(ts_minutely)
+			schedule.every(601).seconds.do(ts_daily)
+			while True:
+				try:
+					time.sleep(2)
+					schedule.run_pending()
+				except Exception as ex:
+					logger.exception(ex)
+					time.sleep(2)
 		except Exception as ex:
-			time.sleep(2)
 			logger.exception(ex)
+			time.sleep(2)
 
 
 if __name__ == "__main__":
