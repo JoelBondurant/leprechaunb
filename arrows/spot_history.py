@@ -6,6 +6,7 @@ import math
 import os
 import time
 
+import numpy as np
 import pandas as pd
 
 from util import logger
@@ -106,13 +107,38 @@ def stats_minutely():
 	logger.info("</stats_minutely>")
 
 
+
 def minute_arrow():
+	"""
+	External minute level wrapper.
+	"""
 	stats_minutely()
 	keys_minutely()
 	spots_minutely()
 
 
+def day_spot_model():
+	"""
+	Daily spot model.
+	"""
+	logger.info("<day_spot_model>")
+	fn = "/data/tsdb/daily/spot_xaubtc.parq"
+	df = pd.read_parquet(fn)
+	df.columns = ["date", "spot"]
+	df["time"] = range(len(df))
+	df["log_spot"] = df.spot.apply(np.log1p)
+	pa, pb, pc = np.polyfit(df.time, df.log_spot, 2)
+	log_spot_model = pa*df.time**2 + pb*df.time + pc - 0.9
+	spot_model = np.exp(log_spot_model)
+	df["spot_model"] = spot_model
+	df.to_csv("/data/adbcsv/spot_model_xaubtc_daily.csv", index=False)
+	logger.info("</day_spot_model>")
+
+
 def day_arrow():
+	"""
+	External day level wrapper.
+	"""
 	logger.info("<day_arrow>")
 	for key in keys:
 		if "timestamp" in key:
@@ -123,6 +149,7 @@ def day_arrow():
 			df.to_csv(f"/data/adbcsv/{key}_daily.csv", index=False)
 		else:
 			logger.warn(f"/data/tsdb/daily/{key}.parq files are missing.")
+	day_spot_model()
 	logger.info("</day_arrow>")
 
 
