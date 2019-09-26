@@ -1,7 +1,7 @@
 <html>
 <head>
 	<meta name="Keywords" content="bitcoin">
-	<meta http-equiv="refresh" content="180">
+	<meta http-equiv="refresh" content="62">
 	<title>Arrows</title>
 	<link rel="icon" href="/favicon.ico">
 	<link rel="stylesheet" type="text/css" href="ws/css/main.css">
@@ -17,9 +17,9 @@
 	<table>
 		<tr>
 			<th>now</th>
-			<th>rtdb_timestamp</th>
-			<th>tsdb_timestamp</th>
 			<th>adb_timestamp</th>
+			<th>tsdb_timestamp</th>
+			<th>rtdb_timestamp</th>
 		</tr>
 		<tr>
 			<td>
@@ -28,9 +28,9 @@
 					<span class="tooltiptext">UTC</span>
 				</div>
 			</td>
-			<td>{{rtdb_timestamp | strtime}}</td>
-			<td>{{tsdb_timestamp | strtime}}</td>
 			<td>{{adb_timestamp | strtime}}</td>
+			<td>{{tsdb_timestamp | strtime}}</td>
+			<td>{{rtdb_timestamp | strtime}}</td>
 		</tr>
 	</table>
 	<hr/>

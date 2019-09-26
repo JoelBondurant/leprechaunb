@@ -86,7 +86,7 @@ def index():
 
 	# Time windowing for charts, this should go in some vega json format:
 	now = datetime.datetime.now().replace(second=0, microsecond=0)
-	hours_back = 1
+	hours_back = 6
 	scroller_start = (now + datetime.timedelta(minutes=-hours_back*60)).isoformat()
 	scroller_end = (now + datetime.timedelta(minutes=1)).isoformat()
 	multiscroller_start = (now + datetime.timedelta(minutes=-hours_back*60)).isoformat()
@@ -193,8 +193,8 @@ def add_header(response):
 	Cache middleware for nginx.
 	"""
 	response.headers["Cache-Control"] = "public, min-fresh=10, max-age=3600"
-	response.headers["Pragma"] = "no-cache"
 	response.headers["Expires"] = "10"
+	response.headers["Pragma"] = "no-cache"
 	return response
 
 

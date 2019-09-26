@@ -2,8 +2,10 @@
 """
 Currency crisis center.
 """
+import importlib
 import time
-import concurrent.futures
+
+import schedule
 
 from util import logger
 from util import rock
@@ -13,36 +15,35 @@ import spot_history
 
 
 def rt_arrow():
-	logger.info("<rt_arrow>")
 	try:
+		logger.info("<rt_arrow>")
 		rtdb_data = rock.rocks("tsdbrocks").get("rtdb_data")
 		rtdb_data["adb_timestamp"] = int(time.time())
 		rock.rocks("adbrocks").put("rtdb_data", rtdb_data)
+		logger.info("</rt_arrow>")
 	except Exception as ex:
 		logger.exception(ex, "Root rt_arrow exception handler:")
 		time.sleep(2)
-	logger.info("</rt_arrow>")
 
 
 def minute_arrow():
-	logger.info("<minute_arrow>")
 	try:
+		logger.info("<minute_arrow>")
 		spot_history.minute_arrow()
+		logger.info("</minute_arrow>")
 	except Exception as ex:
 		logger.exception(ex, "Root minute_arrow exception handler:")
-		time.sleep(4)
-	logger.info("</minute_arrow>")
+		time.sleep(2)
 
 
 def day_arrow():
-	logger.info("<day_arrow>")
 	try:
+		logger.info("<day_arrow>")
 		spot_history.day_arrow()
+		logger.info("</day_arrow>")
 	except Exception as ex:
 		logger.exception(ex, "Root day_arrow exception handler:")
-		time.sleep(8)
-	logger.info("</day_arrow>")
-
+		time.sleep(2)
 
 
 def main():
@@ -50,18 +51,31 @@ def main():
 	Main entry to arrows.
 	"""
 	logger.info("arrows started.")
+
 	time.sleep(1)
 	rt_arrow()
 	minute_arrow()
 	day_arrow()
-	import schedule
-	schedule.every(10).seconds.do(rt_arrow)
-	schedule.every(20).seconds.do(minute_arrow)
-	schedule.every(120).seconds.do(day_arrow)
-	t0 = time.time()
+
 	while True:
-		schedule.run_pending()
-		time.sleep(1)
+		try:
+			# Something in schedule.run_pending propagates
+			# application crash outside the try block.
+			importlib.reload(schedule)
+			schedule.every(10).seconds.do(rt_arrow)
+			schedule.every(20).seconds.do(minute_arrow)
+			schedule.every(120).seconds.do(day_arrow)
+			while True:
+				try:
+					time.sleep(1)
+					schedule.run_pending()
+				except Exception as ex:
+					logger.exception(ex, "Arrows schedule.run_pending exception handler:")
+					time.sleep(2)
+		except Exception as ex:
+			logger.exception(ex, "Root arrows exception handler:")
+			time.sleep(2)
+
 
 
 if __name__ == "__main__":
