@@ -2,12 +2,11 @@
 """
 Test util.stats
 """
-import unittest
 
 from util import stats
 
 
-class TestStats(unittest.TestCase):
+class TestStats:
 
 	def test_filter_outliers(self):
 		test_cases = [
@@ -31,8 +30,6 @@ class TestStats(unittest.TestCase):
 			test_result = actual == test_case[1]
 			if not test_result:
 				print(test_case, actual)
-			self.assertTrue(test_result)
+			assert test_result
 
 
-if __name__ == "__main__":
-	unittest.main()

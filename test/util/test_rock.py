@@ -40,5 +40,3 @@ class TestRock:
 			raise ex
 
 
-if __name__ == "__main__":
-	unittest.main()

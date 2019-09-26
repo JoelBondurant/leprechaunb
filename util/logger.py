@@ -54,6 +54,7 @@ class Logger:
 		formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 		filepath = os.path.join(LOGGING_ROOT, caller)
 		self.filepath = filepath
+		os.makedirs(filepath, mode=0o770, exist_ok=True)
 		datestr = datetime.datetime.strftime(self.datestamp, '%Y%m%d')
 		filename = caller + '_' + datestr + '.log'
 		logpath = os.path.join(filepath, filename)
