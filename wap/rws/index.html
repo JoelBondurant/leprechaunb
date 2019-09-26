@@ -127,6 +127,23 @@
 				"fontSize": 16
 			},
 			"layer": [
+				{
+					"mark": {
+						"type": "line",
+						"color": "#ddd",
+						"strokeWidth": 3,
+					},
+					"encoding": {
+						"x": {
+							"field": "date",
+							"type": "temporal",
+						},
+						"y": {
+							"field": "spot_model",
+							"type": "quantitative",
+						},
+					}
+				},
 				{"mark": {
 					"type": "area",
 					"line": {
@@ -181,23 +198,6 @@
 						}
 					}
 				}},
-				{
-					"mark": {
-						"type": "line",
-						"color": "#111",
-						"strokeWidth": 3,
-					},
-					"encoding": {
-						"x": {
-							"field": "date",
-							"type": "temporal",
-						},
-						"y": {
-							"field": "spot_model",
-							"type": "quantitative",
-						},
-					}
-				}
 			]
 		};
 		vegaEmbed("#bigpic", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
