@@ -51,7 +51,7 @@ def main():
 	"""
 	Main entry to arrows.
 	"""
-	logger.info("arrows started.")
+	logger.warn("arrows started.")
 
 	time.sleep(1)
 	rt_arrow()

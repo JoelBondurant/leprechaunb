@@ -123,7 +123,7 @@ def main():
 	"""
 	Main ts entry point.
 	"""
-	logger.info("ts started.")
+	logger.warn("ts started.")
 
 	time.sleep(1)
 	ts_rt()

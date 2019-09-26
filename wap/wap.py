@@ -23,7 +23,7 @@ from util import rock
 COOKIES = True
 
 logger.addHandler(default_handler)
-logger.info("wap started.")
+logger.warn("wap started.")
 app = Flask("bitcoinarrows", static_url_path="", template_folder="rws")
 
 

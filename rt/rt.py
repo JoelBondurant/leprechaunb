@@ -127,7 +127,7 @@ def main():
 	"""
 	Main rt entry point.
 	"""
-	logger.info("rt started")
+	logger.warn("rt started")
 	started = int(time.time())
 	while True:
 		try:
