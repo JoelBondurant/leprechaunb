@@ -1,0 +1,35 @@
+# /etc/nginx/sites-enabled/bitcoinarrows
+
+server {
+	server_name bitcoinarrows.com www.bitcoinarrows.com;
+
+	listen 443 ssl; # managed by Certbot
+	ssl_certificate /etc/letsencrypt/live/www.bitcoinarrows.com/fullchain.pem; # managed by Certbot
+	ssl_certificate_key /etc/letsencrypt/live/www.bitcoinarrows.com/privkey.pem; # managed by Certbot
+	include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+	ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+
+	location / {
+		proxy_pass "http://127.0.0.1:8880";
+#		proxy_set_header Host $http_host;
+#		proxy_set_header X-Real-IP $remote_addr;
+#		proxy set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	}
+}
+
+server {
+	if ($host = bitcoinarrows.com) {
+		return 301 https://$host$request_uri;
+	} # managed by Certbot
+
+
+	if ($host = www.bitcoinarrows.com) {
+		return 301 https://$host$request_uri;
+	} # managed by Certbot
+
+
+	listen 80;
+	server_name bitcoinarrows.com www.bitcoinarrows.com;
+	return 404; # managed by Certbot
+}
