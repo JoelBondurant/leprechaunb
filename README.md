@@ -1,13 +1,13 @@
-# [bitcoinarrows.com](https://bitcoinarrows.com)
+# [leprechaunb.com](https://leprechaunb.com)
 
 A system for monitoring Bitcoin.
 
 
 ## ScreenShot:
-![ScreenShot](https://raw.github.com/JoelBondurant/bitcoinarrows/master/doc/img/bitcoin_arrows.png)
+![ScreenShot](https://raw.github.com/JoelBondurant/leprechaunb/master/doc/img/bitcoin_arrows.png)
 
 ## Architecture:
-![Architechure](https://raw.github.com/JoelBondurant/bitcoinarrows/master/doc/img/arch.jpg)
+![Architechure](https://raw.github.com/JoelBondurant/leprechaunb/master/doc/img/arch.jpg)
 
 1. rt - Real Time data collector service. (polling ~10 seconds lol)
 1. rtdb - rt overwrites keys in rocksdb (based on leveldb used by Bitcoin for fun)
