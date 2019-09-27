@@ -24,7 +24,7 @@ COOKIES = True
 
 logger.addHandler(default_handler)
 logger.warn("wap started.")
-app = Flask("bitcoinarrows", static_url_path="", template_folder="rws")
+app = Flask("leprechaunb", static_url_path="", template_folder="rws")
 
 
 @app.template_filter("strtime")
@@ -68,7 +68,7 @@ def get_rtdb_data():
 @app.route("/")
 def index():
 	"""
-	https://bitcoinarrows.com
+	https://leprechaunb.com
 	"""
 
 	content = {}
