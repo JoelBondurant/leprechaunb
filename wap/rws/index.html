@@ -130,7 +130,7 @@
 				{
 					"mark": {
 						"type": "line",
-						"color": "#4b0082",
+						"color": "#80a",
 						"strokeWidth": 3,
 					},
 					"encoding": {
@@ -147,7 +147,7 @@
 				{
 					"mark": {
 						"type": "line",
-						"color": "#0000ff",
+						"color": "#48f",
 						"strokeWidth": 3,
 					},
 					"encoding": {
@@ -164,7 +164,7 @@
 				{
 					"mark": {
 						"type": "line",
-						"color": "#008000",
+						"color": "#0f0",
 						"strokeWidth": 3,
 					},
 					"encoding": {
@@ -181,7 +181,7 @@
 				{
 					"mark": {
 						"type": "line",
-						"color": "#ffff00",
+						"color": "#ff0",
 						"strokeWidth": 3,
 					},
 					"encoding": {
@@ -198,7 +198,7 @@
 				{
 					"mark": {
 						"type": "line",
-						"color": "#ffa500",
+						"color": "orange",
 						"strokeWidth": 3,
 					},
 					"encoding": {
@@ -215,7 +215,7 @@
 				{
 					"mark": {
 						"type": "line",
-						"color": "#ff0000",
+						"color": "#f00",
 						"strokeWidth": 3,
 					},
 					"encoding": {
@@ -531,7 +531,7 @@
 			},
 			"mark": {
 				"type": "line",
-				"color": "#9330ff",
+				"color": "#f00",
 				"strokeWidth": 2,
 			},
 			"encoding": {
@@ -604,7 +604,7 @@
 			},
 			"mark": {
 				"type": "line",
-				"color": "#0892d0",
+				"color": "#48f",
 				"strokeWidth": 2,
 			},
 			"encoding": {
@@ -651,6 +651,155 @@
 		vegaEmbed("#hashrate", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
 	</script>
 	</div>
+
+
+	<div class="chartrow">
+	<div id="arrivalrate"></div>
+
+	<script type="text/javascript">
+		var vegaSpec = {
+			"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+			"description": "Bitcoin Arrival Rate History",
+			"width": 600,
+			"height": 240,
+			"padding": 8,
+			"data": {
+				"url": "arrows/stats_minutely.csv"
+			},
+			"autosize": {
+				"type": "fit",
+				"resize": true
+			},
+			"selection": {
+				"grid": {
+					"type": "interval",
+					"bind": "scales"
+				}
+			},
+			"mark": {
+				"type": "line",
+				"color": "#ff0",
+				"strokeWidth": 2,
+			},
+			"encoding": {
+				"x": {
+					"field": "date",
+					"type": "temporal",
+					"scale": {
+						"type":"time",
+						"domain": ["{{scroller_start}}","{{scroller_end}}"]
+					},
+					"axis": {
+						"title": "",
+						"labelFontSize": 14,
+						"tickCount": 7,
+					}
+				},
+				"y": {
+					"field": "arrival_rate",
+					"type": "quantitative",
+					"axis": {
+						"orient": "right",
+						"title": "Arrival Rate",
+						"titleFontSize": 14,
+						"titleAngle": 0,
+						"titleX": -524,
+						"titleY": 20,
+						"labelFontSize": 14,
+						"tickSize": 1,
+						"gridDash": [2,1]
+					},
+					"scale": {
+						"type": "linear",
+						"clamp": true,
+						"nice": true,
+						"zero": false,
+					},
+				}
+			},
+			"config": {
+				"scale": {
+					"continuousPadding": 10
+				}
+			}
+		};
+		vegaEmbed("#arrivalrate", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
+	</script>
+
+
+	<div id="difficulty"></div>
+
+	<script type="text/javascript">
+		var vegaSpec = {
+			"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+			"description": "Bitcoin Difficulty History",
+			"width": 500,
+			"height": 240,
+			"padding": 8,
+			"data": {
+				"url": "arrows/stats_minutely.csv"
+			},
+			"autosize": {
+				"type": "fit",
+				"resize": true
+			},
+			"selection": {
+				"grid": {
+					"type": "interval",
+					"bind": "scales"
+				}
+			},
+			"mark": {
+				"type": "line",
+				"color": "#0f0",
+				"strokeWidth": 2,
+			},
+			"encoding": {
+				"x": {
+					"field": "date",
+					"type": "temporal",
+					"scale": {
+						"type":"time",
+						"domain": ["{{scroller_start}}","{{scroller_end}}"]
+					},
+					"axis": {
+						"title": "",
+						"labelFontSize": 14,
+						"tickCount": 7,
+					}
+				},
+				"y": {
+					"field": "log_difficulty",
+					"type": "quantitative",
+					"axis": {
+						"title": "Log Difficulty",
+						"titleFontSize": 14,
+						"titleAngle": 0,
+						"titleX": 56,
+						"titleY": 20,
+						"labelFontSize": 14,
+						"tickSize": 1,
+						"gridDash": [2,1]
+					},
+					"scale": {
+						"type": "linear",
+						"clamp": true,
+						"nice": true,
+						"zero": false,
+					},
+				}
+			},
+			"config": {
+				"scale": {
+					"continuousPadding": 10
+				}
+			}
+		};
+		vegaEmbed("#difficulty", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
+	</script>
+	</div>
+
+
 
 
 

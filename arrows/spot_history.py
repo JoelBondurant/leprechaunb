@@ -102,7 +102,9 @@ def stats_minutely():
 		"minutes_between_blocks"
 	]
 	df = df[keep_stats]
+	df["log_difficulty"] = df.difficulty.apply(math.log10)
 	df["log_hash_rate"] = df.hash_rate.apply(math.log10)
+	df["arrival_rate"] = (df.minutes_between_blocks * 60).astype(int)
 	df.to_csv("/data/adbcsv/stats_minutely.csv", index=False)
 	logger.info("</stats_minutely>")
 
