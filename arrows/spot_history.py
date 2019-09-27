@@ -132,15 +132,15 @@ def day_spot_model():
 
 	aa, bb, cc, dd, ee = np.polyfit(df.time, df.log1p_spot, 4)
 
-	bounds = ["_lb", "", "_ub"]
-	log_pads = [-0.80, 0.0, 1]
-	exp_pads = [0.66, 0.25, -1]
-	for bound, lpad, epad in zip(bounds, log_pads, exp_pads):
+	labels = [f"_{x}" for x in range(6)]
+	log_pads = [-0.80, -0.40, 0.0, 0.5, 1.0, 1.1]
+	exp_pads = [0.66, 0.50, 0.25, -0.2, -1.0, -1.1]
+	for label, lpad, epad in zip(labels, log_pads, exp_pads):
 		log1p_spot_model = aa*df.time**4 + bb*df.time**3 + cc*df.time**2 + dd*df.time + ee
 		log1p_spot_model += lpad
 		spot_model = np.exp(log1p_spot_model) - 1
 		spot_model += epad
-		df[f"spot_model{bound}"] = spot_model
+		df[f"spot_model{label}"] = spot_model
 
 	df.to_csv("/data/adbcsv/spot_model_xaubtc_daily.csv", index=False)
 	logger.info("</day_spot_model>")

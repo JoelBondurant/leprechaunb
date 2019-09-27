@@ -4,7 +4,7 @@ A system for monitoring Bitcoin.
 
 
 ## ScreenShot:
-![ScreenShot](https://raw.github.com/JoelBondurant/leprechaunb/master/doc/img/bitcoin_arrows.png)
+![ScreenShot](https://raw.github.com/JoelBondurant/leprechaunb/master/doc/img/leprechanb.png)
 
 ## Architecture:
 ![Architechure](https://raw.github.com/JoelBondurant/leprechaunb/master/doc/img/arch.jpg)
