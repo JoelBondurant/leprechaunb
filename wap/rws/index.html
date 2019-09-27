@@ -130,6 +130,40 @@
 				{
 					"mark": {
 						"type": "line",
+						"color": "#c00",
+						"strokeWidth": 3,
+					},
+					"encoding": {
+						"x": {
+							"field": "date",
+							"type": "temporal",
+						},
+						"y": {
+							"field": "spot_model_ub",
+							"type": "quantitative",
+						},
+					}
+				},
+				{
+					"mark": {
+						"type": "line",
+						"color": "#0c0",
+						"strokeWidth": 3,
+					},
+					"encoding": {
+						"x": {
+							"field": "date",
+							"type": "temporal",
+						},
+						"y": {
+							"field": "spot_model_lb",
+							"type": "quantitative",
+						},
+					}
+				},
+				{
+					"mark": {
+						"type": "line",
 						"color": "#ddd",
 						"strokeWidth": 3,
 					},

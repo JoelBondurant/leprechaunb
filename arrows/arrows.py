@@ -40,6 +40,7 @@ def minute_arrow():
 def day_arrow():
 	try:
 		logger.info("<day_arrow>")
+		importlib.reload(spot_history)
 		spot_history.day_arrow()
 		logger.info("</day_arrow>")
 	except Exception as ex:
