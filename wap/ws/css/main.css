@@ -19,7 +19,7 @@ img {
 }
 
 hr {
-	border-color: #202020;
+	border-color: #222;
 }
 
 .pagewrap {
@@ -36,9 +36,9 @@ hr {
 
 
 th {
-	width: 900px;
+	width: 60px;
 	text-align: center;
-	color: #f7931a;
+	color: #888;
 }
 
 td {
