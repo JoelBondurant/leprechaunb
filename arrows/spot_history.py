@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 
 from util import logger
+from util import racoon
 from util import rock
 
 
@@ -32,7 +33,7 @@ def keys_minutely():
 		if key.endswith("_timestamp"):
 			continue
 		df = pd.read_parquet(f"/data/tsdb/minutely/{key}.parq")
-		df.to_csv(f"/data/adbcsv/{key}_minutely.csv", index=False)
+		racoon.to_csv(df, f"/data/adbcsv/{key}_minutely.csv")
 	logger.info("</keys_minutely>")
 
 
@@ -57,10 +58,10 @@ def spots_minutely():
 	cutoff = cutoff - datetime.timedelta(hours=3*24)
 	cutoff = datetime.datetime(*cutoff.timetuple()[:6])
 	df = df[df.date >= cutoff]
-	df.to_csv("/data/adbcsv/spots_btcxau_minutely.csv", index=False)
+	racoon.to_csv(df, "/data/adbcsv/spots_btcxau_minutely.csv")
 	df = df.drop_duplicates(subset=["source"], keep="last")
 	df = df[df.source != "bisq"].sort_values("value", ascending=True, axis=0)
-	df.to_csv("/data/adbcsv/spots_btcxau_minutely_tail.csv", index=False)
+	racoon.to_csv(df, "/data/adbcsv/spots_btcxau_minutely_tail.csv")
 	##############
 	# Bitcoin:
 	##############
@@ -76,10 +77,10 @@ def spots_minutely():
 	cutoff = cutoff - datetime.timedelta(hours=3*24)
 	cutoff = datetime.datetime(*cutoff.timetuple()[:6])
 	df = df[df.date >= cutoff]
-	df.to_csv("/data/adbcsv/spots_xaubtc_minutely.csv", index=False)
+	racoon.to_csv(df, "/data/adbcsv/spots_xaubtc_minutely.csv")
 	df = df.drop_duplicates(subset=["source"], keep="last")
 	df = df[df.source != "bisq"].sort_values("value", ascending=True, axis=0)
-	df.to_csv("/data/adbcsv/spots_xaubtc_minutely_tail.csv", index=False)
+	racoon.to_csv(df, "/data/adbcsv/spots_xaubtc_minutely_tail.csv")
 	logger.info("</spots_minutely>")
 
 
@@ -105,7 +106,7 @@ def stats_minutely():
 	df["log_difficulty"] = df.difficulty.apply(math.log10)
 	df["log_hash_rate"] = df.hash_rate.apply(math.log10)
 	df["arrival_rate"] = (df.minutes_between_blocks * 60).astype(int)
-	df.to_csv("/data/adbcsv/stats_minutely.csv", index=False)
+	racoon.to_csv(df, "/data/adbcsv/stats_minutely.csv")
 	logger.info("</stats_minutely>")
 
 
@@ -144,7 +145,7 @@ def day_spot_model():
 		spot_model += epad
 		df[f"spot_model{label}"] = spot_model
 
-	df.to_csv("/data/adbcsv/spot_model_xaubtc_daily.csv", index=False)
+	racoon.to_csv(df, "/data/adbcsv/spot_model_xaubtc_daily.csv")
 	logger.info("</day_spot_model>")
 
 
@@ -159,7 +160,7 @@ def day_arrow():
 		fn = f"/data/tsdb/daily/{key}.parq"
 		if os.path.exists(fn):
 			df = pd.read_parquet(fn)
-			df.to_csv(f"/data/adbcsv/{key}_daily.csv", index=False)
+			racoon.to_csv(df, f"/data/adbcsv/{key}_daily.csv")
 		else:
 			logger.warn(f"/data/tsdb/daily/{key}.parq files are missing.")
 	day_spot_model()
