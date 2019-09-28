@@ -125,9 +125,9 @@ def drill():
 	return render_template("drill.html")
 
 
-@app.route("/wallet")
-def wallet():
-	return render_template("wallet.html")
+@app.route("/pot")
+def pot():
+	return render_template("pot.html")
 
 
 @app.route("/contact")

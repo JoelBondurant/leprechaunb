@@ -3,7 +3,25 @@ Racoon, the magic trash panda is a wrapper to
 the amazing/terrible Pandas.
 """
 
+import datetime
 import os
+
+import pandas as pd
+
+
+def test_df(n=10):
+	"""
+	Generate a test dataframe.
+	"""
+	X = range(1, n+1)
+	now = datetime.datetime.now().date()
+	dat = {
+		"x": X,
+		"y": [3.14*x for x in X],
+		"z": [now + datetime.timedelta(days=-x) for x in reversed(X)]
+	}
+	df = pd.DataFrame(dat)
+	return df
 
 
 def to_csv(df, file_path):
@@ -14,5 +32,5 @@ def to_csv(df, file_path):
 	fn = os.path.basename(file_path)
 	invisible_file_path = file_path.replace(fn, "." + fn)
 	df.to_csv(invisible_file_path, index=False)
-	os.rename(invisivle_file_path, file_path) # Atomic swap
+	os.rename(invisible_file_path, file_path) # Atomic swap
 
