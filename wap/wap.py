@@ -90,12 +90,15 @@ def index():
 	stats = {}
 	color_index = adb_data["color_index"]
 	stats["color_index"] = color_index
-	content["spot_color"] = rainbow[color_index - 1]
+	spot_color = rainbow[color_index - 1]
+	content["spot_color"] = spot_color
 	bstats = adb_data["blockchain_stats"]
 	keep_bstats = ["trade_volume_btc", "blocks_size", "hash_rate", "difficulty", "miners_revenue_btc", "n_blocks_total", "minutes_between_blocks"]
 	bstats = {k: bstats[k] for k in keep_bstats}
 	stats.update(bstats)
 	stats = to_table(stats, table_id="stats")
+	tdx = stats.find("td")
+	stats = stats[:tdx + 2] + f' style="color:{spot_color};"' + stats[tdx + 2:]
 	content["stats"] = stats
 	#app.logger.info("content:" + str(content))
 
