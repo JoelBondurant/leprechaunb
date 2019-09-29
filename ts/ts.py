@@ -19,7 +19,7 @@ def peek():
 	"""
 	Interactive debugging in prod...
 	"""
-	return rock.rocks("tsdbrocks").get("rtdb_data")
+	return rock.rocks("tsdbrocks").get("tsdb_data")
 
 
 rtdb_keys = rock.rocks("rtdb").get("keys")
@@ -42,7 +42,7 @@ def ts_rt():
 	for key in rtdb_keys:
 		tsdb_data[key] = rock.rocks("rtdb").get(key)
 	tsdb_data["tsdb_timestamp"] = int(time.time())
-	rock.rocks("tsdbrocks").put("tsdb_data", rtdb_data)
+	rock.rocks("tsdbrocks").put("tsdb_data", tsdb_data)
 	logger.info("</ts_rt>")
 
 
