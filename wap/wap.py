@@ -41,17 +41,23 @@ def gendeviceid():
 	return str(uuid.uuid4())
 
 
-def to_table(adict, table_id=None):
+def to_table(obj, table_id=None):
 	if table_id:
 		res = f'<table id="{table_id}">'
 	else:
 		res = "<table>"
 	res += "<tr>"
-	for key in adict.keys():
-		res += f"<th>{key}</th>"
-	res += "</tr><tr>"
-	for val in adict.values():
-		res += f"<td>{val}</td>"
+	if type(obj) == list:
+		for val in obj:
+			res += f"<td>{val}</td>"
+	elif type(obj) == dict:
+		for key in obj.keys():
+			res += f"<th>{key}</th>"
+		res += "</tr><tr>"
+		for val in obj.values():
+			res += f"<td>{val}</td>"
+	else:
+		raise NotImplemented(str(obj))
 	res += "</tr></table>"
 	return res
 
@@ -61,7 +67,9 @@ def get_adb_data():
 	"""
 	Rate limit the hit squad.
 	"""
-	adb_data = rock.rocks("adbrocks").get("adb_data")
+	adb_rocks = rock.rocks("adbrocks")
+	adb_data = adb_rocks.get("adb_data")
+	adb_data["color_index"] = adb_rocks.get("color_index")
 	return adb_data
 
 
@@ -77,9 +85,13 @@ def index():
 	adb_data = get_adb_data()
 	content.update(adb_data)
 
-	stats = adb_data["blockchain_stats"]
-	keep_stats = ["trade_volume_btc", "blocks_size", "hash_rate", "difficulty", "miners_revenue_btc", "n_blocks_total", "minutes_between_blocks"]
-	stats = {k: stats[k] for k in keep_stats}
+	# Unroll blockchain stats
+	stats = {}
+	stats["color_index"] = adb_data["color_index"]
+	bstats = adb_data["blockchain_stats"]
+	keep_bstats = ["trade_volume_btc", "blocks_size", "hash_rate", "difficulty", "miners_revenue_btc", "n_blocks_total", "minutes_between_blocks"]
+	bstats = {k: bstats[k] for k in keep_bstats}
+	stats.update(bstats)
 	stats = to_table(stats, table_id="stats")
 	content["stats"] = stats
 	#app.logger.info("content:" + str(content))

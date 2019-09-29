@@ -16,9 +16,16 @@ def filter_outliers(alist, m=1.5):
 	result = [x for x in result if x < avg + m*std]
 	return result
 
+
 def robust_mean(alist):
 	"""
 	A robust mean.
 	"""
 	return statistics.mean(filter_outliers(alist))
 
+
+def closest(alist, aval):
+	"""
+	Find the closest item in a list.
+	"""
+	return min(alist, key=lambda x: abs(x - aval))

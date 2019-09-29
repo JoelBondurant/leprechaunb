@@ -32,4 +32,18 @@ class TestStats:
 				print(test_case, actual)
 			assert test_result
 
+	def test_closest(self):
+		test_cases = [
+			[[1,2,3], 0.1, 1],
+			[[1,2,3], 1.1, 1],
+			[[1,2,3], 1.9, 2],
+			[[1,2,3], 2.9, 3],
+			[[1,2,3], 3.9, 3],
+		]
+		for test_case in test_cases:
+			test_result = stats.closest(test_case[0], test_case[1]) == test_case[2]
+			if not test_result:
+				print(test_case, test_result)
+			assert test_result
+
 
