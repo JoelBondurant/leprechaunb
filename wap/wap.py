@@ -78,6 +78,7 @@ def index():
 	"""
 	https://leprechaunb.com
 	"""
+	rainbow = ["#80a", "#48f", "#0f0", "#ff0", "#f7931a", "#f00"]
 
 	content = {}
 
@@ -87,7 +88,9 @@ def index():
 
 	# Unroll blockchain stats
 	stats = {}
-	stats["color_index"] = adb_data["color_index"]
+	color_index = adb_data["color_index"]
+	stats["color_index"] = color_index
+	content["spot_color"] = rainbow[color_index - 1]
 	bstats = adb_data["blockchain_stats"]
 	keep_bstats = ["trade_volume_btc", "blocks_size", "hash_rate", "difficulty", "miners_revenue_btc", "n_blocks_total", "minutes_between_blocks"]
 	bstats = {k: bstats[k] for k in keep_bstats}
