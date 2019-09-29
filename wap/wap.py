@@ -57,12 +57,12 @@ def to_table(adict, table_id=None):
 
 
 @cachetools.func.ttl_cache(ttl=10)
-def get_rtdb_data():
+def get_adb_data():
 	"""
 	Rate limit the hit squad.
 	"""
-	rtdb_data = rock.rocks("adbrocks").get("rtdb_data")
-	return rtdb_data
+	adb_data = rock.rocks("adbrocks").get("adb_data")
+	return adb_data
 
 
 @app.route("/")
@@ -73,11 +73,11 @@ def index():
 
 	content = {}
 
-	# RT Data:
-	rtdb_data = get_rtdb_data()
-	content.update(rtdb_data)
+	# Arrows Data:
+	adb_data = get_adb_data()
+	content.update(adb_data)
 
-	stats = rtdb_data["blockchain_stats"]
+	stats = adb_data["blockchain_stats"]
 	keep_stats = ["trade_volume_btc", "blocks_size", "hash_rate", "difficulty", "miners_revenue_btc", "n_blocks_total", "minutes_between_blocks"]
 	stats = {k: stats[k] for k in keep_stats}
 	stats = to_table(stats, table_id="stats")

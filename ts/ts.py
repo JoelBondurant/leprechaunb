@@ -38,11 +38,11 @@ def ts_rt():
 	"""
 	logger.info("<ts_rt>")
 	global rtdb_keys
-	rtdb_data = {}
+	tsdb_data = {}
 	for key in rtdb_keys:
-		rtdb_data[key] = rock.rocks("rtdb").get(key)
-	rtdb_data["tsdb_timestamp"] = int(time.time())
-	rock.rocks("tsdbrocks").put("rtdb_data", rtdb_data)
+		tsdb_data[key] = rock.rocks("rtdb").get(key)
+	tsdb_data["tsdb_timestamp"] = int(time.time())
+	rock.rocks("tsdbrocks").put("tsdb_data", rtdb_data)
 	logger.info("</ts_rt>")
 
 

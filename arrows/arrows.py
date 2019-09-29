@@ -13,13 +13,19 @@ from util import rock
 import spot_history
 
 
+def peek():
+	"""
+	Interactive debugging in prod...
+	"""
+	return rock.rocks("adbrocks").get("adb_data")
+
 
 def rt_arrow():
 	try:
 		logger.info("<rt_arrow>")
-		rtdb_data = rock.rocks("tsdbrocks").get("rtdb_data")
-		rtdb_data["adb_timestamp"] = int(time.time())
-		rock.rocks("adbrocks").put("rtdb_data", rtdb_data)
+		adb_data = rock.rocks("tsdbrocks").get("tsdb_data")
+		adb_data["adb_timestamp"] = int(time.time())
+		rock.rocks("adbrocks").put("adb_data", adb_data)
 		logger.info("</rt_arrow>")
 	except Exception as ex:
 		logger.exception(ex, "Root rt_arrow exception handler:")

@@ -15,13 +15,13 @@ from util import rock
 
 
 
-rtdb_keys = list(rock.rocks("tsdbrocks").get("rtdb_data").keys())
+tsdb_keys = list(rock.rocks("tsdbrocks").get("tsdb_data").keys())
 
-gold_spot_keys = [x for x in rtdb_keys if "_spot_btcxau" in x]
-bitcoin_spot_keys = [x for x in rtdb_keys if "_spot_xaubtc" in x]
+gold_spot_keys = [x for x in tsdb_keys if "_spot_btcxau" in x]
+bitcoin_spot_keys = [x for x in tsdb_keys if "_spot_xaubtc" in x]
 #logger.info("gold_spot_keys: " + str(gold_spot_keys))
 #logger.info("bitcoin_spot_keys: " + str(bitcoin_spot_keys))
-keys = rtdb_keys.copy()
+keys = tsdb_keys.copy()
 
 
 def keys_minutely():
