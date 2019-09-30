@@ -4,6 +4,7 @@ pkill flask
 echo "starting flask wap"
 cd ./wap
 export FLASK_APP="wap"
-export FLASK_ENV="development"
+export FLASK_ENV="production"
+export FLASK_DEBUG=0
 nohup flask run --host=127.0.0.1 --port=8880 </dev/null >/dev/null 2>&1 &
 cd ..
