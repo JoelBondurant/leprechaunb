@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import datetime
 import json
+import os
 import time
 import uuid
 
@@ -24,6 +25,10 @@ from util import rock
 
 COOKIES = True
 
+this_path = os.path.dirname(os.path.realpath(__file__))
+os.chdir(this_path)
+
+
 logger.addHandler(default_handler)
 logger.warn("wap started.")
 app = Flask("leprechaunb", static_url_path="", template_folder="rws")
@@ -38,10 +43,6 @@ def strtime(s):
 @app.errorhandler(404)
 def awol(err):
 	return render_template("404.html"), 404
-
-
-def gendeviceid():
-	return str(uuid.uuid4())
 
 
 @app.route("/exchange")
@@ -131,10 +132,11 @@ def add_header(response):
 	"""
 	Cache middleware for nginx.
 	"""
-	response.headers["Cache-Control"] = "public, min-fresh=10, max-age=3600"
-	response.headers["Expires"] = "10"
+	response.headers["Cache-Control"] = "public, min-fresh=12, max-age=1200"
+	response.headers["Expires"] = "12"
 	response.headers["Pragma"] = "no-cache"
 	return response
 
 
-
+if __name__ == "__main__":
+	app.run(host="127.0.0.1", port=8880, debug=False)
