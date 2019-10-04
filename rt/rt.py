@@ -34,6 +34,16 @@ def peek():
 	return rock.rocks("rtdb").get("spot_xaubtc")
 
 
+def spot_optional(module):
+	"""
+	Make spots optional, exploderized spots will be nan.
+	"""
+	try:
+		return float(module.spot())
+	except:
+		return float("nan")
+
+
 def get_spots(spot_type, timeout=SUBPERIOD, max_tries=SUBPERIODS):
 	"""
 	Returns a list of the spot prices (calls .spot() on modules)
@@ -52,8 +62,8 @@ def get_spots(spot_type, timeout=SUBPERIOD, max_tries=SUBPERIODS):
 		try:
 			mw = len(spot_source_modules)
 			with concurrent.futures.ThreadPoolExecutor(max_workers=mw) as executor:
-				res = executor.map(lambda x: x.spot(), spot_source_modules, timeout=timeout)
-			return list(res)
+				futs = executor.map(spot_optional, spot_source_modules, timeout=timeout)
+			return list(futs)
 		except Exception as ex:
 			logger.exception(ex)
 			time.sleep(1)

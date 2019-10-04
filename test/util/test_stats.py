@@ -10,6 +10,7 @@ class TestStats:
 
 	def test_filter_outliers(self):
 		test_cases = [
+			[[1.0, 2.0, float("nan")], [1.0, 2.0]],
 			[[1000, 1001, 1002], [1000, 1001, 1002]],
 			[[1002, 1001, 1000, 0], [1002, 1001, 1000]],
 			[[1002, 1001, 1000, 0], [1002, 1001, 1000]],
@@ -32,13 +33,28 @@ class TestStats:
 				print(test_case, actual)
 			assert test_result
 
+
+	def test_robust_mean(self):
+		test_cases = [
+			[[1.0, float("nan"), 3.0], 2.0],
+			[[1.0, 2.0, 3.0], 2.0],
+			[[1, 2, 3], 2],
+		]
+		for test_case in test_cases:
+			test_result = stats.robust_mean(test_case[0]) == test_case[1]
+			if not test_result:
+				print(test_case, test_result)
+			assert test_result
+
+
 	def test_closest(self):
 		test_cases = [
-			[[1,2,3], 0.1, 1],
-			[[1,2,3], 1.1, 1],
-			[[1,2,3], 1.9, 2],
-			[[1,2,3], 2.9, 3],
-			[[1,2,3], 3.9, 3],
+			[[1.0, 2.0, float("nan")], 0.1, 1],
+			[[1, 2, 3], 0.1, 1],
+			[[1, 2, 3], 1.1, 1],
+			[[1, 2, 3], 1.9, 2],
+			[[1, 2, 3], 2.9, 3],
+			[[1, 2, 3], 3.9, 3],
 		]
 		for test_case in test_cases:
 			test_result = stats.closest(test_case[0], test_case[1]) == test_case[2]
