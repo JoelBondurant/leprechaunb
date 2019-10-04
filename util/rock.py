@@ -11,6 +11,7 @@ import rocksdb
 
 grams_per_toz = 31.1034768
 
+
 def secondstamp():
 	"""
 	UTC Second Stamp

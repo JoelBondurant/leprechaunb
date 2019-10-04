@@ -129,7 +129,10 @@ def write_rt():
 
 		for dat in dats:
 			#logger.info("rtdb.put: " + dat[0])
-			rock.rocks("rtdb").put(dat[0], dat[1])
+			try:
+				rock.rocks("rtdb").put(dat[0], dat[1])
+			except rock.rocksdb.errors.RocksIOError as ex:
+				pass
 
 	except Exception as ex:
 		time.sleep(2)
