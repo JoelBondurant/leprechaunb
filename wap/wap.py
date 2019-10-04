@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import datetime
 import json
+import logging
 import os
 import time
 import uuid
@@ -19,7 +20,6 @@ from flask.logging import default_handler
 
 from views.index import index_blueprint
 
-from util import logger
 from util import rock
 
 
@@ -29,10 +29,12 @@ this_path = os.path.dirname(os.path.realpath(__file__))
 os.chdir(this_path)
 
 
-logger.addHandler(default_handler)
-logger.warn("wap started.")
 app = Flask("leprechaunb", static_url_path="", template_folder="rws")
 app.register_blueprint(index_blueprint)
+gunicorn_logger = logging.getLogger("gunicorn.error")
+app.logger.handlers = gunicorn_logger.handlers
+app.logger.setLevel(gunicorn_logger.level)
+
 
 
 @app.template_filter("strtime")

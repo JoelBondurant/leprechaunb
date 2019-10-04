@@ -8,6 +8,7 @@ import cachetools.func
 
 from flask import (
 	Blueprint,
+	current_app,
 	make_response,
 	redirect,
 	render_template,
@@ -19,8 +20,6 @@ from util import htm
 from util import logger
 from util import rock
 
-
-COOKIES = True
 
 logger.warn("wap started.")
 index_blueprint = Blueprint("index", __name__)
@@ -90,11 +89,14 @@ def index():
 
 	resp = make_response(render_template("index.html", **content))
 	
-	if COOKIES:
-		if "deviceid" not in request.cookies:
-			deviceid = gendeviceid()
-			expires = datetime.datetime.now() + datetime.timedelta(days=360)
-			resp.set_cookie("deviceid", deviceid, expires=expires)
+	if "deviceid" not in request.cookies:
+		deviceid = gendeviceid()
+		expires = datetime.datetime.now() + datetime.timedelta(days=360)
+		resp.set_cookie("deviceid", deviceid, expires=expires)
+		current_app.logger.info(f"new:deviceid:{deviceid}")
+	else:
+		deviceid = request.cookies.get("deviceid")
+		current_app.logger.info(f"deviceid:{deviceid}")
 
 	return resp
 

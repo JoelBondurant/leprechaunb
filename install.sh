@@ -9,6 +9,9 @@ sudo cp rt/rt.service /etc/systemd/system/
 sudo cp ts/ts.service /etc/systemd/system/
 sudo cp arrows/arrows.service /etc/systemd/system/
 sudo cp wap/wap.service /etc/systemd/system/
+sudo cp nginx/leprechaunb /etc/nginx/sites-enabled/leprechaunb
+sudo systemctl restart nginx
+sudo nginx -s reload
 sudo systemctl daemon-reload
 sudo systemctl start rt
 sudo systemctl start ts
