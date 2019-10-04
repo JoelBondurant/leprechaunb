@@ -33,6 +33,7 @@ def keys_minutely():
 		if key.endswith("_timestamp"):
 			continue
 		df = pd.read_parquet(f"/data/tsdb/minutely/{key}.parq")
+		df = df.dropna()
 		racoon.to_csv(df, f"/data/adbcsv/{key}_minutely.csv")
 	logger.info("</keys_minutely>")
 
@@ -58,9 +59,11 @@ def spots_minutely():
 	cutoff = cutoff - datetime.timedelta(hours=3*24)
 	cutoff = datetime.datetime(*cutoff.timetuple()[:6])
 	df = df[df.date >= cutoff]
+	df = df.dropna()
 	racoon.to_csv(df, "/data/adbcsv/spots_btcxau_minutely.csv")
 	df = df.drop_duplicates(subset=["source"], keep="last")
 	df = df[df.source != "bisq"].sort_values("value", ascending=True, axis=0)
+	df = df.dropna()
 	racoon.to_csv(df, "/data/adbcsv/spots_btcxau_minutely_tail.csv")
 	##############
 	# Bitcoin:
@@ -77,9 +80,11 @@ def spots_minutely():
 	cutoff = cutoff - datetime.timedelta(hours=3*24)
 	cutoff = datetime.datetime(*cutoff.timetuple()[:6])
 	df = df[df.date >= cutoff]
+	df = df.dropna()
 	racoon.to_csv(df, "/data/adbcsv/spots_xaubtc_minutely.csv")
 	df = df.drop_duplicates(subset=["source"], keep="last")
 	df = df[df.source != "bisq"].sort_values("value", ascending=True, axis=0)
+	df = df.dropna()
 	racoon.to_csv(df, "/data/adbcsv/spots_xaubtc_minutely_tail.csv")
 	logger.info("</spots_minutely>")
 

@@ -39,9 +39,12 @@ def spot_optional(module):
 	Make spots optional, exploderized spots will be nan.
 	"""
 	try:
-		return float(module.spot())
+		s = float(module.spot())
+		if s < 1.0:
+			s = float("nan")
 	except:
-		return float("nan")
+		s = float("nan")
+	return s
 
 
 def get_spots(spot_type, timeout=SUBPERIOD, max_tries=SUBPERIODS):
