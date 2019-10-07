@@ -10,7 +10,12 @@ import schedule
 from util import logger
 from util import rock
 
-import spot_history
+from quiver import (
+	key_history,
+	spot_model,
+	spot_history,
+	stats_history,
+)
 
 
 def peek():
@@ -37,6 +42,8 @@ def minute_arrow():
 		logger.info("<minute_arrow>")
 		importlib.reload(spot_history)
 		spot_history.minute_arrow()
+		stats_history.minute_arrow()
+		key_history.minute_arrow()
 		logger.info("</minute_arrow>")
 	except Exception as ex:
 		logger.exception(ex, "Root minute_arrow exception handler:")
@@ -48,6 +55,7 @@ def day_arrow():
 		logger.info("<day_arrow>")
 		importlib.reload(spot_history)
 		spot_history.day_arrow()
+		spot_model.day_arrow()
 		logger.info("</day_arrow>")
 	except Exception as ex:
 		logger.exception(ex, "Root day_arrow exception handler:")
