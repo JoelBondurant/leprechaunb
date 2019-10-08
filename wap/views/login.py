@@ -2,7 +2,10 @@
 import datetime
 import json
 import time
-import uuid
+import hashlib
+import secrets
+
+from util import rock
 
 
 from flask import (
@@ -19,25 +22,73 @@ from flask import (
 login_blueprint = Blueprint("login", __name__)
 
 
-def gendeviceid():
-	return str(uuid.uuid4())
 
-
-@login_blueprint.route("/login/")
+@login_blueprint.route("/login/", methods=["GET"])
 def login():
+
+	time.sleep(0.1)
+	if "deviceid" not in request.cookies:
+		return "enable cookies."
 
 	content = {}
 
 	resp = make_response(render_template("login.html", **content))
-	
-	if "deviceid" not in request.cookies:
-		deviceid = gendeviceid()
-		expires = datetime.datetime.now() + datetime.timedelta(days=360)
-		resp.set_cookie("deviceid", deviceid, expires=expires, samesite="strict")
-		current_app.logger.info(f"new:deviceid:{deviceid}")
-	else:
-		deviceid = request.cookies.get("deviceid")
-		current_app.logger.info(f"deviceid:{deviceid}")
 
 	return resp
+
+
+@login_blueprint.route("/login/new/", methods=["GET", "POST"])
+def login_new():
+
+	time.sleep(0.1)
+	if "deviceid" not in request.cookies:
+		return "enable cookies."
+
+	deviceid = request.cookies.get("deviceid")
+	assert len(deviceid) == 32
+
+	uid = secrets.token_hex(8)
+	current_app.logger.info(f"new:uid:{uid}")
+
+	ukey = secrets.token_hex(8)
+
+	rock.rocks("udb").put(f"ukey_{uid}", ukey)
+
+	content = {
+		"deviceid": deviceid,
+		"uid": uid,
+		"ukey": ukey,
+	}
+
+	resp = make_response(render_template("new.html", **content))
+	expires = datetime.datetime.now() + datetime.timedelta(days=365)
+	resp.set_cookie("uid", uid, expires=expires, samesite="strict")
+	expires = datetime.datetime.now() + datetime.timedelta(days=28)
+	resp.set_cookie("ukey", ukey, expires=expires, samesite="strict")
+
+	return resp
+
+
+@login_blueprint.route("/login/verify/", methods=["GET", "POST"])
+def login_verify():
+
+	time.sleep(0.1)
+	if "deviceid" not in request.cookies:
+		return "enable cookies."
+
+	deviceid = request.cookies.get("deviceid")
+	assert len(deviceid) == 32
+
+	
+	uid = request.cookies.get("uid")
+	assert len(uid) == 16
+
+	ukey = request.cookies.get("ukey")
+	assert len(ukey) == 16
+
+	udb_ukey = rock.rocks("udb").get(f"ukey_{uid}")
+	assert udb_ukey == ukey
+
+	return redirect("/", code=302)
+
 

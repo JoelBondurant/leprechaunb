@@ -4,22 +4,28 @@
 <div class="page-wrap">
 
 	<div class="centerwrap">
+
 		<span style="text-align:center;">
-			Login.
+			Login:
 			<br/><br/><br/>
 			<a href="/">&gt;&gt;&gt;------&gt;</a>
-			<br/>
+			<br/><br/><br/>
 		</span>
 
-		<form action="" method="post">
-			<label for="uid">User Id:</label>
+		<form action="verify" method="post">
+			<label for="uid">uid:</label>
 			<input type="text" name="uid" required>
-
-			<label for="ukey">User Key:</label>
+			<br/>
+			<label for="ukey">ukey:</label>
 			<input type="password" name="ukey" required>
-
-			<button type="submit">Login</button>
+			<br/>
+			<button type="submit">login</button>
 		</form>
+
+		<form action="new" method="post">
+			<button type="new">new</button>
+		</form>
+
 	</div>
 
 </div>

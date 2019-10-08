@@ -38,7 +38,6 @@ app.logger.handlers = gunicorn_logger.handlers
 app.logger.setLevel(gunicorn_logger.level)
 
 
-
 @app.template_filter("strtime")
 def strtime(s):
 	return datetime.datetime.fromtimestamp(s).isoformat().replace("T","_")

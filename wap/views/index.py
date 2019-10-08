@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import datetime
 import json
+import secrets
 import time
-import uuid
 
 import cachetools.func
 
@@ -23,11 +23,6 @@ from util import rock
 
 logger.warn("wap started.")
 index_blueprint = Blueprint("index", __name__)
-
-
-
-def gendeviceid():
-	return str(uuid.uuid4())
 
 
 @cachetools.func.ttl_cache(ttl=10)
@@ -89,8 +84,8 @@ def index():
 
 	resp = make_response(render_template("index.html", **content))
 	
-	if "deviceid" not in request.cookies:
-		deviceid = gendeviceid()
+	if "deviceid" not in request.cookies or len(request.cookies.get("deviceid")) != 32:
+		deviceid = secrets.token_hex(16)
 		expires = datetime.datetime.now() + datetime.timedelta(days=360)
 		resp.set_cookie("deviceid", deviceid, expires=expires, samesite="strict")
 		current_app.logger.info(f"new:deviceid:{deviceid}")
