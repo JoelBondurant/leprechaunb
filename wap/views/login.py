@@ -69,7 +69,7 @@ def login_new():
 	return resp
 
 
-@login_blueprint.route("/login/verify/", methods=["GET", "POST"])
+@login_blueprint.route("/login/verify/", methods=["POST"])
 def login_verify():
 
 	time.sleep(0.1)
@@ -79,16 +79,20 @@ def login_verify():
 	deviceid = request.cookies.get("deviceid")
 	assert len(deviceid) == 32
 
-	
-	uid = request.cookies.get("uid")
+	uid = request.form.get("uid")
 	assert len(uid) == 16
 
-	ukey = request.cookies.get("ukey")
+	ukey = request.form.get("ukey")
 	assert len(ukey) == 16
 
 	udb_ukey = rock.rocks("udb").get(f"ukey_{uid}")
 	assert udb_ukey == ukey
 
-	return redirect("/", code=302)
+	resp = make_response(redirect("/", code=302))
+	expires = datetime.datetime.now() + datetime.timedelta(days=365)
+	resp.set_cookie("uid", uid, expires=expires, samesite="strict")
+	expires = datetime.datetime.now() + datetime.timedelta(days=28)
+	resp.set_cookie("ukey", ukey, expires=expires, samesite="strict")
+	return resp
 
 
