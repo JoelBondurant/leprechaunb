@@ -19,6 +19,7 @@ from flask import (
 from flask.logging import default_handler
 
 from views.index import index_blueprint
+from views.login import login_blueprint
 
 from util import rock
 
@@ -31,6 +32,7 @@ os.chdir(this_path)
 
 app = Flask("leprechaunb", static_url_path="", template_folder="rws")
 app.register_blueprint(index_blueprint)
+app.register_blueprint(login_blueprint)
 gunicorn_logger = logging.getLogger("gunicorn.error")
 app.logger.handlers = gunicorn_logger.handlers
 app.logger.setLevel(gunicorn_logger.level)

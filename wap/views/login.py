@@ -23,7 +23,7 @@ def gendeviceid():
 	return str(uuid.uuid4())
 
 
-@login_blueprint.route("/")
+@login_blueprint.route("/login/")
 def login():
 
 	content = {}
