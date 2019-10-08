@@ -55,20 +55,33 @@ def bitcoin_minute_arrow():
 	logger.info("<bitcoin_spots_minutely>")
 	bitcoin_spot_keys = bitcoin_spot_keys.copy()
 	bitcoin_spot_keys = [x for x in bitcoin_spot_keys if "bisq" not in x]
+	base_cutoff = datetime.datetime.utcnow().replace(second=0, microsecond=0)
 	df = pd.read_parquet(f"/data/tsdb/minutely/{bitcoin_spot_keys[0]}.parq")
 	df["source"] = bitcoin_spot_keys[0].split("_")[0]
 	for spot_key in bitcoin_spot_keys[1:]:
 		df = pd.concat([df, pd.read_parquet(f"/data/tsdb/minutely/{spot_key}.parq")], ignore_index=True, sort=True)
 		source = spot_key.split("_")[0]
 		df.source = df.source.fillna(source)
-	cutoff = datetime.datetime.utcnow().replace(second=0, microsecond=0)
-	cutoff = cutoff - datetime.timedelta(hours=3*24)
+	cutoff = base_cutoff - datetime.timedelta(hours=3*24)
+	df = df[df.date >= cutoff]
+	for spot_key in bitcoin_spot_keys:
+		df = pd.concat([df, pd.read_parquet(f"/data/tsdb/hourly/{spot_key}.parq")], ignore_index=True, sort=True)
+		source = spot_key.split("_")[0]
+		df.source = df.source.fillna(source)
+	cutoff = base_cutoff - datetime.timedelta(hours=21*24)
+	df = df[df.date >= cutoff]
+	for spot_key in bitcoin_spot_keys:
+		df = pd.concat([df, pd.read_parquet(f"/data/tsdb/daily/{spot_key}.parq")], ignore_index=True, sort=True)
+		source = spot_key.split("_")[0]
+		df.source = df.source.fillna(source)
+	cutoff = base_cutoff - datetime.timedelta(hours=365*24)
 	df = df[df.date >= cutoff]
 	df = df.dropna()
+	df = df.drop_duplicates(subset=["date", "source"], keep="last")
+	df = df[df.source != "bisq"]
+	df = df.sort_values("value", ascending=True, axis=0)
 	racoon.to_csv(df, "/data/adbcsv/spots_xaubtc_minutely.csv")
 	df = df.drop_duplicates(subset=["source"], keep="last")
-	df = df[df.source != "bisq"].sort_values("value", ascending=True, axis=0)
-	df = df.dropna()
 	racoon.to_csv(df, "/data/adbcsv/spots_xaubtc_minutely_tail.csv")
 	logger.info("</bitcoin_spots_minutely>")
 

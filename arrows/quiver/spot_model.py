@@ -27,8 +27,10 @@ def day_arrow():
 	aa, bb, cc, dd, ee = np.polyfit(df.time, df.log1p_spot, 4)
 
 	labels = [f"spot_model_{x}" for x in range(6)]
-	log_pads = [-0.80, -0.40, 0.0, 0.5, 1, 1.2]
-	exp_pads = [0.661, 0.496, 0.248, -0.244, -1.044, -1.513]
+	#log_pads = [-0.80, -0.40, 0.0, 0.5, 1, 1.2]
+	#exp_pads = [0.661, 0.496, 0.248, -0.244, -1.044, -1.513]
+	log_pads = [-0.80, -0.40, 0.0, 0.5, 1.0, 1.1]
+	exp_pads = [0.66, 0.5, 0.25, -0.2, -1.0, -1.1]
 	for label, lpad, epad in zip(labels, log_pads, exp_pads):
 		log1p_spot_model = aa*df.time**4 + bb*df.time**3 + cc*df.time**2 + dd*df.time + ee
 		log1p_spot_model += lpad
