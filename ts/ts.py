@@ -63,6 +63,7 @@ def ts_minutely():
 				else:
 					nowpie = {"date": now, "value": val}
 				df = df.append(nowpie, ignore_index=True)
+				df = df.dropna()
 				df.drop_duplicates(subset=["date"], keep="last", inplace=True)
 				if len(df) != nvals:
 					df.to_parquet(fname)
@@ -98,6 +99,7 @@ def ts_hourly():
 					nowpie = {"date": now, "value": val}
 				df = df.append(nowpie, ignore_index=True)
 				df.date = pd.to_datetime(df.date)
+				df = df.dropna()
 				df.drop_duplicates(subset=["date"], keep="first", inplace=True)
 				if len(df) != nvals:
 					df.to_parquet(fname)
@@ -134,6 +136,7 @@ def ts_daily():
 					nowpie = {"date": now, "value": val}
 				df = df.append(nowpie, ignore_index=True)
 				df.date = pd.to_datetime(df.date)
+				df = df.dropna()
 				df.drop_duplicates(subset=["date"], keep="first", inplace=True)
 				if len(df) != nvals:
 					df.to_parquet(fname)
