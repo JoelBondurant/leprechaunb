@@ -92,7 +92,7 @@ def index():
 	if "deviceid" not in request.cookies:
 		deviceid = gendeviceid()
 		expires = datetime.datetime.now() + datetime.timedelta(days=360)
-		resp.set_cookie("deviceid", deviceid, expires=expires)
+		resp.set_cookie("deviceid", deviceid, expires=expires, samesite="strict")
 		current_app.logger.info(f"new:deviceid:{deviceid}")
 	else:
 		deviceid = request.cookies.get("deviceid")
