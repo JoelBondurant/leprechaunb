@@ -128,9 +128,12 @@ class Rock:
 		else:
 			bkey = akey
 		bval = self.connection().get(bkey)
+		if bval is None:
+			return None
 		if value_decode:
 			try:
-				aval = json.loads(bval.decode())
+				aval = bval.decode()
+				aval = json.loads(aval)
 			except Exception as ex:
 				msg = ex.args[0] + "\n"
 				msg += "val.decode failure:\n"

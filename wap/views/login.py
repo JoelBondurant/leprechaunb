@@ -29,10 +29,11 @@ def get_ukey_signature_key():
 	uksk_hex = rock.rocks("udb", read_only=True).get("ukey_signature_key")
 	if uksk_hex is None:
 		uksk = ecdsa.SigningKey.generate(ecdsa.SECP256k1)
-		uksk_hex.to_string().hex()
+		uksk_hex = uksk.to_string().hex()
 		rock.rocks("udb").put("ukey_signature_key", uksk_hex)
 	else:
-		uksk = ecdsa.SigningKey.from_string(binascii.unhexlify(uksk_hex), curve=ecdsa.SECP256k1)
+		uksk_str = binascii.unhexlify(uksk_hex)
+		uksk = ecdsa.SigningKey.from_string(uksk_str, curve=ecdsa.SECP256k1)
 	return uksk
 
 
