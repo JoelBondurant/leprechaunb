@@ -21,7 +21,7 @@ from flask import (
 
 login_blueprint = Blueprint("login", __name__)
 
-
+#rock.rocks("udb").get("ukey")
 
 @login_blueprint.route("/login/", methods=["GET"])
 def login():

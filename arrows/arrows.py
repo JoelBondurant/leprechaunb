@@ -22,13 +22,13 @@ def peek():
 	"""
 	Interactive debugging in prod...
 	"""
-	return rock.rocks("adbrocks").get("adb_data")
+	return rock.rocks("adbrocks", read_only=True).get("adb_data")
 
 
 def rt_arrow():
 	try:
 		logger.info("<rt_arrow>")
-		adb_data = rock.rocks("tsdbrocks").get("tsdb_data")
+		adb_data = rock.rocks("tsdbrocks", read_only=True).get("tsdb_data")
 		adb_data["adb_timestamp"] = int(time.time())
 		rock.rocks("adbrocks").put("adb_data", adb_data)
 		logger.info("</rt_arrow>")

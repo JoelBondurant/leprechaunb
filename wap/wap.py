@@ -21,7 +21,6 @@ from flask.logging import default_handler
 from views.index import index_blueprint
 from views.login import login_blueprint
 
-from util import rock
 
 
 COOKIES = True

@@ -40,12 +40,13 @@ def daystamp():
 
 class Rock:
 
-	def __init__(self, db_name):
+	def __init__(self, db_name, read_only=False):
 		"""
 		Initalize a key-value store.
 		"""
 		self.db_name = db_name
 		self.db_path = os.path.join("/data", db_name)
+		self.read_only = read_only
 		self.conn = None
 
 
@@ -55,7 +56,7 @@ class Rock:
 		"""
 		if self.conn is None:
 			conn_opts = rocksdb.Options(create_if_missing=True)
-			conn = rocksdb.DB(self.db_path, conn_opts)
+			conn = rocksdb.DB(self.db_path, conn_opts, read_only=self.read_only)
 			self.conn = conn
 		return self.conn
 
@@ -162,9 +163,9 @@ class Rock:
 			avals = bvals
 		return avals
 
-def rocks(rocks_db_name):
+def rocks(rocks_db_name, read_only=False):
 	"""
 	Get a connection to RocksDB.
 	"""
-	return Rock(rocks_db_name)
+	return Rock(rocks_db_name, read_only=read_only)
 

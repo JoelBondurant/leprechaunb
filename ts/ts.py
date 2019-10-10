@@ -19,10 +19,10 @@ def peek():
 	"""
 	Interactive debugging in prod...
 	"""
-	return rock.rocks("tsdbrocks").get("tsdb_data")
+	return rock.rocks("tsdbrocks", read_only=True).get("tsdb_data")
 
 
-rtdb_keys = rock.rocks("rtdb").get("keys")
+rtdb_keys = rock.rocks("rtdb", read_only=True).get("keys")
 
 
 periods = ["minutely", "hourly", "daily"]
@@ -40,7 +40,7 @@ def ts_rt():
 	global rtdb_keys
 	tsdb_data = {}
 	for key in rtdb_keys:
-		tsdb_data[key] = rock.rocks("rtdb").get(key)
+		tsdb_data[key] = rock.rocks("rtdb", read_only=True).get(key)
 	tsdb_data["tsdb_timestamp"] = int(time.time())
 	rock.rocks("tsdbrocks").put("tsdb_data", tsdb_data)
 	logger.info("</ts_rt>")
@@ -51,7 +51,7 @@ def ts_minutely():
 	now = datetime.datetime.now().replace(second=0, microsecond=0)
 	for key in rtdb_keys:
 		try:
-			val = rock.rocks("rtdb").get(key)
+			val = rock.rocks("rtdb", read_only=True).get(key)
 			fname = f"/data/tsdb/minutely/{key}.parq"
 			if os.path.exists(fname):
 				logger.info("Append to: " + fname)
@@ -87,7 +87,7 @@ def ts_hourly():
 	now = datetime.datetime.now().replace(minute=0, second=0, microsecond=0)
 	for key in rtdb_keys:
 		try:
-			val = rock.rocks("rtdb").get(key)
+			val = rock.rocks("rtdb", read_only=True).get(key)
 			fname = f"/data/tsdb/hourly/{key}.parq"
 			if os.path.exists(fname):
 				df = pd.read_parquet(fname)
@@ -124,7 +124,7 @@ def ts_daily():
 	now = datetime.datetime.now().date()
 	for key in rtdb_keys:
 		try:
-			val = rock.rocks("rtdb").get(key)
+			val = rock.rocks("rtdb", read_only=True).get(key)
 			fname = f"/data/tsdb/daily/{key}.parq"
 			if os.path.exists(fname):
 				df = pd.read_parquet(fname)

@@ -31,7 +31,7 @@ def peek():
 	"""
 	Interactive debugging in prod...
 	"""
-	return rock.rocks("rtdb").get("spot_xaubtc")
+	return rock.rocks("rtdb", read_only=True).get("spot_xaubtc")
 
 
 def spot_optional(module):

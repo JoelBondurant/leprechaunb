@@ -30,7 +30,7 @@ def get_adb_data():
 	"""
 	Rate limit the hit squad.
 	"""
-	adb_rocks = rock.rocks("adbrocks")
+	adb_rocks = rock.rocks("adbrocks", read_only=True)
 	adb_data = adb_rocks.get("adb_data")
 	adb_data["color_index"] = adb_rocks.get("color_index")
 	return adb_data
