@@ -129,7 +129,16 @@ class Rock:
 			bkey = akey
 		bval = self.connection().get(bkey)
 		if value_decode:
-			aval = json.loads(bval.decode())
+			try:
+				aval = json.loads(bval.decode())
+			except Exception as ex:
+				msg = ex.args[0] + "\n"
+				msg += "val.decode failure:\n"
+				msg += f"akey={akey}\n"
+				msg += f"bval={bval}\n"
+				msg += f"db_name={self.db_name}\n"
+				msg += f"read_only={self.read_only}\n"
+				raise Exception(msg) from ex
 		else:
 			aval = bval
 		return aval

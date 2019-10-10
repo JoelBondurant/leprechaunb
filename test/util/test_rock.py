@@ -40,3 +40,25 @@ class TestRock:
 			raise ex
 
 
+	def test_hammer_read_only(self):
+		N = 60
+		try:
+			started = time.time()
+			os.makedirs("/data/" + TestRock.DBNAME, mode=0o770, exist_ok=True)
+			for idx in range(N):
+				rock.rocks(TestRock.DBNAME).put(f"key{idx}", idx)
+			test_result = True
+			for idx in range(N):
+				val = rock.rocks(TestRock.DBNAME, read_only=True).get(f"key{idx}")
+				test_result = test_result and (val == idx)
+				if not test_result:
+					print(idx, val)
+			elapsed = time.time() - started
+			if elapsed >= 8:
+				print("8 second timeout on testrocks. ;?")
+				assert False
+		except Exception as ex:
+			print(ex)
+			raise ex
+
+
