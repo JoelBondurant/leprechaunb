@@ -77,7 +77,7 @@ def ts_minutely():
 				df = pd.DataFrame(nowpie)
 				df.to_parquet(fname)
 		except Exception as ex:
-			logger.info("ts_minutely.exception")
+			logger.info(f"ts_minutely.exception.{key}")
 			logger.exception(ex)
 	logger.info("</ts_minutely>")
 
@@ -114,7 +114,7 @@ def ts_hourly():
 				df.date = pd.to_datetime(df.date)
 				df.to_parquet(fname)
 		except Exception as ex:
-			logger.info("ts_hourly.exception")
+			logger.info(f"ts_hourly.exception.{key}")
 			logger.exception(ex)
 	logger.info("</ts_hourly>")
 
@@ -151,7 +151,7 @@ def ts_daily():
 				df.date = pd.to_datetime(df.date)
 				df.to_parquet(fname)
 		except Exception as ex:
-			logger.info("ts_daily.exception")
+			logger.info(f"ts_daily.exception.{key}")
 			logger.exception(ex)
 	logger.info("</ts_daily>")
 
