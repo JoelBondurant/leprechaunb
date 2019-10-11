@@ -30,7 +30,20 @@ def to_csv(df, file_path):
 	(getting data flicker with partial writes is fun)
 	"""
 	fn = os.path.basename(file_path)
-	invisible_file_path = file_path.replace(fn, "." + fn)
+	rn = os.urandom(8).hex()
+	invisible_file_path = file_path.replace(fn, "." + rn + "_" + fn)
 	df.to_csv(invisible_file_path, index=False)
+	os.rename(invisible_file_path, file_path) # Atomic swap
+
+
+def to_parquet(df, file_path):
+	"""
+	Atomic write a parquet file.
+	(finally got some data corruption running multiple instances in prod)
+	"""
+	fn = os.path.basename(file_path)
+	rn = os.urandom(8).hex()
+	invisible_file_path = file_path.replace(fn, "." + rn + "_" + fn)
+	df.to_parquet(invisible_file_path)
 	os.rename(invisible_file_path, file_path) # Atomic swap
 

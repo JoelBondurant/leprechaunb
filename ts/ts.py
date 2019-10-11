@@ -12,6 +12,7 @@ import pandas as pd
 import schedule
 
 from util import logger
+from util import racoon
 from util import rock
 
 
@@ -66,7 +67,7 @@ def ts_minutely():
 				df = df.dropna()
 				df.drop_duplicates(subset=["date"], keep="last", inplace=True)
 				if len(df) != nvals:
-					df.to_parquet(fname)
+					racoon.to_parquet(df, fname)
 			else:
 				logger.info("Create: " + fname)
 				if type(val) == dict:
@@ -75,7 +76,7 @@ def ts_minutely():
 				else:
 					nowpie = {"date": [now], "value": [val]}
 				df = pd.DataFrame(nowpie)
-				df.to_parquet(fname)
+				racoon.to_parquet(df, fname)
 		except Exception as ex:
 			logger.info(f"ts_minutely.exception.{key}")
 			logger.exception(ex)
@@ -102,7 +103,7 @@ def ts_hourly():
 				df = df.dropna()
 				df.drop_duplicates(subset=["date"], keep="first", inplace=True)
 				if len(df) != nvals:
-					df.to_parquet(fname)
+					racoon.to_parquet(df, fname)
 			else:
 				logger.info("Create: " + fname)
 				if type(val) == dict:
@@ -112,7 +113,7 @@ def ts_hourly():
 					nowpie = {"date": [now], "value": [val]}
 				df = pd.DataFrame(nowpie)
 				df.date = pd.to_datetime(df.date)
-				df.to_parquet(fname)
+				racoon.to_parquet(df, fname)
 		except Exception as ex:
 			logger.info(f"ts_hourly.exception.{key}")
 			logger.exception(ex)
@@ -139,7 +140,7 @@ def ts_daily():
 				df = df.dropna()
 				df.drop_duplicates(subset=["date"], keep="first", inplace=True)
 				if len(df) != nvals:
-					df.to_parquet(fname)
+					racoon.to_parquet(df, fname)
 			else:
 				logger.info("Create: " + fname)
 				if type(val) == dict:
@@ -149,7 +150,7 @@ def ts_daily():
 					nowpie = {"date": [now], "value": [val]}
 				df = pd.DataFrame(nowpie)
 				df.date = pd.to_datetime(df.date)
-				df.to_parquet(fname)
+				racoon.to_parquet(df, fname)
 		except Exception as ex:
 			logger.info(f"ts_daily.exception.{key}")
 			logger.exception(ex)
