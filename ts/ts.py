@@ -6,6 +6,8 @@ Time series builder.
 import datetime
 import importlib
 import os
+import subprocess as sp
+import random
 import time
 
 import pandas as pd
@@ -31,6 +33,19 @@ for period in periods:
 	path = f"/data/tsdb/{period}"
 	if not os.path.exists(path):
 		os.makedirs(path, mode=0o770, exist_ok=True)
+
+
+def ts_rsync():
+	"""
+	rsync backup
+	"""
+	logger.info("<ts_rsync>")
+	rid = random.randint(1, 7)
+	src_path = "/data/tsdb/"
+	bak_path = f"/data/bak/tsdb/{rid}/"
+	os.makedirs(bak_path, mode=0o770, exist_ok=True)
+	sp.call(["rsync", "-r", src_path, bak_path])
+	logger.info("</ts_rsync>")
 
 
 def ts_rt():
@@ -168,6 +183,7 @@ def main():
 	ts_rt()
 	ts_minutely()
 	ts_hourly()
+	ts_rsync()
 	ts_daily()
 
 	while True:
@@ -176,8 +192,9 @@ def main():
 			importlib.reload(schedule)
 			schedule.every(11).seconds.do(ts_rt)
 			schedule.every(21).seconds.do(ts_minutely)
-			schedule.every(601).seconds.do(ts_hourly)
-			schedule.every(1201).seconds.do(ts_daily)
+			schedule.every(701).seconds.do(ts_hourly)
+			schedule.every(1301).seconds.do(ts_rsync)
+			schedule.every(1701).seconds.do(ts_daily)
 			while True:
 				try:
 					time.sleep(2)
