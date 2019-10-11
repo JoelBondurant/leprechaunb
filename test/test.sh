@@ -1,1 +1,3 @@
-pytest -s test
+cd test
+pytest -s .
+cd ..
