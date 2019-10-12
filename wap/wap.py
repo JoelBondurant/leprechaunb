@@ -18,6 +18,7 @@ from flask import (
 )
 from flask.logging import default_handler
 
+from util import logger
 from views.index import index_blueprint
 from views.login import login_blueprint
 
@@ -29,6 +30,7 @@ this_path = os.path.dirname(os.path.realpath(__file__))
 os.chdir(this_path)
 
 
+logger.warn("wap started.")
 app = Flask("leprechaunb", static_url_path="", template_folder="rws")
 app.register_blueprint(index_blueprint)
 app.register_blueprint(login_blueprint)
