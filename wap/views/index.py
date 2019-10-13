@@ -86,8 +86,8 @@ def index():
 	
 	if "deviceid" not in request.cookies or len(request.cookies.get("deviceid")) != 32:
 		deviceid = secrets.token_hex(16)
-		expires = datetime.datetime.now() + datetime.timedelta(days=360)
-		resp.set_cookie("deviceid", deviceid, expires=expires, samesite="strict")
+		expires = datetime.datetime.now() + datetime.timedelta(days=180)
+		resp.set_cookie("deviceid", deviceid, expires=expires, samesite="strict", domain=".leprechaunb.com")
 		current_app.logger.info(f"new:deviceid:{deviceid}")
 	else:
 		deviceid = request.cookies.get("deviceid")

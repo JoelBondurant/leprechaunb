@@ -113,3 +113,13 @@ input[type=submit] {
 	width: 98%;
 }
 
+
+.formrow {
+	display: grid;
+	margin-bottom: 10px;
+	margin-left: 20px;
+	grid-template-columns: 1fr 1fr 1fr;
+	width: 90%;
+}
+
+

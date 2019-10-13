@@ -14,13 +14,19 @@
 
 		<hr/>
 
-		<form action="verify" method="post">
+		<form name="verify" action="verify" method="post">
 			<br/><br/>
-			<label for="uid">uid:</label>
-			<input type="text" name="uid" required>
-			<br/>
-			<label for="ukey">ukey:</label>
-			<input type="password" name="ukey" required>
+			<ul>
+				<li class="formrow">
+					<label for="user_id">user_id:</label>
+					<input type="text" name="user_id" required>
+				</li>
+				<br/>
+				<li class="formrow">
+					<label for="remote_key">remote_key:</label>
+					<input type="password" name="remote_key" required>
+				</li>
+			</ul>
 			<br/>
 			<button type="submit">login</button>
 			<br/><br/>
@@ -28,9 +34,9 @@
 
 		<hr/>
 
-		<form action="new" method="post">
+		<form name="new" action="new" method="post">
 			<br/><br/>
-			<button type="new">new</button>
+			<button type="submit">new</button>
 		</form>
 
 	</div>
