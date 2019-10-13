@@ -6,8 +6,8 @@ User=leprechaunb
 Group=leprechaunb
 Type=simple
 ExecStart=/home/leprechaunb/leprechaunb/arrows/arrows.py
-Restart=on-failure
-Restart=8s
+Restart=always
+RestartSec=8
 TimeoutSec=8
 
 

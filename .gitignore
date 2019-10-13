@@ -6,4 +6,4 @@ __pycache__*
 *.jpg
 *.svg
 nohup*
-bitcoin/bitcoin-*
+bitcoin/bitcoin

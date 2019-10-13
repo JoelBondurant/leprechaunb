@@ -6,8 +6,8 @@ User=leprechaunb
 Group=leprechaunb
 WorkingDirectory=/home/leprechaunb/leprechaunb/wap
 ExecStart=gunicorn -w 2 -b 127.0.0.1:8880 wap:app
-Restart=on-failure
-Restart=8s
+Restart=always
+RestartSec=8
 TimeoutSec=8
 Type=simple
 
