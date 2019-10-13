@@ -7,4 +7,5 @@ tar -xzvf ${fn} -C .
 mv bitcoin-${vn} bitcoin
 rm ${fn}
 cd ..
+sudo ln -s $PWD/bitcoin/bitcoin/bin/bitcoind /usr/local/bin/bitcoind
 echo "Bitcoin installed"
