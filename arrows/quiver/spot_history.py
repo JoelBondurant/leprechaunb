@@ -68,13 +68,13 @@ def bitcoin_minute_arrow():
 		df = pd.concat([df, pd.read_parquet(f"/data/tsdb/hourly/{spot_key}.parq")], ignore_index=True, sort=True)
 		source = spot_key.split("_")[0]
 		df.source = df.source.fillna(source)
-	cutoff = base_cutoff - datetime.timedelta(hours=21*24)
+	cutoff = base_cutoff - datetime.timedelta(hours=7*24)
 	df = df[df.date >= cutoff]
 	for spot_key in bitcoin_spot_keys:
 		df = pd.concat([df, pd.read_parquet(f"/data/tsdb/daily/{spot_key}.parq")], ignore_index=True, sort=True)
 		source = spot_key.split("_")[0]
 		df.source = df.source.fillna(source)
-	cutoff = base_cutoff - datetime.timedelta(hours=365*24)
+	cutoff = base_cutoff - datetime.timedelta(hours=21*24)
 	df = df[df.date >= cutoff]
 	df = df.dropna()
 	df = df.drop_duplicates(subset=["date", "source"], keep="last")

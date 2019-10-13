@@ -7,7 +7,6 @@ import datetime
 import importlib
 import os
 import subprocess as sp
-import random
 import time
 
 import pandas as pd
@@ -35,17 +34,19 @@ for period in periods:
 		os.makedirs(path, mode=0o770, exist_ok=True)
 
 
+bak_idx = 0
 def ts_rsync():
 	"""
 	rsync backup
 	"""
-	logger.info("<ts_rsync>")
-	rid = random.randint(1, 7)
+	global bak_idx
+	logger.info(f"<ts_rsync bak_idx={bak_idx}>")
 	src_path = "/data/tsdb/"
-	bak_path = f"/data/bak/tsdb/{rid}/"
+	bak_path = f"/data/bak/tsdb/{bak_idx}/"
 	os.makedirs(bak_path, mode=0o770, exist_ok=True)
 	sp.call(["rsync", "-r", src_path, bak_path])
-	logger.info("</ts_rsync>")
+	bak_idx = (bak_idx + 1) % 3
+	logger.info(f"</ts_rsync>")
 
 
 def ts_rt():
