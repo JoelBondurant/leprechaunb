@@ -45,7 +45,12 @@ def ts_rsync():
 	bak_path = f"/data/bak/tsdb/{bak_idx}/"
 	os.makedirs(bak_path, mode=0o770, exist_ok=True)
 	sp.call(["rsync", "-r", src_path, bak_path])
-	bak_idx = (bak_idx + 1) % 3
+	zorder = 3
+	if bak_idx == zorder - 1:
+		logger.info(f"<ts_rsync backblaze>")
+		sp.call(["b2", "sync", "/data/bak/", "b2://leprechaunbak/"])
+		logger.info(f"</ts_rsync backblaze>")
+	bak_idx = (bak_idx + 1) % zorder
 	logger.info(f"</ts_rsync>")
 
 
