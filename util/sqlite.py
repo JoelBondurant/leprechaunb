@@ -15,12 +15,16 @@ class KV:
 		self.path = f"{base}/{name}.db"
 		try:
 			sql_text = "create table if not exists kv (kk text primary key, vv text)"
-			self.execute(sql_text)
+			self._execute(sql_text)
 		except sqlite3.OperationalError as ex:
 			print(ex)
 
 
-	def execute(self, sql_txt, kv=None, fetch=None, read_only=False):
+	def dump(self):
+		return self._execute("select * from kv", fetch="many")
+
+
+	def _execute(self, sql_txt, kv=None, fetch=None, read_only=False):
 		uri = self.path
 		if read_only:
 			uri += "?mode=ro"
@@ -52,7 +56,7 @@ class KV:
 			"akey": akey,
 			"aval": aval,
 		}
-		self.execute(sql_txt, kv)
+		self._execute(sql_txt, kv)
 
 
 	def get(self, akey):
@@ -61,7 +65,7 @@ class KV:
 		kv = {
 			"akey": akey,
 		}
-		rs = self.execute(sql_txt, kv, fetch="one", read_only=True)
+		rs = self._execute(sql_txt, kv, fetch="one", read_only=True)
 		if rs is None:
 			return None
 		return rs[0]
