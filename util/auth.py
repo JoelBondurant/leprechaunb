@@ -72,6 +72,9 @@ def verify_ukey_token(uid, ukey_token_b64):
 	sk = get_ukey_signature_key()
 	vk = sk.get_verifying_key()
 	ukey_token = base64.b64decode(ukey_token_b64)
-	return vk.verify(ukey_token, uid.encode())
+	try:
+		return vk.verify(ukey_token, uid.encode())
+	except:
+		return False
 
 

@@ -13,8 +13,8 @@ from flask import (
 	send_from_directory,
 )
 
+
 from util import auth
-from util import rock
 
 
 login_blueprint = Blueprint("login", __name__)
