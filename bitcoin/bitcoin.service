@@ -6,7 +6,7 @@ StartLimitBurst=6
 [Service]
 User=leprechaunb
 Group=leprechaunb
-ExecStart=/usr/local/bin/bitcoind -datadir=/data/bitcoin -prune=100000 -listen=0 -blocksonly=1 -dbcache=10 -maxorphantx=10 -maxmempool=10 -maxconnections=4 -maxsigcachesize=2 -rpcthreads=1 -par=1
+ExecStart=/usr/local/bin/bitcoind -rpcuser=lb -rpcpassword=woahvicky -datadir=/data/bitcoin -prune=100000 -listen=0 -blocksonly=1 -dbcache=10 -maxorphantx=10 -maxmempool=10 -maxconnections=4 -maxsigcachesize=2 -rpcthreads=1 -par=1
 Type=simple
 
 [System]
