@@ -16,6 +16,8 @@ from flask import (
 	send_from_directory,
 )
 
+
+from util import auth
 from util import htm
 from util import logger
 from util import rock
@@ -41,11 +43,17 @@ def index():
 	"""
 	https://leprechaunb.com
 	"""
-	rainbow = ["#80a", "#48f", "#0f0", "#ff0", "#f7931a", "#f00"]
-
 	content = {}
 
+	rainbow = ["#80a", "#48f", "#0f0", "#ff0", "#f7931a", "#f00"]
 	content["rainbow"] = rainbow
+
+	content["login_link"] = "<a href='/login'>login</a>"
+	if "uid" in request.cookies and "ukey_token" in request.cookies:
+		uid = request.cookies.get("uid")
+		ukey_token = request.cookies.get("ukey_token")
+		if auth.verify_ukey_token(uid, ukey_token):
+			content["login_link"] = ""
 
 	# Arrows Data:
 	adb_data = get_adb_data()

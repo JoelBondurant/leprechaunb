@@ -21,7 +21,7 @@ from flask.logging import default_handler
 from util import logger
 from views.index import index_blueprint
 from views.login import login_blueprint
-
+from views.pot import pot_blueprint
 
 
 COOKIES = True
@@ -34,6 +34,8 @@ logger.warn("wap started.")
 app = Flask("leprechaunb", static_url_path="", template_folder="rws")
 app.register_blueprint(index_blueprint)
 app.register_blueprint(login_blueprint)
+app.register_blueprint(pot_blueprint)
+
 gunicorn_logger = logging.getLogger("gunicorn.error")
 app.logger.handlers = gunicorn_logger.handlers
 app.logger.setLevel(gunicorn_logger.level)
@@ -62,11 +64,6 @@ def alert():
 @app.route("/drill")
 def drill():
 	return render_template("drill.html")
-
-
-@app.route("/pot")
-def pot():
-	return render_template("pot.html")
 
 
 @app.route("/contact")
