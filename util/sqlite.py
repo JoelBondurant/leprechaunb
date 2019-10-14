@@ -14,22 +14,18 @@ class KV:
 		os.makedirs(base, mode=0o770, exist_ok=True)
 		self.path = f"{base}/{name}.db"
 		try:
-			print("KV.create")
 			sql_text = "create table if not exists kv (kk text primary key, vv text)"
 			self.execute(sql_text)
 		except sqlite3.OperationalError as ex:
-			print("KV.create.err")
 			print(ex)
 
 
 	def execute(self, sql_txt, kv=None, fetch=None, read_only=False):
-		print(f"execute(sql_txt={sql_txt}, kv={kv}, fetch={fetch}, ro={read_only})")
 		uri = self.path
 		if read_only:
 			uri += "?mode=ro"
 		curs = sqlite3.connect(uri, uri=True)
 		if fetch is None:
-			print(sql_txt, kv, fetch, read_only)
 			if kv is None:
 				curs.execute(sql_txt)
 			else:
@@ -38,9 +34,15 @@ class KV:
 			curs.close()
 			return None
 		elif fetch == "one":
-			return curs.execute(sql_txt, kv).fetchone()
+			if kv is None:
+				return curs.execute(sql_txt).fetchone()
+			else:
+				return curs.execute(sql_txt, kv).fetchone()
 		elif fetch == "many":
-			return curs.execute(sql_txt, kv).fetchmany()
+			if kv is None:
+				return curs.execute(sql_txt).fetchmany()
+			else:
+				return curs.execute(sql_txt, kv).fetchmany()
 
 
 	def put(self, akey, aval):
