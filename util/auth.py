@@ -10,7 +10,7 @@ import time
 import cachetools.func
 import ecdsa
 
-from util import rock
+from util import sqlite
 
 
 def random_sleep(base=0.1, addl=0.1):
@@ -37,11 +37,11 @@ def get_ukey_signature_key():
 	"""
 	Get a signing key for cookies.
 	"""
-	sk_b64 = rock.rocks("udb", read_only=True).get("ukey_signature_key")
+	sk_b64 = sqlite.KV("udb").get("ukey_signature_key")
 	if sk_b64 is None or sk_b64 == "":
 		sk = ecdsa.SigningKey.generate(ecdsa.SECP256k1)
 		sk_b64 = base64.b64encode(sk.to_string()).decode()
-		rock.rocks("udb").put("ukey_signature_key", sk_b64)
+		sqlite.KV("udb").put("ukey_signature_key", sk_b64)
 	else:
 		sk_str = base64.b64decode(sk_b64)
 		sk = ecdsa.SigningKey.from_string(sk_str, curve=ecdsa.SECP256k1)
@@ -54,9 +54,9 @@ def gen_ukey_token(uid, ukey, new_ukey=False):
 	"""
 	random_sleep()
 	if new_ukey:
-		rock.rocks("udb").put(f"ukey_{uid}", ukey)
+		sqlite.KV("udb").put(f"ukey_{uid}", ukey)
 	else:
-		udb_ukey = rock.rocks("udb", read_only=True).get(f"ukey_{uid}")
+		udb_ukey = sqlite.KV("udb").get(f"ukey_{uid}")
 		assert udb_ukey == ukey
 	sk = get_ukey_signature_key()
 	ukey_token = sk.sign(uid.encode())
