@@ -34,26 +34,6 @@ for period in periods:
 		os.makedirs(path, mode=0o770, exist_ok=True)
 
 
-bak_idx = 0
-def ts_rsync():
-	"""
-	rsync backup
-	"""
-	global bak_idx
-	logger.info(f"<ts_rsync bak_idx={bak_idx}>")
-	src_path = "/data/tsdb/"
-	bak_path = f"/data/bak/tsdb/{bak_idx}/"
-	os.makedirs(bak_path, mode=0o770, exist_ok=True)
-	sp.call(["rsync", "-r", src_path, bak_path])
-	zorder = 3
-	if bak_idx == zorder - 1:
-		logger.info(f"<ts_rsync backblaze>")
-		sp.call(["b2", "sync", "/data/bak/", "b2://leprechaunbak/"])
-		logger.info(f"</ts_rsync backblaze>")
-	bak_idx = (bak_idx + 1) % zorder
-	logger.info(f"</ts_rsync>")
-
-
 def ts_rt():
 	"""
 	Pump rt data down the pipeline.
@@ -189,7 +169,6 @@ def main():
 	ts_rt()
 	ts_minutely()
 	ts_hourly()
-	ts_rsync()
 	ts_daily()
 
 	while True:
@@ -199,7 +178,6 @@ def main():
 			schedule.every(11).seconds.do(ts_rt)
 			schedule.every(21).seconds.do(ts_minutely)
 			schedule.every(701).seconds.do(ts_hourly)
-			schedule.every(1301).seconds.do(ts_rsync)
 			schedule.every(1701).seconds.do(ts_daily)
 			while True:
 				try:

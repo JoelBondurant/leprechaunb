@@ -1,0 +1,18 @@
+[Unit]
+Description=Leprechaun Rsync
+StartLimitInterval=400
+StartLimitBurst=6
+
+[Service]
+User=leprechaunb
+Group=leprechaunb
+ExecStart=/home/leprechaunb/leprechaunb/rsync/rsync.py
+Type=simple
+
+[System]
+Restart=always
+RestartSec=120
+
+[Install]
+WantedBy=multi-user.target
+
