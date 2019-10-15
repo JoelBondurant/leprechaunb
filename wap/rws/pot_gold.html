@@ -5,28 +5,55 @@
 
 	<div class="centerwrap">
 		<span>
-			<h3>Pot Gold</h3>
+			<h3>Gold Pot</h3>
 			<hr/><br/>
 			<a href="/">&gt;&gt;&gt;------&gt;</a>
 		</span>
 	</div>
 
-	<br/><br/>
+	<br/>
 	<hr/>
-	<br/><br/>
+	<br/>
 
 	<div class="centerwrap">
-	<form name="gold" action="gold" method="post">
+	<form name="new" action="new" method="post">
 		<ul>
 			<li class="formrow">
-				<label for="datebin">datebin:</label>
+				<label for="datebin">datebin*:</label>
 				<input type="date" name="datebin" required>
 			</li>
 			<li class="formrow">
-				<label for="grams">grams:</label>
+				<label for="grams">grams*:</label>
 				<input type="number" name="grams" min="0" required>
 			</li>
+			<li class="formrow">
+				<label for="source">source:</label>
+				<input type="text" name="source">
+			</li>
+			<li class="formrow">
+				<label for="latitude">latitude:</label>
+				<input type="number" name="latitude" min="0" max="90" step="0.0001">
+			</li>
+			<li class="formrow">
+				<label for="longitude">longitude:</label>
+				<input type="number" name="longitude" min="0" max="180" step="0.0001">
+			</li>
+			<li class="formrow">
+				<label for="ownemail">ownemail:</label>
+				<input type="email" name="ownemail">
+			</li>
+			<li class="formrow">
+				<label for="benemail">benemail:</label>
+				<input type="email" name="benemail">
+			</li>
+			<li class="formrow">
+				<label for="note">note:</label>
+				<input type="text" name="note">
+			</li>
 		</ul>
+		<br/>
+		<button type="submit">+</button>
+		<br/>
 	</form>
 	</div>
 
