@@ -117,7 +117,7 @@ input[type=submit] {
 .formrow {
 	display: grid;
 	margin-bottom: 10px;
-	margin-left: 20px;
+	margin-left: 10px;
 	grid-template-columns: 1fr 1fr 1fr;
 	width: 90%;
 }
