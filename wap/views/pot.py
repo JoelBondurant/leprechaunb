@@ -27,11 +27,6 @@ def pot():
 
 	content = {}
 
-	if "deviceid" not in request.cookies:
-		current_app.logger.info(f"login:nocookies")
-		return make_response(render_template("cookies.html", **content))
-
-	deviceid = request.cookies.get("deviceid")
 	if ("uid" not in request.cookies) or ("ukey_token" not in request.cookies):
 		return make_response(redirect("/login", code=302))
 
@@ -50,3 +45,19 @@ def pot():
 
 	return make_response(render_template("pot.html", **content))
 
+
+@pot_blueprint.route("/pot/gold/", methods=["GET", "POST"])
+def gold():
+
+	content = {}
+
+	if ("uid" not in request.cookies) or ("ukey_token" not in request.cookies):
+		return make_response(redirect("/login", code=302))
+
+	uid = request.cookies.get("uid")
+	ukey_token = request.cookies.get("ukey_token")
+
+	if not auth.verify_ukey_token(uid, ukey_token):
+		return make_response(redirect("/login", code=302))
+
+	return make_response(render_template("pot_gold.html", **content))

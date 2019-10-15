@@ -1,0 +1,35 @@
+{% include "header.html" %}
+</head>
+<body id="about">
+<div class="pagewrap">
+
+	<div class="centerwrap">
+		<span>
+			<h3>Pot Gold</h3>
+			<hr/><br/>
+			<a href="/">&gt;&gt;&gt;------&gt;</a>
+		</span>
+	</div>
+
+	<br/><br/>
+	<hr/>
+	<br/><br/>
+
+	<div class="centerwrap">
+	<form name="gold" action="gold" method="post">
+		<ul>
+			<li class="formrow">
+				<label for="datebin">datebin:</label>
+				<input type="date" name="datebin" required>
+			</li>
+			<li class="formrow">
+				<label for="grams">grams:</label>
+				<input type="number" name="grams" min="0" required>
+			</li>
+		</ul>
+	</form>
+	</div>
+
+</div>
+</body>
+</html>
