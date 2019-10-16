@@ -31,13 +31,52 @@
 	<hr/>
 	<br/><br/>
 
-	{{pot_gold}}
+	<table>
+		<tr>
+			<th>date</th>
+			<th>grams</th>
+			<th>source</th>
+			<th>latitude</th>
+			<th>longitude</th>
+			<th>note</th>
+		</tr>
+	{% for prow in pot_gold %}
+		<tr>
+			<td>{{prow.datebin}}</td>
+			<td>{{prow.grams}}</td>
+			<td>{{prow.source}}</td>
+			<td>{{prow.latitude}}</td>
+			<td>{{prow.longitude}}</td>
+			<td>{{prow.note}}</td>
+		</tr>
+	{% endfor %}
+	</table>
 
 	<br/><br/>
 	<hr/>
 	<br/><br/>
 
-	{{pot_bitcoin}}
+	<table>
+		<tr>
+			<th>date</th>
+			<th>sats</th>
+			<th>source</th>
+			<th>pub_key</th>
+			<th>priv_key</th>
+			<th>note</th>
+		</tr>
+	{% for prow in pot_bitcoin %}
+		<tr>
+			<td>{{prow.datebin}}</td>
+			<td>{{prow.sats}}</td>
+			<td>{{prow.source}}</td>
+			<td>{{prow.pub_key}}</td>
+			<td>{{prow.priv_key}}</td>
+			<td>{{prow.note}}</td>
+		</tr>
+	{% endfor %}
+	</table>
+
 	</div>
 
 </div>
