@@ -53,7 +53,7 @@ def index():
 		uid = request.cookies.get("uid")
 		ukey_token = request.cookies.get("ukey_token")
 		if auth.verify_ukey_token(uid, ukey_token):
-			content["login_link"] = ""
+			content["login_link"] = "<a href='/login/logout'>logout</a>"
 
 	# Arrows Data:
 	adb_data = get_adb_data()

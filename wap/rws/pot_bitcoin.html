@@ -5,24 +5,48 @@
 
 	<div class="centerwrap">
 		<span>
-			<h3>Pot</h3>
+			<h3>Bitcoin Pot</h3>
 			<hr/><br/>
 			<a href="/">&gt;&gt;&gt;------&gt;</a>
-			<br/><br/><hr/>
 		</span>
 	</div>
 
-	<br/><br/>
+	<br/>
 	<hr/>
-	<br/><br/>
+	<br/>
 
 	<div class="centerwrap">
-		<form name="gold" action="gold" method="post">
-			<button type="submit">+gold</button>
-		</form>
-		<form name="bitcoin" action="bitcoin" method="post">
-			<button type="submit">+bitcoin</button>
-		</form>
+	<form name="new" action="new" method="post">
+		<ul>
+			<li class="formrow">
+				<label for="datebin">datebin*:</label>
+				<input type="date" name="datebin" required>
+			</li>
+			<li class="formrow">
+				<label for="sats">sats*:</label>
+				<input type="number" name="sats" min="0" required>
+			</li>
+			<li class="formrow">
+				<label for="source">source:</label>
+				<input type="text" name="source">
+			</li>
+			<li class="formrow">
+				<label for="pub_key">pub_key:</label>
+				<input type="text" name="pub_key">
+			</li>
+			<li class="formrow">
+				<label for="priv_key">priv_key:</label>
+				<input type="text" name="priv_key">
+			</li>
+			<li class="formrow">
+				<label for="note">note:</label>
+				<input type="text" name="note">
+			</li>
+		</ul>
+		<br/>
+		<button type="submit">+</button>
+		<br/>
+	</form>
 	</div>
 
 </div>

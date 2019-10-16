@@ -104,3 +104,14 @@ def login_new():
 	return resp
 
 
+@login_blueprint.route("/login/logout/", methods=["GET"])
+def login_logout():
+
+	resp = make_response(redirect("/", code=302))
+
+	resp.set_cookie("uid", "", expires=0, samesite="strict", domain=".leprechaunb.com")
+	resp.set_cookie("ukey_token", "", expires=0, samesite="strict", domain=".leprechaunb.com")
+
+	return resp
+
+

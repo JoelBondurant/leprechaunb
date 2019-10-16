@@ -65,8 +65,8 @@ def gen_ukey_token(uid, ukey, new_ukey=False):
 	Generate a token based on uid after ukey is checked.
 	"""
 	random_sleep()
+	ukey_hash = hash_ukey(ukey)
 	if new_ukey:
-		ukey_hash = hash_ukey(ukey)
 		sqlite.KV("udb").put(f"ukey_hash_{uid}", ukey_hash)
 	else:
 		udb_ukey_hash = sqlite.KV("udb").get(f"ukey_hash_{uid}")
