@@ -43,6 +43,7 @@ def pot():
 	if pdat is None or pdat == "":
 		pdat = {}
 	else:
+		pdat = auth.lt_decrypt(pdat)
 		pdat = json.loads(pdat)
 	content["pdat"] = pdat
 
@@ -92,6 +93,7 @@ def new_gold():
 	if pot_json is None:
 		pot = []
 	else:
+		pot_json = auth.lt_decrypt(pot_json)
 		pot = json.loads(pot_json)
 	pot += [
 		{
@@ -104,6 +106,7 @@ def new_gold():
 		}
 	]
 	pot_json = json.dumps(pot)
+	pot_json = auth.lt_encrypt(pot_json)
 	udb.put(key, pot_json)
 
 	resp = make_response(redirect("/pot", code=302))
@@ -153,6 +156,7 @@ def new_bitcoin():
 	if pot_json is None:
 		pot = []
 	else:
+		pot_json = auth.lt_decrypt(pot_json)
 		pot = json.loads(pot_json)
 	pot += [
 		{
@@ -165,6 +169,7 @@ def new_bitcoin():
 		}
 	]
 	pot_json = json.dumps(pot)
+	pot_json = auth.lt_encrypt(pot_json)
 	udb.put(key, pot_json)
 
 	resp = make_response(redirect("/pot", code=302))

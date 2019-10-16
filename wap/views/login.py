@@ -93,7 +93,7 @@ def login_new():
 		"ukey": ukey,
 	}
 
-	resp = make_response(render_template("new.html", **content))
+	resp = make_response(render_template("new_user.html", **content))
 
 	expires = datetime.datetime.now() + datetime.timedelta(days=180)
 	resp.set_cookie("uid", uid, expires=expires, samesite="strict", domain=".leprechaunb.com")
