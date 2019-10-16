@@ -39,13 +39,22 @@ def pot():
 	if not auth.verify_ukey_token(uid, ukey_token):
 		return make_response(redirect("/login", code=302))
 
-	pdat = sqlite.KV("udb").get(f"pot_{uid}")
-	if pdat is None or pdat == "":
-		pdat = {}
+	udb = sqlite.KV("udb")
+	pot_gold = udb.get(f"pot_gold_{uid}")
+	pot_gold = auth.lt_decrypt(pot_gold)
+	if pot_gold is None or pot_gold == "":
+		pot_gold = []
 	else:
-		pdat = auth.lt_decrypt(pdat)
-		pdat = json.loads(pdat)
-	content["pdat"] = pdat
+		pot_gold = json.loads(pot_gold)
+	content["pot_gold"] = pot_gold
+
+	pot_bitcoin = udb.get(f"pot_bitcoin_{uid}")
+	pot_bitcoin = auth.lt_decrypt(pot_bitcoin)
+	if pot_bitcoin is None or pot_bitcoin == "":
+		pot_bitcoin = []
+	else:
+		pot_bitcoin = json.loads(pot_bitcoin)
+	content["pot_bitcoin"] = pot_bitcoin
 
 	return make_response(render_template("pot.html", **content))
 
