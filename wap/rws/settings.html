@@ -1,0 +1,50 @@
+{% include "header.html" %}
+</head>
+<body id="about">
+<div class="pagewrap">
+
+	<div class="centerwrap">
+		<span>
+			<h3>Settings</h3>
+			<hr/><br/>
+			<a href="/">&gt;&gt;&gt;------&gt;</a>
+		</span>
+	</div>
+
+	<br/>
+	<hr/>
+	<br/>
+
+	<div class="centerwrap">
+	<form name="settings" action="sync" method="post">
+		<ul>
+			<li class="formrow">
+				<label for="email">email:</label>
+				<input type="email" name="email" value="{{settings.email}}">
+			</li>
+			<li class="formrow">
+				<label for="benemail_date">benemail_date:</label>
+				<input type="date" name="benemail_date" value="{{settings.benemail_date}}">
+			</li>
+			<li class="formrow">
+				<label for="benemails">benemails*:</label>
+				<input type="text" name="benemails" value="{{settings.benemails}}">
+			</li>
+			<li class="formrow">
+				<label for="benemail_delay">benemail_delay:</label>
+				<input type="text" name="benemail_delay" value="{{settings.benemail_delay}}">
+			</li>
+			<li class="formrow">
+				<label for="note">note:</label>
+				<input type="text" name="note" value="{{settings.note}}">
+			</li>
+		</ul>
+		<br/>
+		<button type="submit">sync</button>
+		<br/>
+	</form>
+	</div>
+
+</div>
+</body>
+</html>

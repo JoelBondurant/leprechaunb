@@ -4,7 +4,6 @@ import json
 
 
 import cachetools.func
-import ecdsa
 
 
 from flask import (

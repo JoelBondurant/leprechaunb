@@ -22,6 +22,7 @@ from util import logger
 from views.index import index_blueprint
 from views.login import login_blueprint
 from views.pot import pot_blueprint
+from views.settings import settings_blueprint
 
 
 COOKIES = True
@@ -35,6 +36,7 @@ app = Flask("leprechaunb", static_url_path="", template_folder="rws")
 app.register_blueprint(index_blueprint)
 app.register_blueprint(login_blueprint)
 app.register_blueprint(pot_blueprint)
+app.register_blueprint(settings_blueprint)
 
 gunicorn_logger = logging.getLogger("gunicorn.error")
 app.logger.handlers = gunicorn_logger.handlers
