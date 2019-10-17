@@ -25,6 +25,7 @@ from util import sqlite
 pot_blueprint = Blueprint("pot", __name__)
 
 
+
 @pot_blueprint.route("/pot/", methods=["GET"])
 def pot():
 
@@ -94,27 +95,32 @@ def new_gold():
 	source = request.form.get("source")
 	latitude = request.form.get("latitude")
 	longitude = request.form.get("longitude")
+	cost_usd = request.form.get("cost_usd")
+	local_key = request.form.get("local_key")
 	note = request.form.get("note")
 
 	udb = sqlite.KV("udb")
 	key = f"pot_gold_{uid}"
 	pot_json = udb.get(key)
 	if pot_json is None:
-		pot = []
+		gold_pot = []
 	else:
 		pot_json = auth.lt_decrypt(pot_json)
-		pot = json.loads(pot_json)
-	pot += [
+		gold_pot = json.loads(pot_json)
+	gold_pot += [
 		{
 			"datebin": datebin,
 			"grams": grams,
 			"source": source,
 			"latitude": latitude,
 			"longitude": longitude,
+			"cost_usd": cost_usd,
+			"local_key": local_key,
 			"note": note,
 		}
 	]
-	pot_json = json.dumps(pot)
+	gold_pot = sort_pot(gold_pot)
+	pot_json = json.dumps(gold_pot)
 	pot_json = auth.lt_encrypt(pot_json)
 	udb.put(key, pot_json)
 
@@ -157,27 +163,32 @@ def new_bitcoin():
 	source = request.form.get("source")
 	pub_key = request.form.get("pub_key")
 	priv_key = request.form.get("priv_key")
+	cost_usd = request.form.get("cost_usd")
+	local_key = request.form.get("local_key")
 	note = request.form.get("note")
 
 	udb = sqlite.KV("udb")
 	key = f"pot_bitcoin_{uid}"
 	pot_json = udb.get(key)
 	if pot_json is None:
-		pot = []
+		bitcoin_pot = []
 	else:
 		pot_json = auth.lt_decrypt(pot_json)
-		pot = json.loads(pot_json)
-	pot += [
+		bitcoin_pot = json.loads(pot_json)
+	bitcoin_pot += [
 		{
 			"datebin": datebin,
 			"sats": sats,
 			"source": source,
 			"pub_key": pub_key,
 			"priv_key": priv_key,
+			"cost_usd": cost_usd,
+			"local_key": local_key,
 			"note": note,
 		}
 	]
-	pot_json = json.dumps(pot)
+	bitcoin_pot = sort_pot(bitcoin_pot)
+	pot_json = json.dumps(bitcoin_pot)
 	pot_json = auth.lt_encrypt(pot_json)
 	udb.put(key, pot_json)
 

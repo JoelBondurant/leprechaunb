@@ -38,6 +38,7 @@
 			<th>source</th>
 			<th>latitude</th>
 			<th>longitude</th>
+			<th>cost_usd</th>
 			<th>note</th>
 		</tr>
 	{% for prow in pot_gold %}
@@ -47,6 +48,7 @@
 			<td>{{prow.source}}</td>
 			<td>{{prow.latitude}}</td>
 			<td>{{prow.longitude}}</td>
+			<td>{{prow.cost_usd}}</td>
 			<td>{{prow.note}}</td>
 		</tr>
 	{% endfor %}
@@ -63,6 +65,7 @@
 			<th>source</th>
 			<th>pub_key</th>
 			<th>priv_key</th>
+			<th>cost_usd</th>
 			<th>note</th>
 		</tr>
 	{% for prow in pot_bitcoin %}
@@ -72,6 +75,7 @@
 			<td>{{prow.source}}</td>
 			<td>{{prow.pub_key}}</td>
 			<td>{{prow.priv_key}}</td>
+			<td>{{prow.cost_usd}}</td>
 			<td>{{prow.note}}</td>
 		</tr>
 	{% endfor %}
