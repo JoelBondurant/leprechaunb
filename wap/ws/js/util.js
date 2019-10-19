@@ -55,8 +55,8 @@ function sha512(msg) {
 }
 
 
-function pubSalt() {
-	return "leprechaunbsalt"
+function pubSaltArray() {
+	return new Uint8Array([79, 83, 33, 212, 19, 1, 13, 84, 22, 70, 8, 9, 1, 2, 3, 4]);
 }
 
 
@@ -65,33 +65,40 @@ function pubIV() {
 }
 
 
-async function padString(msg) {
-	padding = await toBase64(sha512(msg + pubSalt()));
-	return msg + padding.repeat(10);
-}
-
-
-async function unpadString(msg) {
-	return msg.slice(0, -240);
-}
-
-
 function aesgcmParams() {
 	aesgcm = {
 		"name": "AES-GCM",
 		"iv": pubIV(),
-		"length": 256,
 		"tagLength": 128,
 	}
 	return aesgcm;
 }
 
 
-async function deriveKey(akey0) {
-	aesgcm = aesgcmParams();
-	akey = await sha256(sha512(akey0 + pubSalt()));
-	akey = await crypto.subtle.importKey("raw", akey, aesgcm, false, ["encrypt", "decrypt"]);
-	return akey;
+async function deriveKey(akey) {
+	akey = await crypto.subtle.importKey(
+		"raw",
+		(new TextEncoder()).encode(akey),
+		{
+			"name": "PBKDF2",
+		},
+		false,
+		["deriveBits", "deriveKey"]
+	);
+	return await crypto.subtle.deriveKey(
+	{
+		"name": "PBKDF2",
+		"salt": pubSaltArray(),
+		"iterations": 9999,
+		"hash": "SHA-512",
+	},
+	akey,
+	{
+		"name": "AES-GCM",
+		"length": 256,
+	},
+	false,
+	["encrypt", "decrypt"]);
 }
 
 
