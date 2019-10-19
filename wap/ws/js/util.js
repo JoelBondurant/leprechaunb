@@ -6,7 +6,7 @@ Leprechaun Sauce
 function dateTime(id) {
 	var date = new Date();
 	document.getElementById(id).innerHTML = date.toISOString().slice(0, -5).replace("T", "_");
-	setTimeout('date_time("' + id + '");', '1000');
+	setTimeout('dateTime("' + id + '");', '1000');
 	return true;
 }
 
