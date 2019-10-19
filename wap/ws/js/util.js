@@ -11,19 +11,37 @@ function dateTime(id) {
 }
 
 
-function toBase64(blob) {
-	return btoa(encodeURIComponent(blob).replace(/%([0-9A-F]{2})/g,
-		function toSolidBytes(match, p1) {
-			return String.fromCharCode("0x" + p1);
-		}
-	));
+function uint8ArrayToHexString(byteArray) {
+	return Array.from(new Uint8Array(byteArray), function(byte) {
+		return ("0" + (byte & 0xFF).toString(16)).slice(-2);
+	}).join("");
 }
 
 
-function fromBase64(msg) {
-	return decodeURIComponent(atob(msg).split("").map(function(c) {
-		return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+function hexStringToUint8Array(hexString) {
+	var result = [];
+	for (var i = 0; i < hexString.length; i += 2) {
+		result.push(parseInt(hexString.substr(i, 2), 16));
+	}
+	return new Uint8Array(result);
+}
+
+
+function hexToBase64(hexstring) {
+	return btoa(hexstring.match(/\w{2}/g).map(function(a) {
+		return String.fromCharCode(parseInt(a, 16));
 	}).join(""));
+}
+
+
+function base64ToHex(base64) {
+	var raw = atob(base64);
+	var HEX = '';
+	for ( i = 0; i < raw.length; i++ ) {
+		var _hex = raw.charCodeAt(i).toString(16);
+		HEX += (_hex.length==2?_hex:'0'+_hex);
+	}
+	return HEX.toLowerCase();
 }
 
 
@@ -78,27 +96,24 @@ async function deriveKey(akey0) {
 
 
 async function encrypt(msg, akey) {
-	/*wip*/
 	aesgcm = aesgcmParams();
 	akey = await deriveKey(akey);
-	msg = toBase64(msg);
-	msg = await padString(msg);
 	msg = (new TextEncoder()).encode(msg);
 	encr = await crypto.subtle.encrypt(aesgcm, akey, msg);
-	return toBase64(encr);
+	encr = uint8ArrayToHexString(encr);
+	encr = hexToBase64(encr);
+	return encr;
 }
 
 
 async function decrypt(msg, akey) {
-	/*wip*/
 	aesgcm = aesgcmParams();
 	akey = await deriveKey(akey);
-	msg1 = fromBase64(msg);
-	msg2 = Uint8Array.from(msg1, c => c.charCodeAt(0));
-	decr = await crypto.subtle.decrypt(aesgcm, akey, msg2);
-	//decr = fromBase64(decr)
-	//decr = await unpadString(decr);
-	return [msg, msg1, msg2, decr];
+	msg = base64ToHex(msg);
+	msg = hexStringToUint8Array(msg);
+	decr = await crypto.subtle.decrypt(aesgcm, akey, msg);
+	decr = (new TextDecoder()).decode(decr);
+	return decr;
 }
 
 
