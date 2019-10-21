@@ -1,8 +1,9 @@
 {% include "header.html" %}
 	<meta http-equiv="refresh" content="3600">
-	<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-	<script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.0-beta.8"></script>
-	<script src="https://cdn.jsdelivr.net/npm/vega-embed@5"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vega@5.7.3/build/vega.min.js" integrity="sha256-iafRf4SRKIyGDwlx/HS4XLg88syr2HDdt/IZDacXWhc=" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.0-beta.10/build/vega-lite.min.js" integrity="sha256-x1I7R4UjzchH5qq42TwIgaHRcZOU7gvM13nX6OOlbms=" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vega-embed@6.0.0/build/vega-embed.min.js" integrity="sha256-aDMgUfMOMp2poxEzi2dtFxS/6DGvYbf5by4sYukgt2I=" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vega-tooltip@0.19.1/build/vega-tooltip.min.js" integrity="sha256-jfSNVm2HnEPByge2OvjvN/O9WsXiWpLhnZ+USGoiuGQ=" crossorigin="anonymous"></script>
 </head>
 <body id="index">
 <div class="page-wrap">
@@ -112,7 +113,7 @@
 			"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
 			"description": "Bitcoin Price History",
 			"width": 560,
-			"height": 230,
+			"height": 232,
 			"padding": 8,
 			"data": {
 				"url": "arrows/spot_model_xaubtc_daily.csv"
@@ -284,6 +285,7 @@
 		vegaEmbed("#bigpic", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
 	</script>
 
+	&nbsp;
 
 	<div id="scroller"></div>
 
@@ -427,6 +429,7 @@
 		vegaEmbed("#spotbars", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
 	</script>
 
+	&nbsp;
 
 	<div id="multiscroller"></div>
 	<script type="text/javascript">
@@ -579,6 +582,7 @@
 		vegaEmbed("#volume", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
 	</script>
 
+	&nbsp;
 
 	<div id="hashrate"></div>
 
@@ -726,6 +730,7 @@
 		vegaEmbed("#arrivalrate", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
 	</script>
 
+	&nbsp;
 
 	<div id="difficulty"></div>
 
