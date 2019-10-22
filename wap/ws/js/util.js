@@ -11,6 +11,13 @@ function dateTime(id) {
 }
 
 
+async function getAddressBalance(addr, confirmations=6) {
+	base = "https://blockchain.info/q/addressbalance/";
+	resp = await fetch(base + addr + "?confirmations=" + confirmations);
+	return resp.json();
+}
+
+
 function uint8ArrayToHexString(byteArray) {
 	return Array.from(new Uint8Array(byteArray), function(byte) {
 		return ("0" + (byte & 0xFF).toString(16)).slice(-2);
