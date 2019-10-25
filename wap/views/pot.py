@@ -25,6 +25,17 @@ pot_blueprint = Blueprint("pot", __name__)
 
 
 
+def sort_pot(apot):
+	if apot is None:
+		return None
+	for idx in range(len(apot)):
+		apot[idx]["id"] = idx
+	apot = sorted(apot, key=lambda x: (x["datebin"], x["id"]))
+	for idx in range(len(apot)):
+		apot[idx]["id"] = idx
+	return list(apot)
+
+
 @pot_blueprint.route("/pot/", methods=["GET"])
 def pot():
 
