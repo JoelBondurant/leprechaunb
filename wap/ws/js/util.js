@@ -11,6 +11,11 @@ function dateTime(id) {
 }
 
 
+async function sleep(ms) {
+	return await new Promise(x => setTimeout(x, ms));
+}
+
+
 async function getAddressBalance(addr, confirmations=6) {
 	base = "https://blockchain.info/q/addressbalance/";
 	resp = await fetch(base + addr + "?confirmations=" + confirmations);

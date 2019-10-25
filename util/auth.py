@@ -9,9 +9,19 @@ import random
 import secrets
 import time
 
+
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 import cachetools.func
 import ecdsa
+
+
+from flask import (
+	make_response,
+	redirect,
+	render_template,
+	request,
+)
+
 
 from util import sqlite
 
@@ -157,4 +167,35 @@ def lt_decrypt(enc_b64):
 	msg_raw = aesgcm.decrypt(b"nonce", enc_raw, b"addl")
 	return msg_raw.decode()
 
+
+def is_verified():
+	"""
+	Flask check cookies for user auth verification.
+	"""
+	ans = True
+	if ("uid" not in request.cookies) or ("ukey_token" not in request.cookies):
+		return False
+
+	uid = request.cookies.get("uid")
+	assert len(uid) == uid_len
+	ukey_token = request.cookies.get("ukey_token")
+
+	return verify_ukey_token(uid, ukey_token)
+
+
+def unverified_redirect():
+	"""
+	Flask redirect to login.
+	"""
+	return make_response(redirect("/login", code=302))
+
+
+def verified_response(template_name, content={}):
+	"""
+	Flask response with auth verification.
+	"""
+	if not is_verified():
+		return unverified_redirect()
+
+	return make_response(render_template(template_name, **content))
 

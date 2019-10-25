@@ -38,17 +38,12 @@ def sort_pot(apot):
 
 @pot_blueprint.route("/pot/", methods=["GET"])
 def pot():
+	if not auth.is_verified():
+		return auth.unverified_redirect()
 
 	content = {}
 
-	if ("uid" not in request.cookies) or ("ukey_token" not in request.cookies):
-		return make_response(redirect("/login", code=302))
-
 	uid = request.cookies.get("uid")
-	ukey_token = request.cookies.get("ukey_token")
-
-	if not auth.verify_ukey_token(uid, ukey_token):
-		return make_response(redirect("/login", code=302))
 
 	udb = sqlite.KV("udb")
 	pot_gold = udb.get(f"pot_gold_{uid}")
@@ -72,33 +67,15 @@ def pot():
 
 @pot_blueprint.route("/pot/gold/", methods=["GET", "POST"])
 def gold():
-
-	content = {}
-
-	if ("uid" not in request.cookies) or ("ukey_token" not in request.cookies):
-		return make_response(redirect("/login", code=302))
-
-	uid = request.cookies.get("uid")
-	ukey_token = request.cookies.get("ukey_token")
-
-	if not auth.verify_ukey_token(uid, ukey_token):
-		return make_response(redirect("/login", code=302))
-
-	return make_response(render_template("pot_gold.html", **content))
+	return auth.verified_response("pot_gold.html")
 
 
 @pot_blueprint.route("/pot/gold/new", methods=["POST"])
 def new_gold():
-
-	if ("uid" not in request.cookies) or ("ukey_token" not in request.cookies):
-		return make_response(redirect("/login", code=302))
+	if not auth.is_verified():
+		return auth.unverified_redirect()
 
 	uid = request.cookies.get("uid")
-	assert len(uid) == 16
-	ukey_token = request.cookies.get("ukey_token")
-
-	if not auth.verify_ukey_token(uid, ukey_token):
-		return make_response(redirect("/login", code=302))
 
 	datebin = request.form.get("datebin")
 	grams = request.form.get("grams")
@@ -140,33 +117,15 @@ def new_gold():
 
 @pot_blueprint.route("/pot/bitcoin/", methods=["GET", "POST"])
 def bitcoin():
-
-	content = {}
-
-	if ("uid" not in request.cookies) or ("ukey_token" not in request.cookies):
-		return make_response(redirect("/login", code=302))
-
-	uid = request.cookies.get("uid")
-	ukey_token = request.cookies.get("ukey_token")
-
-	if not auth.verify_ukey_token(uid, ukey_token):
-		return make_response(redirect("/login", code=302))
-
-	return make_response(render_template("pot_bitcoin.html", **content))
+	return auth.verified_response("pot_bitcoin.html")
 
 
 @pot_blueprint.route("/pot/bitcoin/new", methods=["POST"])
 def new_bitcoin():
-
-	if ("uid" not in request.cookies) or ("ukey_token" not in request.cookies):
-		return make_response(redirect("/login", code=302))
+	if not auth.is_verified():
+		return auth.unverified_redirect()
 
 	uid = request.cookies.get("uid")
-	assert len(uid) == 16
-	ukey_token = request.cookies.get("ukey_token")
-
-	if not auth.verify_ukey_token(uid, ukey_token):
-		return make_response(redirect("/login", code=302))
 
 	datebin = request.form.get("datebin")
 	sats = request.form.get("sats")
