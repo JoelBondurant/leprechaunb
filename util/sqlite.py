@@ -10,9 +10,10 @@ class KV:
 
 	def __init__(self, name):
 		self.name = name
-		base = "file:/data/sqlite"
+		base = "/data/sqlite"
 		os.makedirs(base, mode=0o770, exist_ok=True)
 		self.path = f"{base}/{name}.db"
+		self.uri = f"file:{self.path}"
 		try:
 			sql_text = """
 				create table if not exists kv
@@ -27,7 +28,7 @@ class KV:
 
 
 	def reset(self):
-		return os.remove(self.path.replace("file:", ""))
+		return os.remove(self.path)
 
 
 	def dump(self):
@@ -35,7 +36,7 @@ class KV:
 
 
 	def _execute(self, sql_txt, kv=None, fetch=None, read_only=False):
-		uri = self.path
+		uri = self.uri
 		if read_only:
 			uri += "?mode=ro"
 		conn = sqlite3.connect(uri, uri=True)
