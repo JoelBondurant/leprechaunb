@@ -16,6 +16,20 @@ async function sleep(ms) {
 }
 
 
+function uint8range(start, stop, step=1) {
+	raw = [start];
+	x = start;
+	while (true) {
+		x += step;
+		if (x > stop) {
+			break;
+		}
+		raw.push(x);
+	}
+	return new Uint8Array(raw);
+}
+
+
 async function getAddressBalance(addr, confirmations=6) {
 	base = "https://blockchain.info/q/addressbalance/";
 	resp = await fetch(base + addr + "?confirmations=" + confirmations);
@@ -67,13 +81,13 @@ function sha512(msg) {
 }
 
 
-function pubSaltArray() {
-	return new Uint8Array([79, 83, 33, 212, 19, 1, 13, 84, 22, 70, 8, 9, 1, 2, 3, 4]);
+function pubSaltArray(len=16) {
+	return uint8range(79, 79 + len - 1);
 }
 
 
-function pubIV() {
-	return new Uint8Array([79, 83, 33, 128, 195, 193, 197, 3, 25, 127, 20, 9]);
+function pubIV(len=12) {
+	return uint8range(79, 79 + len - 1);
 }
 
 
@@ -115,6 +129,9 @@ async function deriveKey(akey) {
 
 
 async function encrypt(msg, akey) {
+	if (msg === "") {
+		return "";
+	}
 	aesgcm = aesgcmParams();
 	akey = await deriveKey(akey);
 	msg = (new TextEncoder()).encode(msg);
@@ -126,6 +143,9 @@ async function encrypt(msg, akey) {
 
 
 async function decrypt(msg, akey) {
+	if (msg === "") {
+		return "";
+	}
 	aesgcm = aesgcmParams();
 	akey = await deriveKey(akey);
 	msg = base64ToHex(msg);

@@ -65,31 +65,31 @@ def pot():
 	return make_response(render_template("pot.html", **content))
 
 
-@pot_blueprint.route("/pot/gold/", methods=["GET", "POST"])
+@pot_blueprint.route("/pot/gold/", methods=["GET"])
 def gold():
 	return auth.verified_response("pot_gold.html")
 
 
-@pot_blueprint.route("/pot/gold/new", methods=["POST"])
+@pot_blueprint.route("/pot/gold/new", methods=["GET"])
 def new_gold():
 	if not auth.is_verified():
 		return auth.unverified_redirect()
 
 	uid = request.cookies.get("uid")
 
-	datebin = request.form.get("datebin")
-	grams = request.form.get("grams")
-	source = request.form.get("source")
-	latitude = request.form.get("latitude")
-	longitude = request.form.get("longitude")
-	cost_usd = request.form.get("cost_usd")
-	local_key = request.form.get("local_key")
-	note = request.form.get("note")
+	datebin = request.args.get("datebin")
+	grams = request.args.get("grams")
+	source = request.args.get("source")
+	latitude = request.args.get("latitude")
+	longitude = request.args.get("longitude")
+	cost_usd = request.args.get("cost_usd")
+	local_key = request.args.get("local_key")
+	note = request.args.get("note")
 
 	udb = sqlite.KV("udb")
 	key = f"pot_gold_{uid}"
 	pot_json = udb.get(key)
-	if pot_json is None:
+	if pot_json in {None, ""}:
 		gold_pot = []
 	else:
 		pot_json = auth.lt_decrypt(pot_json)
@@ -115,31 +115,31 @@ def new_gold():
 	return resp
 
 
-@pot_blueprint.route("/pot/bitcoin/", methods=["GET", "POST"])
+@pot_blueprint.route("/pot/bitcoin/", methods=["GET"])
 def bitcoin():
 	return auth.verified_response("pot_bitcoin.html")
 
 
-@pot_blueprint.route("/pot/bitcoin/new", methods=["POST"])
+@pot_blueprint.route("/pot/bitcoin/new", methods=["GET"])
 def new_bitcoin():
 	if not auth.is_verified():
 		return auth.unverified_redirect()
 
 	uid = request.cookies.get("uid")
 
-	datebin = request.form.get("datebin")
-	sats = request.form.get("sats")
-	source = request.form.get("source")
-	pub_key = request.form.get("pub_key")
-	priv_key = request.form.get("priv_key")
-	cost_usd = request.form.get("cost_usd")
-	local_key = request.form.get("local_key")
-	note = request.form.get("note")
+	datebin = request.args.get("datebin")
+	sats = request.args.get("sats")
+	source = request.args.get("source")
+	pub_key = request.args.get("pub_key")
+	priv_key = request.args.get("priv_key")
+	cost_usd = request.args.get("cost_usd")
+	local_key = request.args.get("local_key")
+	note = request.args.get("note")
 
 	udb = sqlite.KV("udb")
 	key = f"pot_bitcoin_{uid}"
 	pot_json = udb.get(key)
-	if pot_json is None:
+	if pot_json in {None, ""}:
 		bitcoin_pot = []
 	else:
 		pot_json = auth.lt_decrypt(pot_json)
