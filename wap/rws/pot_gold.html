@@ -52,31 +52,11 @@
 			</li>
 		</ul>
 		<br/>
-		<input type="button" onclick="encryptedSubmitForm()" value="+">
+		<input type="button" onclick="encryptedSubmitForm('new')" value="+">
 		<br/>
 	</form>
 	</div>
 </div>
-
-<script>
-async function encryptedSubmitForm() {
-	form = document.forms["new"];
-	form_types = [];
-	for (idx=0; idx < form.elements.length; idx += 1) {
-		dtype = form.elements[idx].type
-		form_types.push(dtype)
-		form.elements[idx].type = "text"
-		form.elements[idx].value = await encrypt(form.elements[idx].value, "dev");
-	}
-	await sleep(10);
-	form.submit();
-	await sleep(10);
-	for (idx=0; idx < form.elements.length; idx += 1) {
-		form.elements[idx].type = form_types[idx];
-		form.elements[idx].value = await decrypt(form.elements[idx].value, "dev");
-	}
-}
-</script>
 
 </body>
 </html>
