@@ -63,6 +63,11 @@ def alert():
 	return render_template("alert.html")
 
 
+@app.route("/blank")
+def blank():
+	return render_template("blank.html")
+
+
 @app.route("/drill")
 def drill():
 	return render_template("drill.html")
