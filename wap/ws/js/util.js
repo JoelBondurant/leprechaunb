@@ -166,13 +166,23 @@ async function encryptedSubmitForm(formName) {
 		form_types.push(dtype)
 		form.elements[idx].type = "text"
 		form.elements[idx].value = await encrypt(form.elements[idx].value, ekey);
+		await sleep(8);
 	}
-	await sleep(40);
 	form.submit();
-	await sleep(10);
 	for (idx=0; idx < form.elements.length; idx += 1) {
+		await sleep(8);
 		form.elements[idx].type = form_types[idx];
 		form.elements[idx].value = await decrypt(form.elements[idx].value, ekey);
+	}
+}
+
+
+async function decryptElements() {
+	ekey = "dev"
+	cts = document.getElementsByClassName("encrypted");
+	for (ct of cts) {
+		await sleep(16)
+		ct.textContent = await decrypt(ct.textContent, ekey);
 	}
 }
 

@@ -5,9 +5,7 @@
 
 	<div class="centerwrap">
 		<span>
-			<h1>Pot</h1>
-			<h2>Live Dev Preview Warning</h1>
-			<h3>Data May Be Deleted</h3>
+			<h3>Pot</h3>
 			<hr/>
 			<a href="/">&gt;&gt;&gt;------&gt;</a>
 			<hr/>
@@ -23,7 +21,7 @@
 	<div class="centerwrap">
 	<hr/>
 
-	<table>
+	<table id="pot_gold">
 		<tr>
 			<th>date</th>
 			<th>grams</th>
@@ -35,13 +33,13 @@
 		</tr>
 	{% for prow in pot_gold %}
 		<tr>
-			<td>{{prow.datebin}}</td>
-			<td>{{prow.grams}}</td>
-			<td>{{prow.source}}</td>
-			<td>{{prow.latitude}}</td>
-			<td>{{prow.longitude}}</td>
-			<td>{{prow.cost_usd}}</td>
-			<td>{{prow.note}}</td>
+			<td class="encrypted">{{prow.datebin}}</td>
+			<td class="encrypted">{{prow.grams}}</td>
+			<td class="encrypted">{{prow.source}}</td>
+			<td class="encrypted">{{prow.latitude}}</td>
+			<td class="encrypted">{{prow.longitude}}</td>
+			<td class="encrypted">{{prow.cost_usd}}</td>
+			<td class="encrypted">{{prow.note}}</td>
 		</tr>
 	{% endfor %}
 	</table>
@@ -50,7 +48,7 @@
 	<hr/>
 	<br/><br/>
 
-	<table>
+	<table id="pot_bitcoin">
 		<tr>
 			<th>date</th>
 			<th>sats</th>
@@ -62,13 +60,13 @@
 		</tr>
 	{% for prow in pot_bitcoin %}
 		<tr>
-			<td>{{prow.datebin}}</td>
-			<td>{{prow.sats}}</td>
-			<td>{{prow.source}}</td>
-			<td>{{prow.pub_key}}</td>
-			<td>{{prow.priv_key}}</td>
-			<td>{{prow.cost_usd}}</td>
-			<td>{{prow.note}}</td>
+			<td class="encrypted">{{prow.datebin}}</td>
+			<td class="encrypted">{{prow.sats}}</td>
+			<td class="encrypted">{{prow.source}}</td>
+			<td class="encrypted">{{prow.pub_key}}</td>
+			<td class="encrypted">{{prow.priv_key}}</td>
+			<td class="encrypted">{{prow.cost_usd}}</td>
+			<td class="encrypted">{{prow.note}}</td>
 		</tr>
 	{% endfor %}
 	</table>
@@ -76,5 +74,10 @@
 	</div>
 
 </div>
+
+<script>
+	decryptElements();
+</script>
+
 </body>
 </html>
