@@ -155,10 +155,18 @@ async function decrypt(msg, akey) {
 	return decr;
 }
 
+function localKey() {
+	lkey = localStorage.getItem("local_key")
+	if (!lkey) {
+		lkey = prompt("local_key:", "");
+		localStorage.setItem("local_key", lkey);
+	}
+	return lkey;
+}
 
 
 async function encryptedSubmitForm(formName) {
-	ekey = "dev"
+	ekey = localKey();
 	form = document.forms[formName];
 	form_types = [];
 	for (idx=0; idx < form.elements.length; idx += 1) {
@@ -166,11 +174,11 @@ async function encryptedSubmitForm(formName) {
 		form_types.push(dtype)
 		form.elements[idx].type = "text"
 		form.elements[idx].value = await encrypt(form.elements[idx].value, ekey);
-		await sleep(8);
+		await sleep(2);
 	}
 	form.submit();
 	for (idx=0; idx < form.elements.length; idx += 1) {
-		await sleep(8);
+		await sleep(2);
 		form.elements[idx].type = form_types[idx];
 		form.elements[idx].value = await decrypt(form.elements[idx].value, ekey);
 	}
@@ -178,10 +186,10 @@ async function encryptedSubmitForm(formName) {
 
 
 async function decryptElements() {
-	ekey = "dev"
+	ekey = localKey();
 	cts = document.getElementsByClassName("encrypted");
 	for (ct of cts) {
-		await sleep(16)
+		await sleep(2)
 		ct.textContent = await decrypt(ct.textContent, ekey);
 	}
 }
