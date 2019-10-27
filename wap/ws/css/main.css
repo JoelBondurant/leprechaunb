@@ -1,16 +1,16 @@
 * {
 	margin: 1;
-	font-family: "Arial";
+	font-family: "Verdana, Arial";
 }
 
 html, body {
 	height: 100%;
-	color: #fcfcfc;
+	color: #ddd;
 	background-color: #060606;
 }
 
 a {
-	color: #808080;
+	color: #888;
 }
 
 img {

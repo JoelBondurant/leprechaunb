@@ -37,14 +37,14 @@ async function getAddressBalance(addr, confirmations=6) {
 }
 
 
-function uint8ArrayToHexString(byteArray) {
+function uint8ArrayToHex(byteArray) {
 	return Array.from(new Uint8Array(byteArray), function(byte) {
 		return ("0" + (byte & 0xFF).toString(16)).slice(-2);
 	}).join("");
 }
 
 
-function hexStringToUint8Array(hexString) {
+function hexToUint8Array(hexString) {
 	var result = [];
 	for (var i = 0; i < hexString.length; i += 2) {
 		result.push(parseInt(hexString.substr(i, 2), 16));
@@ -136,7 +136,7 @@ async function encrypt(msg, akey) {
 	akey = await deriveKey(akey);
 	msg = (new TextEncoder()).encode(msg);
 	encr = await crypto.subtle.encrypt(aesgcm, akey, msg);
-	encr = uint8ArrayToHexString(encr);
+	encr = uint8ArrayToHex(encr);
 	encr = hexToBase64(encr);
 	return encr;
 }
@@ -149,16 +149,19 @@ async function decrypt(msg, akey) {
 	aesgcm = aesgcmParams();
 	akey = await deriveKey(akey);
 	msg = base64ToHex(msg);
-	msg = hexStringToUint8Array(msg);
+	msg = hexToUint8Array(msg);
 	decr = await crypto.subtle.decrypt(aesgcm, akey, msg);
 	decr = (new TextDecoder()).decode(decr);
 	return decr;
 }
 
-function localKey() {
+
+async function localKey() {
 	lkey = localStorage.getItem("local_key")
 	if (!lkey) {
 		lkey = prompt("local_key:", "");
+		lkey = hexToBase64(uint8ArrayToHex(await sha256(lkey)));
+		lkey = await encrypt(lkey, "local_key" + lkey);
 		localStorage.setItem("local_key", lkey);
 	}
 	return lkey;
@@ -166,7 +169,7 @@ function localKey() {
 
 
 async function encryptedSubmitForm(formName) {
-	ekey = localKey();
+	ekey = await localKey();
 	form = document.forms[formName];
 	form_types = [];
 	for (idx=0; idx < form.elements.length; idx += 1) {
@@ -186,10 +189,9 @@ async function encryptedSubmitForm(formName) {
 
 
 async function decryptElements() {
-	ekey = localKey();
+	ekey = await localKey();
 	cts = document.getElementsByClassName("encrypted");
 	for (ct of cts) {
-		await sleep(2)
 		ct.textContent = await decrypt(ct.textContent, ekey);
 	}
 }
