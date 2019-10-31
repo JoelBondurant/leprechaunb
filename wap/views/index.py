@@ -61,7 +61,7 @@ def index():
 
 	# Unroll blockchain stats
 	stats = {}
-	color_index = adb_data["color_index"]
+	color_index = adb_data["color_index"] + 1
 	stats["color_index"] = color_index
 	spot_color = rainbow[color_index - 1]
 	content["spot_color"] = spot_color
