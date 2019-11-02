@@ -199,7 +199,7 @@ async function decryptElements() {
 
 function modulo(divident, divisor) {
 	divident = divident.toString();
-	divisor = divisor.toString();
+	
 	var cDivident = '';
 	var cRest = '';
 
@@ -207,7 +207,7 @@ function modulo(divident, divisor) {
 		var cChar = divident[i];
 		var cOperator = cRest + '' + cDivident + '' + cChar;
 
-		if ( cOperator < parseInt(divisor) ) {
+		if ( cOperator < divisor ) {
 				cDivident += '' + cChar;
 		} else {
 				cRest = cOperator % divisor;
