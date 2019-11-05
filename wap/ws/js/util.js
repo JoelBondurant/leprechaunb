@@ -1,8 +1,11 @@
 /*
-Leprechaun Sauce
+Leprechaun B, no rights reserved.
 */
 
 
+/*
+Bind the time to html.
+*/
 function dateTime(id) {
 	var date = new Date();
 	document.getElementById(id).innerHTML = date.toISOString().slice(0, -5).replace("T", "_");
@@ -11,12 +14,18 @@ function dateTime(id) {
 }
 
 
+/*
+Sleep, to suspend the drawing thread. Used to induce flicker when screen painting encryption/decryption.
+*/
 async function sleep(ms) {
 	return await new Promise(x => setTimeout(x, ms));
 }
 
 
-function uint8range(start, stop, step=1) {
+/*
+Generate a list of bytes in the range.
+*/
+function byteRange(start, stop, step=1) {
 	raw = [start];
 	x = start;
 	while (true) {
@@ -30,6 +39,9 @@ function uint8range(start, stop, step=1) {
 }
 
 
+/*
+Get Bitcoin unspent output potential of an address.
+*/
 async function getAddressBalance(addr, confirmations=6) {
 	base = "https://blockchain.info/q/addressbalance/";
 	resp = await fetch(base + addr + "?confirmations=" + confirmations);
@@ -37,22 +49,31 @@ async function getAddressBalance(addr, confirmations=6) {
 }
 
 
-function uint8ArrayToHex(byteArray) {
+/*
+bytes to hex.
+*/
+function bytesToHex(byteArray) {
 	return Array.from(new Uint8Array(byteArray), function(byte) {
 		return ("0" + (byte & 0xFF).toString(16)).slice(-2);
 	}).join("");
 }
 
 
-function hexToUint8Array(hexString) {
+/*
+hex to bytes
+*/
+function hexToBytes(hexString) {
 	var result = [];
 	for (var i = 0; i < hexString.length; i += 2) {
 		result.push(parseInt(hexString.substr(i, 2), 16));
 	}
-	return new Uint8Array(result);
+	return new Uint8Array(result).reverse();
 }
 
 
+/*
+hex to base64
+*/
 function hexToBase64(hexstring) {
 	return btoa(hexstring.match(/\w{2}/g).map(function(a) {
 		return String.fromCharCode(parseInt(a, 16));
@@ -60,6 +81,9 @@ function hexToBase64(hexstring) {
 }
 
 
+/*
+base64 to hex
+*/
 function base64ToHex(base64) {
 	var raw = atob(base64);
 	var HEX = '';
@@ -71,26 +95,64 @@ function base64ToHex(base64) {
 }
 
 
+/*
+Bytes to BigInt
+*/
+function bytesToBigInt(x) {
+	y = 0n;
+	M = BigInt(x.length);
+	for (i=0n; i<M; i++) {
+		y += BigInt(x[i]) * bigPow(2n, 8n*i);
+	}
+	return y;
+}
+
+
+/*
+BigInt to Hex
+*/
+function bigIntToHex(x) {
+	return x.toString(16);
+}
+
+
+/*
+sha256 short.
+*/
 function sha256(msg) {
 	return crypto.subtle.digest("SHA-256", (new TextEncoder()).encode(msg));
 }
 
 
+/*
+sha512 short.
+*/
 function sha512(msg) {
 	return crypto.subtle.digest("SHA-512", (new TextEncoder()).encode(msg));
 }
 
 
+/*
+AES-GCM 256 public salt.
+Chosen in a predictable manner, based on the golden prime.
+*/
 function pubSaltArray(len=16) {
-	return uint8range(79, 79 + len - 1);
+	return byteRange(79, 79 + len - 1);
 }
 
 
+/*
+AES-GCM 256 public initalization vector.
+Chosen in a predictable manner, based on the golden prime.
+*/
 function pubIV(len=12) {
-	return uint8range(79, 79 + len - 1);
+	return byteRange(79, 79 + len - 1);
 }
 
 
+/*
+AES-GCM helper.
+*/
 function aesgcmParams() {
 	aesgcm = {
 		"name": "AES-GCM",
@@ -101,6 +163,9 @@ function aesgcmParams() {
 }
 
 
+/*
+AES-GCM 256 key derivation.
+*/
 async function deriveKey(akey) {
 	akey = await crypto.subtle.importKey(
 		"raw",
@@ -128,6 +193,9 @@ async function deriveKey(akey) {
 }
 
 
+/*
+Weak AES encrytion.
+*/
 async function encrypt(msg, akey) {
 	if (msg === "") {
 		return "";
@@ -136,12 +204,15 @@ async function encrypt(msg, akey) {
 	akey = await deriveKey(akey);
 	msg = (new TextEncoder()).encode(msg);
 	encr = await crypto.subtle.encrypt(aesgcm, akey, msg);
-	encr = uint8ArrayToHex(encr);
+	encr = bytesToHex(encr);
 	encr = hexToBase64(encr);
 	return encr;
 }
 
 
+/*
+Weak AES decrytion.
+*/
 async function decrypt(msg, akey) {
 	if (msg === "") {
 		return "";
@@ -149,18 +220,21 @@ async function decrypt(msg, akey) {
 	aesgcm = aesgcmParams();
 	akey = await deriveKey(akey);
 	msg = base64ToHex(msg);
-	msg = hexToUint8Array(msg);
+	msg = hexToBytes(msg);
 	decr = await crypto.subtle.decrypt(aesgcm, akey, msg);
 	decr = (new TextDecoder()).decode(decr);
 	return decr;
 }
 
 
+/*
+Get/cache a local encryption key for e2ee.
+*/
 async function localKey() {
 	lkey = localStorage.getItem("local_key")
 	if (!lkey) {
 		lkey = prompt("local_key:", "");
-		lkey = hexToBase64(uint8ArrayToHex(await sha256(lkey)));
+		lkey = hexToBase64(bytesToHex(await sha256(lkey)));
 		lkey = await encrypt(lkey, "local_key" + lkey);
 		localStorage.setItem("local_key", lkey);
 	}
@@ -168,6 +242,9 @@ async function localKey() {
 }
 
 
+/*
+Submit encrypted form data.
+*/
 async function encryptedSubmitForm(formName) {
 	ekey = await localKey();
 	form = document.forms[formName];
@@ -188,11 +265,105 @@ async function encryptedSubmitForm(formName) {
 }
 
 
+/*
+Decrypt html element text content of class encrypted.
+*/
 async function decryptElements() {
 	ekey = await localKey();
 	cts = document.getElementsByClassName("encrypted");
 	for (ct of cts) {
 		ct.textContent = await decrypt(ct.textContent, ekey);
+	}
+}
+
+
+/*
+Big Square Root function.
+*/
+function bigSqrt(n) {
+	m = BigInt(n);
+	if (m < 0n) {
+		throw "nope";
+	}
+	if (m < 2n) {
+		return m;
+	}
+	function newtonIteration(n, x0) {
+		const x1 = ((n / x0) + x0) >> 1n;
+		if (x0 === x1 || x0 === (x1 - 1n)) {
+			return x0;
+		}
+		return newtonIteration(n, x1);
+	}
+	return newtonIteration(m, 1n);
+}
+
+
+/*
+Big Power function.
+*/
+function bigPow(a, b) {
+	a = BigInt(a);
+	b = BigInt(b);
+	if (b == 0n) {
+		return 1n;
+	} else if ((b % 2n) == 1n) {
+		return a*bigPow(a, b - 1n);
+	} else {
+		c = bigPow(a, b/2n);
+		return c*c;
+	}
+}
+
+
+/*
+Big Absolute Value function.
+*/
+function bigAbs(x) {
+	x = BigInt(x);
+	if (x < 0n) {
+		return -x;
+	}
+	return x;
+}
+
+
+/*
+GCD function.
+*/
+function gcd(a, b) {
+	a = bigAbs(a);
+	b = bigAbs(b);
+	if (b > a) {
+		c = a;
+		a = b;
+		b = c;
+	}
+	while (true) {
+		if (b == 0) {
+			return a;
+		}
+		a %= b;
+		if (a == 0) {
+			return b;
+		}
+		b %= a;
+	}
+}
+
+
+/*
+Modular Inverse function.
+*/
+function invMod(a, b) {
+	a = BigInt(a);
+	b = BigInt(b);
+	if (a == 0n) {
+		return 0n;
+	} else if ((b % a) == 0n) {
+		return 1n;
+	} else {
+		return b - invMod(b % a, a) * b / a;
 	}
 }
 
