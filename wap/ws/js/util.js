@@ -109,6 +109,14 @@ function bytesToBigInt(x) {
 
 
 /*
+Hex to BigInt
+*/
+function hexToBigInt(x) {
+	return bytesToBigInt(hexToBytes(x));
+}
+
+
+/*
 BigInt to Hex
 */
 function bigIntToHex(x) {
@@ -120,7 +128,10 @@ function bigIntToHex(x) {
 sha256 short.
 */
 function sha256(msg) {
-	return crypto.subtle.digest("SHA-256", (new TextEncoder()).encode(msg));
+	if (typeof msg == "string") {
+		msg = (new TextEncoder()).encode(msg);
+	}
+	return crypto.subtle.digest("SHA-256", msg);
 }
 
 
@@ -128,7 +139,10 @@ function sha256(msg) {
 sha512 short.
 */
 function sha512(msg) {
-	return crypto.subtle.digest("SHA-512", (new TextEncoder()).encode(msg));
+	if (typeof msg == "string") {
+		msg = (new TextEncoder()).encode(msg);
+	}
+	return crypto.subtle.digest("SHA-512", msg);
 }
 
 

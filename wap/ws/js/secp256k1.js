@@ -31,19 +31,6 @@ function generatorPoint() {
 
 
 /*
-secp256k1 private key.
-*/
-function privateKey() {
-	k0 = crypto.getRandomValues(new Uint8Array(32));
-	k = bytesToBigInt(k0);
-	if (k > generatorOrder()) {
-		return privateKey();
-	}
-	return "80" + k.toString(16) + "01";
-}
-
-
-/*
 Elliptic field addition.
 */
 function ellipticAdd(a, b) {
@@ -93,12 +80,26 @@ function ellipticMultiply(b) {
 
 
 /*
-Secp256k1 public key gen.
+secp256k1 private keygen.
 */
-function ellipticKey(privKey) {
-	pubKey = ellipticMultiply(privKey);
-	pubKey0 = Array.from(hexToBytes(pubKey[0].toString(16)));
-	pubKey1 = Array.from(hexToBytes(pubKey[1].toString(16)));
-	pubKey = pubKey0.concat(pubKey1);
-	return bytesToHex(pubKey);
+function privateKey() {
+	k0 = crypto.getRandomValues(new Uint8Array(32));
+	k = bytesToBigInt(k0);
+	if (k > generatorOrder()) {
+		return privateKey();
+	}
+	return k.toString(16);
 }
+
+
+/*
+Secp256k1 public keygen.
+*/
+function publicKey(privKey, index=0) {
+	pubKey = ellipticMultiply(privKey);
+	pubKey0 = pubKey[0].toString(16);
+	pubKey1 = pubKey[1].toString(16);
+	pubKey = [pubKey0, pubKey1];
+	return pubKey;
+}
+
