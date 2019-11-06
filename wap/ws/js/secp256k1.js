@@ -1,6 +1,6 @@
 /*
 Leprechaun B, no rights reserved.
-Secp256k1
+Secp256k1 - dev wip.
 */
 
 
@@ -42,7 +42,7 @@ function ellipticAdd(a, b) {
 	}
 	G = ellipticOrder();
 	lam = ((b[1] - a[1]) * invMod(b[0] - a[0], G)) % G;
-	x = (lam*lam - a[0]-b[0]) % G;
+	x = (lam*lam - a[0] - b[0]) % G;
 	y = (lam*(a[0] - x) - a[1]) % G;
 	return [x, y];
 }
@@ -66,11 +66,18 @@ function ellipticDouble(a) {
 /*
 Elliptic field scalar multiplication.
 */
-function ellipticMultiply(b) {
+function ellipticMultiply(b, start=0) {
+	bbin = b.toString(2);
 	a = generatorPoint();
-	c = null;
-	for (i=0n; i<256n; i++) {
-		if (b & (1n << i)) {
+	if (start==0) {
+		c = null;
+	} else if (start=1) {
+		c = a;
+	} else if (start=2) {
+		c = ellipticDouble(a);
+	}
+	for (i=0; i<256; i++) {
+		if (bbin[i] == "1") {
 			c = ellipticAdd(c, a);
 		}
 		a = ellipticDouble(a);
