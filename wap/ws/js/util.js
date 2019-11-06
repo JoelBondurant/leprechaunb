@@ -67,7 +67,7 @@ function hexToBytes(hexString) {
 	for (var i = 0; i < hexString.length; i += 2) {
 		result.push(parseInt(hexString.substr(i, 2), 16));
 	}
-	return new Uint8Array(result).reverse();
+	return (new Uint8Array(result));
 }
 
 
@@ -99,12 +99,21 @@ function base64ToHex(base64) {
 Bytes to BigInt
 */
 function bytesToBigInt(x) {
+	x = x.reverse();
 	y = 0n;
 	M = BigInt(x.length);
 	for (i=0n; i<M; i++) {
 		y += BigInt(x[i]) * bigPow(2n, 8n*i);
 	}
 	return y;
+}
+
+
+/*
+BigInt to Hex
+*/
+function bigIntToHex(x) {
+	return x.toString(16).split().reverse().join("");
 }
 
 
@@ -117,10 +126,11 @@ function hexToBigInt(x) {
 
 
 /*
-BigInt to Hex
+BigInt to Bytes
 */
-function bigIntToHex(x) {
-	return x.toString(16);
+function bigIntToBytes(x) {
+	asHex = bigIntToHex(x);
+	return hexToBytes(asHex);
 }
 
 
