@@ -113,7 +113,7 @@ function bytesToBigInt(x) {
 BigInt to Hex
 */
 function bigIntToHex(x) {
-	return x.toString(16).split().reverse().join("");
+	return x.toString(16);
 }
 
 
