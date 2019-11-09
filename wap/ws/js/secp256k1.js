@@ -67,30 +67,35 @@ function ellipticAdd(a, b) {
 		return ellipticDouble(a);
 	}
 	G = ellipticOrder();
-	lam = ((b[1] - a[1]) * invMod(b[0] - a[0], G)) % G;
+	lam = ((b[1] - a[1]) * invMod(b[0] - a[0], G));
 	x = (lam*lam - a[0] - b[0]) % G;
 	y = (lam*(a[0] - x) - a[1]) % G;
+	if (y < 0n) {
+		y += G;
+	}
 	return [x, y];
 }
 
 
 /*
-Elliptic scalar multiplication.
+Elliptic scalar multiplication on the generator point.
 */
-function ellipticMultiply(b) {
-	a = generatorPoint();
-	bbin = b.toString(2);
-	c = a;
-	for (i=0; i<256; i++) {
-		if (bbin[i] == null) {
-			break;
-		}
-		if (bbin[i] == "1") {
-			c = ellipticAdd(c, a);
-		}
-		a = ellipticDouble(a);
+function ellipticPower(x) {
+	if (x == 0n) {
+		return null;
 	}
-	return c;
+	x = BigInt(x);
+	xbin = x.toString(2).split("").reverse().join("");
+	xbinLen = xbin.length;
+	n = generatorPoint();
+	r = null;
+	for (i=0; i<xbinLen; i++) {
+		if (xbin[i] == "1") {
+			r = ellipticAdd(r, n);
+		}
+		n = ellipticDouble(n);
+	}
+	return r;
 }
 
 
@@ -120,7 +125,7 @@ function privateKey() {
 Secp256k1 public keygen.
 */
 function publicKey(privKey, index=0) {
-	pubKey = ellipticMultiply(privKey);
+	pubKey = ellipticPower(privKey);
 	return pubKey;
 }
 
