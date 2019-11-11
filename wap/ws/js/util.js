@@ -135,6 +135,14 @@ function bigIntToBytes(x) {
 
 
 /*
+Modulo function for javascript, % is incorrect.
+*/
+function mod(n, m) {
+	return ((n % m) + m) % m;
+}
+
+
+/*
 sha256 short.
 */
 function sha256(msg) {
@@ -331,7 +339,7 @@ function bigPow(a, b) {
 	b = BigInt(b);
 	if (b == 0n) {
 		return 1n;
-	} else if ((b % 2n) == 1n) {
+	} else if (mod(b, 2n) == 1n) {
 		return a*bigPow(a, b - 1n);
 	} else {
 		c = bigPow(a, b/2n);
@@ -367,7 +375,7 @@ function gcd(a, b) {
 		if (b == 0) {
 			return a;
 		}
-		a %= b;
+		a = mod(a, b);
 		if (a == 0) {
 			return b;
 		}
@@ -382,12 +390,17 @@ Modular Inverse function.
 function invMod(a, b) {
 	a = BigInt(a);
 	b = BigInt(b);
-	if (a == 0n) {
-		return 0n;
-	} else if ((b % a) == 0n) {
-		return 1n;
-	} else {
-		return b - invMod(b % a, a) * b / a;
+	inv1 = 1n;
+	inv2 = 0n;
+	while ((b != 1n) && (b != 0n)) {
+		s = inv1;
+		inv1 = inv2;
+		inv2 = s - inv2 * (a / b);
+		s = a;
+		a = b;
+		b = mod(s, b);
 	}
+	return inv2;
 }
+
 
