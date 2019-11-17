@@ -70,9 +70,9 @@ function ellipticDouble(a) {
 		return ellipticIdentity();
 	}
 	G = ellipticOrder();
-	lam = (3n * a[0] * a[0]) * invMod(2n * a[1], G);
-	x = mod(lam*lam - 2n*a[0], G);
-	y = mod(lam*(a[0] - x) - a[1], G);
+	lam = (3n * a[0] ** 2n) * util.invMod(2n * a[1], G);
+	x = util.mod(lam**2n - 2n*a[0], G);
+	y = util.mod(lam*(a[0] - x) - a[1], G);
 	return [x, y];
 }
 
@@ -93,10 +93,10 @@ function ellipticAdd(a, b) {
 	G = ellipticOrder();
 	[x1, y1] = a;
 	[x2, y2] = b;
-	lam = (y1 - y2) * invMod(x1 - x2, G);
-	x = bigPow(lam, 2n) - (x1 + x2);
+	lam = (y1 - y2) * util.invMod(x1 - x2, G);
+	x = (lam**2n) - (x1 + x2);
 	y = lam * (x1 - x) - y1;
-	return [mod(x, G), mod(y, G)];
+	return [util.mod(x, G), util.mod(y, G)];
 }
 
 
@@ -108,7 +108,7 @@ function ellipticPower(a, k) {
 	if (k == 1n) {
 		return a;
 	}
-	if (mod(k, 2n) == 1n) {
+	if (util.mod(k, 2n) == 1n) {
 		return ellipticAdd(a, ellipticPower(a, k - 1n));
 	}
 	return ellipticPower(ellipticDouble(a), k / 2n);
@@ -119,6 +119,9 @@ function ellipticPower(a, k) {
 Format elliptic curve point as hex.
 */
 function ellipticHex(a) {
+	if (isEllipticIdentity(a)) {
+		return ['0','0'];
+	}
 	return a.map(x=>x.toString(16));
 }
 
@@ -127,6 +130,9 @@ function ellipticHex(a) {
 Elliptic generator point powers.
 */
 function generatorPower(k) {
+	if (k <= 0n) {
+		return ellipticIdentity();
+	}
 	g = generatorPoint();
 	return ellipticPower(g, k);
 }
@@ -137,7 +143,7 @@ Is point on secp256k1?
 */
 function onCurve(a) {
 	G = ellipticOrder();
-	return (mod(a[1]*a[1] - a[0]*a[0]*a[0] - 7n, G) == 0n);
+	return (util.mod(a[1]**2n - a[0]**3n - 7n, G) == 0n);
 }
 
 
@@ -146,7 +152,7 @@ secp256k1 private keygen.
 */
 function privateKey() {
 	k0 = crypto.getRandomValues(new Uint8Array(32));
-	k = bytesToBigInt(k0);
+	k = util.bytesToBigInt(k0);
 	if (k > generatorOrder()) {
 		return privateKey();
 	}
