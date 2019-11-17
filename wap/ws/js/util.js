@@ -10,7 +10,7 @@ Bind the time to html.
 function dateTime(id) {
 	var date = new Date();
 	document.getElementById(id).innerHTML = date.toISOString().slice(0, -5).replace("T", "_");
-	setTimeout('dateTime("' + id + '");', '1000');
+	setTimeout('util.dateTime("' + id + '");', '1000');
 	return true;
 }
 

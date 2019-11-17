@@ -164,8 +164,11 @@ function privateKey() {
 Secp256k1 public keygen.
 */
 function publicKey(privKey, index=0) {
-	pubKey = ellipticPower(privKey);
-	return pubKey;
+	if (typeof(privKey) == 'string') {
+		privKey = util.hexToBigInt(privKey);
+	}
+	pubKey = generatorPower(privKey);
+	return ellipticHex(pubKey);
 }
 
 
