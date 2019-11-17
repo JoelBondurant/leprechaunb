@@ -3,6 +3,7 @@ Leprechaun B, no rights reserved.
 Secp256k1 - dev wip.
 */
 
+var secp256k1 = (function () {
 
 /*
 secp256k1 group order of the elliptic addition.
@@ -161,3 +162,22 @@ function publicKey(privKey, index=0) {
 	return pubKey;
 }
 
+
+return {
+	ellipticOrder: ellipticOrder,
+	generatorPoint: generatorPoint,
+	generatorOrder: generatorOrder,
+	ellipticIdentity: ellipticIdentity,
+	isEllipticIdentity: isEllipticIdentity,
+	ellipticInverse: ellipticInverse,
+	ellipticDouble: ellipticDouble,
+	ellipticAdd: ellipticPower,
+	ellipticHex: ellipticHex,
+	generatorPower: generatorPower,
+	onCurve: onCurve,
+	privateKey: privateKey,
+	publicKey: publicKey,
+}
+
+
+})();

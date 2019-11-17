@@ -2,6 +2,7 @@
 Leprechaun B, no rights reserved.
 */
 
+var util = (function () {
 
 /*
 Bind the time to html.
@@ -139,6 +140,50 @@ Modulo function for javascript, % is incorrect.
 */
 function mod(n, m) {
 	return ((n % m) + m) % m;
+}
+
+
+/*
+Modular Inverse function.
+*/
+function invMod(a, b) {
+	a = BigInt(a);
+	b = BigInt(b);
+	inv1 = 1n;
+	inv2 = 0n;
+	while ((b != 1n) && (b != 0n)) {
+		s = inv1;
+		inv1 = inv2;
+		inv2 = s - inv2 * (a / b);
+		s = a;
+		a = b;
+		b = mod(s, b);
+	}
+	return inv2;
+}
+
+
+/*
+GCD function.
+*/
+function gcd(a, b) {
+	a = bigAbs(a);
+	b = bigAbs(b);
+	if (b > a) {
+		c = a;
+		a = b;
+		b = c;
+	}
+	while (true) {
+		if (b == 0) {
+			return a;
+		}
+		a = mod(a, b);
+		if (a == 0) {
+			return b;
+		}
+		b %= a;
+	}
 }
 
 
@@ -360,47 +405,33 @@ function bigAbs(x) {
 }
 
 
-/*
-GCD function.
-*/
-function gcd(a, b) {
-	a = bigAbs(a);
-	b = bigAbs(b);
-	if (b > a) {
-		c = a;
-		a = b;
-		b = c;
-	}
-	while (true) {
-		if (b == 0) {
-			return a;
-		}
-		a = mod(a, b);
-		if (a == 0) {
-			return b;
-		}
-		b %= a;
-	}
+return {
+	dateTime: dateTime,
+	sleep: sleep,
+	byteRange: byteRange,
+	getAddressBalance: getAddressBalance,
+	bytesToHex: bytesToHex,
+	hexToBytes: hexToBytes,
+	hexToBase64: hexToBase64,
+	base64ToHex: base64ToHex,
+	bytesToBigInt: bytesToBigInt,
+	bigIntToHex: bigIntToHex,
+	hexToBigInt: hexToBigInt,
+	bigIntToBytes: bigIntToBytes,
+	mod: mod,
+	invMod: invMod,
+	gcd: gcd,
+	sha256:sha256,
+	sha512:sha512,
+	encrypt: encrypt,
+	decrypt: decrypt,
+	localKey: localKey,
+	encryptedSubmitForm: encryptedSubmitForm,
+	decryptElements: decryptElements,
+	bigSqrt: bigSqrt,
+	bigPow: bigPow,
+	bigAbs: bigAbs,
 }
 
 
-/*
-Modular Inverse function.
-*/
-function invMod(a, b) {
-	a = BigInt(a);
-	b = BigInt(b);
-	inv1 = 1n;
-	inv2 = 0n;
-	while ((b != 1n) && (b != 0n)) {
-		s = inv1;
-		inv1 = inv2;
-		inv2 = s - inv2 * (a / b);
-		s = a;
-		a = b;
-		b = mod(s, b);
-	}
-	return inv2;
-}
-
-
+})();
