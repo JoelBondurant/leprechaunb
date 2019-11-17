@@ -24,6 +24,19 @@ async function sleep(ms) {
 
 
 /*
+Time a function.
+*/
+async function timeit(func) {
+	a = performance.now();
+	res = await func();
+	b = performance.now();
+	d = (b - a) / 1000.0;
+	console.log('Call to ' + func + ' took: ' + d + ' seconds.');
+	return res;
+}
+
+
+/*
 Generate a list of bytes in the range.
 */
 function byteRange(start, stop, step=1) {
@@ -405,9 +418,36 @@ function bigAbs(x) {
 }
 
 
+async function proofOfWork(x, difficulty=4) {
+	x = new Uint8Array(await util.sha512(await util.sha512(x)));
+	nonce = 0n;
+	while (true) {
+		nonceBytes = util.bigIntToBytes(nonce);
+		hsh = await util.sha256(await util.sha512(await util.sha256(x + nonceBytes)));
+		hshZero = new Uint8Array(hsh.slice(0, difficulty));
+		depth = 0;
+		for (idx=0; idx<hshZero.length; idx++) {
+			hp = hshZero[idx];
+			if (hp == 0) {
+				depth += 2;
+				continue;
+			} else if (hp < 16) {
+				depth += 1;
+			}
+			break;
+		}
+		if (depth >= difficulty) {
+			return nonce;
+		}
+		nonce++;
+	}
+}
+
+
 return {
 	dateTime: dateTime,
 	sleep: sleep,
+	timeit: timeit,
 	byteRange: byteRange,
 	getAddressBalance: getAddressBalance,
 	bytesToHex: bytesToHex,
