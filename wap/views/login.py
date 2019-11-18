@@ -53,47 +53,14 @@ def login_verify():
 	assert len(deviceid) == 32
 
 	uid = request.form.get("user_id")
-	assert len(uid) == 16
+	assert len(uid) == 32
 
-	ukey = request.form.get("remote_key")
-	assert len(ukey) == 16
+	ukey = request.form.get("user_key")
+	assert len(ukey) == 32
 
 	ukey_token = auth.gen_ukey_token(uid, ukey)
 
 	resp = make_response(redirect("/", code=302))
-
-	expires = datetime.datetime.now() + datetime.timedelta(days=180)
-	resp.set_cookie("uid", uid, expires=expires, samesite="strict", domain=".leprechaunb.com")
-
-	expires = datetime.datetime.now() + datetime.timedelta(days=28)
-	resp.set_cookie("ukey_token", ukey_token, expires=expires, samesite="strict", domain=".leprechaunb.com")
-
-	return resp
-
-
-@login_blueprint.route("/login/new/", methods=["GET", "POST"])
-def login_new():
-
-	if "deviceid" not in request.cookies:
-		return "enable cookies."
-
-	deviceid = request.cookies.get("deviceid")
-	assert len(deviceid) == 32
-
-	uid = auth.gen_uid()
-	current_app.logger.info(f"new:uid:{uid}")
-
-	ukey = auth.gen_ukey()
-
-	ukey_token = auth.gen_ukey_token(uid, ukey, new_ukey=True)
-
-	content = {
-		"deviceid": deviceid,
-		"uid": uid,
-		"ukey": ukey,
-	}
-
-	resp = make_response(render_template("new_user.html", **content))
 
 	expires = datetime.datetime.now() + datetime.timedelta(days=180)
 	resp.set_cookie("uid", uid, expires=expires, samesite="strict", domain=".leprechaunb.com")
@@ -113,5 +80,4 @@ def login_logout():
 	resp.set_cookie("ukey_token", "", expires=0, samesite="strict", domain=".leprechaunb.com")
 
 	return resp
-
 

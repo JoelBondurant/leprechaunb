@@ -20,10 +20,16 @@ from flask import (
 	redirect,
 	render_template,
 	request,
+	current_app,
 )
 
 
 from util import sqlite
+
+
+deviceid_len = 32
+uid_len = 32
+ukey_len = 32
 
 
 def random_sleep(base=0.1, addl=0.1):
@@ -33,19 +39,8 @@ def random_sleep(base=0.1, addl=0.1):
 	time.sleep(base + addl*random.random())
 
 
-deviceid_len = 32
 def gen_deviceid():
 	return secrets.token_hex(deviceid_len//2)
-
-
-uid_len = 16
-def gen_uid():
-	return secrets.token_hex(uid_len//2)
-
-
-ukey_len = 16
-def gen_ukey():
-	return secrets.token_hex(ukey_len//2)
 
 
 @cachetools.func.ttl_cache(ttl=12*3600)
@@ -82,21 +77,46 @@ def hash_ukey(ukey):
 	"""
 	salt0 = "e19n63c34r83y84p33t07"
 	hash1x = hashlib.sha256((salt0 + ukey).encode()).hexdigest()
-	hash2x = hashlib.sha256((salt0 + hash1x + ukey).encode()).hexdigest()
+	hash2x = hashlib.sha512((salt0 + hash1x + ukey).encode()).hexdigest()
 	hash3x = hashlib.sha256((salt0 + hash2x + ukey).encode()).hexdigest()
 	return hash3x[:ukey_len]
 
 
-def gen_ukey_token(uid, ukey, new_ukey=False):
+def verify_ukey(uid, ukey, difficulty=15):
+	'''
+	Verify user credentials.
+	'''
+	# Hash checksum:
+	chk = hashlib.sha256(bytes.fromhex(uid + pad)).hexdigest()[:8]
+	assert chk == chksum
+
+	# Proof of work check:
+	ukey_parts = ukey.split('.')
+	assert len(ukey_parts) == 3
+
+	nonce_hex = ukey_parts[0]
+	pad = ukey_parts[1]
+	chksum = ukey_parts[2]
+
+	xx = hashlib.sha512(hashlib.sha512(bytes.fromhex(uid)).digest()).hexdigest()
+	hin = bytes.fromhex(xx + nonce_hex)
+	hx = hashlib.sha256(hashlib.sha512(hashlib.sha256(hin).digest()).digest()).hexdigest()
+	hxbin = bin(int(hx, 16))[3:][:difficulty]
+	assert '0'*difficulty == hxbin
+	return True
+
+
+def gen_ukey_token(uid, ukey):
 	"""
 	Generate a token based on uid after ukey is checked.
 	"""
 	random_sleep()
+	verify_ukey(uid, ukey)
 	ukey_hash = hash_ukey(ukey)
-	if new_ukey:
+	udb_ukey_hash = sqlite.KV("udb").get(f"ukey_hash_{uid}")
+	if udb_ukey_hash is None:
 		sqlite.KV("udb").put(f"ukey_hash_{uid}", ukey_hash)
 	else:
-		udb_ukey_hash = sqlite.KV("udb").get(f"ukey_hash_{uid}")
 		assert udb_ukey_hash == ukey_hash
 	sk = get_ukey_signature_key()
 	ukey_token = sk.sign(uid.encode())

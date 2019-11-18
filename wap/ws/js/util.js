@@ -134,7 +134,11 @@ function bytesToBigInt(x) {
 BigInt to Hex
 */
 function bigIntToHex(x) {
-	return x.toString(16);
+	hx = x.toString(16);
+	if (hx.length % 2 != 0) {
+		hx = '0' + hx;
+	}
+	return hx;
 }
 
 
@@ -425,87 +429,17 @@ function bigAbs(x) {
 }
 
 
-async function proofOfWork(x, difficulty=4) {
-	x = new Uint8Array(await util.sha512(await util.sha512(x)));
+async function proofOfWork(hx, difficulty=15) {
+	hx = bytesToHex(await sha512(await sha512(hexToBytes(hx))));
+	check = '0'.repeat(difficulty);
 	nonce = 0n;
 	while (true) {
-		nonceBytes = util.bigIntToBytes(nonce);
-		hsh = await util.sha256(await util.sha512(await util.sha256(x + nonceBytes)));
-		hshZero = new Uint8Array(hsh.slice(0, difficulty));
-		depth = 0;
-		for (idx=0; idx<hshZero.length; idx++) {
-			hp = hshZero[idx];
-			if (hp == 0) {
-				depth += 2;
-				continue;
-			} else if (hp < 16) {
-				depth += 1;
-			}
-			break;
-		}
-		if (depth >= difficulty) {
-			return nonce;
-		}
-		nonce++;
-	}
-}
-
-
-/*
-Verify a user key.
-*/
-async function verifyUserKey(userId, userKey, difficulty=4, checkLen=8) {
-	userKeyParts = userKey.split('.');
-	nonceCheck = false;
-	x = new Uint8Array(await util.sha512(await util.sha512(userId)));
-	nonce = util.hexToBigInt(userKeyParts[0])
-	nonceBytes = util.bigIntToBytes(nonce);
-	hsh = await util.sha256(await util.sha512(await util.sha256(x + nonceBytes)));
-	hshZero = new Uint8Array(hsh.slice(0, difficulty));
-	depth = 0;
-	for (idx=0; idx<hshZero.length; idx++) {
-		hp = hshZero[idx];
-		if (hp == 0) {
-			depth += 2;
-			continue;
-		} else if (hp < 16) {
-			depth += 1;
-		}
-		break;
-	}
-	if (depth >= difficulty) {
-		nonceCheck = true;
-	}
-	pad = userKeyParts[1];
-	check = util.bytesToHex(await util.sha256(userId + pad)).slice(0, checkLen);
-	check = (check == userKeyParts[2]);
-	return check && nonceCheck;
-}
-
-
-/*
-Proof of work function.
-*/
-async function proofOfWork(x, difficulty=4) {
-	x = new Uint8Array(await util.sha512(await util.sha512(x)));
-	nonce = 0n;
-	while (true) {
-		nonceBytes = util.bigIntToBytes(nonce);
-		hsh = await util.sha256(await util.sha512(await util.sha256(x + nonceBytes)));
-		hshZero = new Uint8Array(hsh.slice(0, difficulty));
-		depth = 0;
-		for (idx=0; idx<hshZero.length; idx++) {
-			hp = hshZero[idx];
-			if (hp == 0) {
-				depth += 2;
-				continue;
-			} else if (hp < 16) {
-				depth += 1;
-			}
-			break;
-		}
-		if (depth >= difficulty) {
-			return nonce;
+		nonceHex = bigIntToHex(nonce);
+		hashInput = hexToBytes(hx + nonceHex);
+		hash1 = bytesToHex(await sha256(await sha512(await sha256(hashInput))));
+		hash2 = hexToBigInt(hash1).toString(2).slice(1, difficulty + 1);
+		if (hash2 == check) {
+			return nonceHex;
 		}
 		nonce++;
 	}
@@ -524,11 +458,11 @@ function generateUserId() {
 New userKey.
 */
 async function generateUserKey(userId, len=32, checkLen=8) {
-	nonce = (await proofOfWork(userId)).toString(16);
-	padLen = len - nonce.length - 2 - checkLen;
+	nonceHex = await proofOfWork(userId);
+	padLen = len - nonceHex.length - 2 - checkLen;
 	pad = randomHex(padLen);
-	check = util.bytesToHex(await util.sha256(userId + pad)).slice(0, checkLen);
-	key = nonce + '.' + pad + '.' + check;
+	check = util.bytesToHex(await util.sha256(util.hexToBytes(userId + pad))).slice(0, checkLen);
+	key = nonceHex + '.' + pad + '.' + check;
 	return key;
 }
 
@@ -562,7 +496,6 @@ return {
 	bigPow: bigPow,
 	bigAbs: bigAbs,
 	proofOfWork: proofOfWork,
-	verifyUserKey: verifyUserKey,
 	generateUserId: generateUserId,
 	generateUserKey: generateUserKey,
 }
