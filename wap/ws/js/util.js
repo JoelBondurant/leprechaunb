@@ -4,12 +4,13 @@ Leprechaun B, no rights reserved.
 
 var util = (function () {
 
+
 /*
 Bind the time to html.
 */
 function dateTime(id) {
 	var date = new Date();
-	document.getElementById(id).innerHTML = date.toISOString().slice(0, -5).replace("T", "_");
+	document.getElementById(id).innerHTML = date.toISOString().slice(0, -5).replace('T', '_');
 	setTimeout('util.dateTime("' + id + '");', '1000');
 	return true;
 }
@@ -24,7 +25,7 @@ async function sleep(ms) {
 
 
 /*
-Time a function.
+Time a nullary function, use a lambda to set parameters.
 */
 async function timeit(func) {
 	a = performance.now();
@@ -33,6 +34,22 @@ async function timeit(func) {
 	d = (b - a) / 1000.0;
 	console.log('Call to ' + func + ' took: ' + d + ' seconds.');
 	return res;
+}
+
+
+/*
+Random bytes.
+*/
+function randomBytes(n) {
+	return crypto.getRandomValues(new Uint8Array(n));
+}
+
+
+/*
+Random hex.
+*/
+function randomHex(n) {
+	return util.bytesToHex(randomBytes(Math.floor(n/2+1))).slice(0,n);
 }
 
 
@@ -54,22 +71,12 @@ function byteRange(start, stop, step=1) {
 
 
 /*
-Get Bitcoin unspent output potential of an address.
-*/
-async function getAddressBalance(addr, confirmations=6) {
-	base = "https://blockchain.info/q/addressbalance/";
-	resp = await fetch(base + addr + "?confirmations=" + confirmations);
-	return resp.json();
-}
-
-
-/*
 bytes to hex.
 */
 function bytesToHex(byteArray) {
 	return Array.from(new Uint8Array(byteArray), function(byte) {
-		return ("0" + (byte & 0xFF).toString(16)).slice(-2);
-	}).join("");
+		return ('0' + (byte & 0xFF).toString(16)).slice(-2);
+	}).join('');
 }
 
 
@@ -91,7 +98,7 @@ hex to base64
 function hexToBase64(hexstring) {
 	return btoa(hexstring.match(/\w{2}/g).map(function(a) {
 		return String.fromCharCode(parseInt(a, 16));
-	}).join(""));
+	}).join(''));
 }
 
 
@@ -204,10 +211,10 @@ function gcd(a, b) {
 sha256 short.
 */
 function sha256(msg) {
-	if (typeof msg == "string") {
+	if (typeof msg == 'string') {
 		msg = (new TextEncoder()).encode(msg);
 	}
-	return crypto.subtle.digest("SHA-256", msg);
+	return crypto.subtle.digest('SHA-256', msg);
 }
 
 
@@ -215,10 +222,10 @@ function sha256(msg) {
 sha512 short.
 */
 function sha512(msg) {
-	if (typeof msg == "string") {
+	if (typeof msg == 'string') {
 		msg = (new TextEncoder()).encode(msg);
 	}
-	return crypto.subtle.digest("SHA-512", msg);
+	return crypto.subtle.digest('SHA-512', msg);
 }
 
 
@@ -245,9 +252,9 @@ AES-GCM helper.
 */
 function aesgcmParams() {
 	aesgcm = {
-		"name": "AES-GCM",
-		"iv": pubIV(),
-		"tagLength": 128,
+		'name': 'AES-GCM',
+		'iv': pubIV(),
+		'tagLength': 128,
 	}
 	return aesgcm;
 }
@@ -258,28 +265,28 @@ AES-GCM 256 key derivation.
 */
 async function deriveKey(akey) {
 	akey = await crypto.subtle.importKey(
-		"raw",
+		'raw',
 		(new TextEncoder()).encode(akey),
 		{
-			"name": "PBKDF2",
+			'name': 'PBKDF2',
 		},
 		false,
-		["deriveBits", "deriveKey"]
+		['deriveBits', 'deriveKey']
 	);
 	return await crypto.subtle.deriveKey(
 	{
-		"name": "PBKDF2",
-		"salt": pubSaltArray(),
-		"iterations": 9999,
-		"hash": "SHA-512",
+		'name': 'PBKDF2',
+		'salt': pubSaltArray(),
+		'iterations': 9999,
+		'hash': 'SHA-512',
 	},
 	akey,
 	{
-		"name": "AES-GCM",
-		"length": 256,
+		'name': 'AES-GCM',
+		'length': 256,
 	},
 	false,
-	["encrypt", "decrypt"]);
+	['encrypt', 'decrypt']);
 }
 
 
@@ -287,8 +294,8 @@ async function deriveKey(akey) {
 Weak AES encrytion.
 */
 async function encrypt(msg, akey) {
-	if (msg === "") {
-		return "";
+	if (msg === '') {
+		return '';
 	}
 	aesgcm = aesgcmParams();
 	akey = await deriveKey(akey);
@@ -304,8 +311,8 @@ async function encrypt(msg, akey) {
 Weak AES decrytion.
 */
 async function decrypt(msg, akey) {
-	if (msg === "") {
-		return "";
+	if (msg === '') {
+		return '';
 	}
 	aesgcm = aesgcmParams();
 	akey = await deriveKey(akey);
@@ -321,12 +328,12 @@ async function decrypt(msg, akey) {
 Get/cache a local encryption key for e2ee.
 */
 async function localKey() {
-	lkey = localStorage.getItem("local_key")
+	lkey = localStorage.getItem('local_key')
 	if (!lkey) {
-		lkey = prompt("local_key:", "");
+		lkey = prompt('local_key:', '');
 		lkey = hexToBase64(bytesToHex(await sha256(lkey)));
-		lkey = await encrypt(lkey, "local_key" + lkey);
-		localStorage.setItem("local_key", lkey);
+		lkey = await encrypt(lkey, 'local_key' + lkey);
+		localStorage.setItem('local_key', lkey);
 	}
 	return lkey;
 }
@@ -342,7 +349,7 @@ async function encryptedSubmitForm(formName) {
 	for (idx=0; idx < form.elements.length; idx += 1) {
 		dtype = form.elements[idx].type
 		form_types.push(dtype)
-		form.elements[idx].type = "text"
+		form.elements[idx].type = 'text'
 		form.elements[idx].value = await encrypt(form.elements[idx].value, ekey);
 		await sleep(2);
 	}
@@ -360,7 +367,7 @@ Decrypt html element text content of class encrypted.
 */
 async function decryptElements() {
 	ekey = await localKey();
-	cts = document.getElementsByClassName("encrypted");
+	cts = document.getElementsByClassName('encrypted');
 	for (ct of cts) {
 		ct.textContent = await decrypt(ct.textContent, ekey);
 	}
@@ -373,7 +380,7 @@ Big Square Root function.
 function bigSqrt(n) {
 	m = BigInt(n);
 	if (m < 0n) {
-		throw "nope";
+		throw 'nope';
 	}
 	if (m < 2n) {
 		return m;
@@ -444,12 +451,95 @@ async function proofOfWork(x, difficulty=4) {
 }
 
 
+/*
+Verify a user key.
+*/
+async function verifyUserKey(userId, userKey, difficulty=4, checkLen=8) {
+	userKeyParts = userKey.split('.');
+	nonceCheck = false;
+	x = new Uint8Array(await util.sha512(await util.sha512(userId)));
+	nonce = util.hexToBigInt(userKeyParts[0])
+	nonceBytes = util.bigIntToBytes(nonce);
+	hsh = await util.sha256(await util.sha512(await util.sha256(x + nonceBytes)));
+	hshZero = new Uint8Array(hsh.slice(0, difficulty));
+	depth = 0;
+	for (idx=0; idx<hshZero.length; idx++) {
+		hp = hshZero[idx];
+		if (hp == 0) {
+			depth += 2;
+			continue;
+		} else if (hp < 16) {
+			depth += 1;
+		}
+		break;
+	}
+	if (depth >= difficulty) {
+		nonceCheck = true;
+	}
+	pad = userKeyParts[1];
+	check = util.bytesToHex(await util.sha256(userId + pad)).slice(0, checkLen);
+	check = (check == userKeyParts[2]);
+	return check && nonceCheck;
+}
+
+
+/*
+Proof of work function.
+*/
+async function proofOfWork(x, difficulty=4) {
+	x = new Uint8Array(await util.sha512(await util.sha512(x)));
+	nonce = 0n;
+	while (true) {
+		nonceBytes = util.bigIntToBytes(nonce);
+		hsh = await util.sha256(await util.sha512(await util.sha256(x + nonceBytes)));
+		hshZero = new Uint8Array(hsh.slice(0, difficulty));
+		depth = 0;
+		for (idx=0; idx<hshZero.length; idx++) {
+			hp = hshZero[idx];
+			if (hp == 0) {
+				depth += 2;
+				continue;
+			} else if (hp < 16) {
+				depth += 1;
+			}
+			break;
+		}
+		if (depth >= difficulty) {
+			return nonce;
+		}
+		nonce++;
+	}
+}
+
+
+/*
+New userId.
+*/
+function generateUserId() {
+	return randomHex(32);
+}
+
+
+/*
+New userKey.
+*/
+async function generateUserKey(userId, len=32, checkLen=8) {
+	nonce = (await proofOfWork(userId)).toString(16);
+	padLen = len - nonce.length - 2 - checkLen;
+	pad = randomHex(padLen);
+	check = util.bytesToHex(await util.sha256(userId + pad)).slice(0, checkLen);
+	key = nonce + '.' + pad + '.' + check;
+	return key;
+}
+
+
 return {
 	dateTime: dateTime,
 	sleep: sleep,
 	timeit: timeit,
+	randomBytes: randomBytes,
+	randomHex: randomHex,
 	byteRange: byteRange,
-	getAddressBalance: getAddressBalance,
 	bytesToHex: bytesToHex,
 	hexToBytes: hexToBytes,
 	hexToBase64: hexToBase64,
@@ -471,6 +561,10 @@ return {
 	bigSqrt: bigSqrt,
 	bigPow: bigPow,
 	bigAbs: bigAbs,
+	proofOfWork: proofOfWork,
+	verifyUserKey: verifyUserKey,
+	generateUserId: generateUserId,
+	generateUserKey: generateUserKey,
 }
 
 

@@ -1,6 +1,6 @@
 /*
 Leprechaun B, no rights reserved.
-Secp256k1 - dev wip.
+Secp256k1 based on javascript BigInt.
 */
 
 var secp256k1 = (function () {
