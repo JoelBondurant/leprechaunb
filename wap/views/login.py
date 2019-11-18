@@ -53,10 +53,7 @@ def login_verify():
 	assert len(deviceid) == 32
 
 	uid = request.form.get("user_id")
-	assert len(uid) == 32
-
 	ukey = request.form.get("user_key")
-	assert len(ukey) == 32
 
 	ukey_token = auth.gen_ukey_token(uid, ukey)
 

@@ -86,11 +86,8 @@ def verify_ukey(uid, ukey, difficulty=15):
 	'''
 	Verify user credentials.
 	'''
-	# Hash checksum:
-	chk = hashlib.sha256(bytes.fromhex(uid + pad)).hexdigest()[:8]
-	assert chk == chksum
-
-	# Proof of work check:
+	assert len(uid) == uid_len
+	assert len(ukey) == ukey_len
 	ukey_parts = ukey.split('.')
 	assert len(ukey_parts) == 3
 
@@ -98,6 +95,11 @@ def verify_ukey(uid, ukey, difficulty=15):
 	pad = ukey_parts[1]
 	chksum = ukey_parts[2]
 
+	# Hash checksum:
+	chk = hashlib.sha256(bytes.fromhex(uid + pad)).hexdigest()[:8]
+	assert chk == chksum
+
+	# Proof of work check:
 	xx = hashlib.sha512(hashlib.sha512(bytes.fromhex(uid)).digest()).hexdigest()
 	hin = bytes.fromhex(xx + nonce_hex)
 	hx = hashlib.sha256(hashlib.sha512(hashlib.sha256(hin).digest()).digest()).hexdigest()
