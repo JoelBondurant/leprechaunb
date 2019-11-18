@@ -23,8 +23,8 @@
 				</li>
 				<br/>
 				<li class="formrow">
-					<label for="remote_key">remote_key:</label>
-					<input type="password" name="remote_key" required>
+					<label for="user_key">user_key:</label>
+					<input type="password" name="user_key" required>
 				</li>
 			</ul>
 			<br/>
@@ -35,12 +35,27 @@
 		<hr/>
 
 		<form name="new" action="new" method="post">
-			<br/><br/>
-			<button type="submit">new</button>
+			<span id='newUserMsg'></span><br/><br/>
+			<span id='newUserId'></span><br/>
+			<span id='newUserKey'></span><br/>
+			<input type="button" onclick="newUser()" value='new'>
 		</form>
 
 	</div>
-
+<script>
+async function newUser() {
+	newUserMsgRow = 'Generating new credentials, please wait up to 10 minutes...';
+	document.getElementById('newUserMsg').innerText = newUserMsgRow;
+	newUserMsgRow = 'Store this in your password database:'
+	newUserId = util.generateUserId();
+	newUserKey = await util.generateUserKey(newUserId);
+	newUserIdRow = 'user_id = ' + newUserId;
+	newUserKeyRow = 'user_key = ' + newUserKey;
+	document.getElementById('newUserMsg').innerText = newUserMsgRow;
+	document.getElementById('newUserId').innerText = newUserIdRow;
+	document.getElementById('newUserKey').innerText = newUserKeyRow;
+}
+</script>
 </div>
 </body>
 </html>
