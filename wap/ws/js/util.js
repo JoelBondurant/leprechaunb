@@ -160,6 +160,58 @@ function bigIntToBytes(x) {
 
 
 /*
+Bytes to Base58
+*/
+function bytesToBase58(b58) {
+	A = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+	var d = [], s = "", i, j, c, n;
+	for(i in b58) {
+		j = 0,
+		c = b58[i];
+		s += c || s.length ^ i ? "" : 1;
+		while(j in d || c) {
+			n = d[j];
+			n = n ? n * 256 + c : c;
+			c = n / 58 | 0;
+			d[j] = n % 58;
+			j++;
+		}
+	}
+	while (j--) {
+		s += A[d[j]];
+	}
+	return s;
+}
+
+
+/*
+Base58 to Bytes.
+*/
+function base58ToBytes(b58) {
+	A = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+	var d = [], b = [], i, j, c, n;
+	for(i in b58) {
+		j = 0,
+		c = A.indexOf(b58[i]);
+		if(c < 0)
+			return undefined;
+		c || b.length ^ i ? i : b.push(0);
+		while(j in d || c) {
+			n = d[j];
+			n = n ? n * 58 + c : c;
+			c = n >> 8;
+			d[j] = n % 256;
+			j++;
+		}
+	}
+	while (j--) {
+		b.push(d[j]);
+	}
+	return new Uint8Array(b);
+}
+
+
+/*
 Modulo function for javascript, % is incorrect.
 */
 function mod(n, m) {
@@ -482,6 +534,8 @@ return {
 	bigIntToHex: bigIntToHex,
 	hexToBigInt: hexToBigInt,
 	bigIntToBytes: bigIntToBytes,
+	bytesToBase58: bytesToBase58,
+	base58ToBytes: base58ToBytes,
 	mod: mod,
 	invMod: invMod,
 	gcd: gcd,

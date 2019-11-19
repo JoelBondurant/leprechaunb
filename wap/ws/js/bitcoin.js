@@ -27,11 +27,26 @@ function privateKey() {
 /*
 Bitcoin public keygen.
 */
-async function publicKey(privKey, index=0) {
+async function publicKey(privKey, index=0, mainNet=true) {
 	pubKey = secp256k1.publicKey(privKey, index);
-	pubKey = '02' + pubKey[0];
+	y = util.hexToBigInt(pubKey[1]);
+	parity = (util.mod(y, 2n) == 0n);
+	parityHex = '03';
+	if (parity) {
+		parityHex = '02';
+	}
+	pubKey = parityHex + pubKey[0]; // compressed key format;
 	pubKey = util.bytesToHex(await util.sha256(util.hexToBytes(pubKey)));
 	pubKey = CryptoJS.RIPEMD160(CryptoJS.enc.Hex.parse(pubKey)).toString()
+	if (mainNet) {
+		extendedRipemd = '00' + pubKey;
+		pubKey = extendedRipemd;
+	}
+	pubKey = util.bytesToHex(await util.sha256(util.hexToBytes(pubKey)));
+	pubKey = util.bytesToHex(await util.sha256(util.hexToBytes(pubKey)));
+	chksum = pubKey.slice(0, 8);
+	pubKey = extendedRipemd + chksum;
+	pubKey = util.bytesToBase58(util.hexToBytes(pubKey));
 	return pubKey;
 }
 
