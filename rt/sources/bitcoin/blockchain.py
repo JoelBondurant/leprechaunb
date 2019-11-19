@@ -18,6 +18,8 @@ def stats():
 	Blockchain.com stats.
 	"""
 	resp = web.get(base_uri + "stats")
+	for kk in ['hash_rate']:
+		resp[kk] = int(resp[kk])
 	return resp
 
 
