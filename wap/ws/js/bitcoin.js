@@ -54,6 +54,7 @@ async function publicKey(privKey, index=0, mainNet=true) {
 return {
 	privateKey: privateKey,
 	publicKey: publicKey,
+	getAddressBalance: getAddressBalance,
 }
 
 
