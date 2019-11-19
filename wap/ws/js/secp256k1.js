@@ -141,7 +141,7 @@ function generatorPower(k) {
 /*
 Is point on secp256k1?
 */
-function onCurve(a) {
+function isOnCurve(a) {
 	G = ellipticOrder();
 	return (util.mod(a[1]**2n - a[0]**3n - 7n, G) == 0n);
 }
@@ -183,7 +183,7 @@ return {
 	ellipticAdd: ellipticPower,
 	ellipticHex: ellipticHex,
 	generatorPower: generatorPower,
-	onCurve: onCurve,
+	isOnCurve: isOnCurve,
 	privateKey: privateKey,
 	publicKey: publicKey,
 }

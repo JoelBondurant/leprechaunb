@@ -40,6 +40,9 @@ def random_sleep(base=0.1, addl=0.1):
 
 
 def gen_deviceid():
+	'''
+	Generate a new deviceid.
+	'''
 	return secrets.token_hex(deviceid_len//2)
 
 
@@ -71,6 +74,18 @@ def get_ukey_signature_key():
 	return sk
 
 
+def hash_uid(uid):
+	"""
+	Hash for user_id/uid storage to database.
+	"""
+	salt0 = "y38m55d24v83x84r77s02"
+	hash1x = hashlib.sha256((salt0 + uid).encode()).hexdigest()
+	hash2x = hashlib.sha512((salt0 + hash1x + uid).encode()).hexdigest()
+	hash3x = hashlib.sha256((salt0 + hash2x + uid).encode()).hexdigest()
+	return hash3x[:uid_len//2]
+
+
+
 def hash_ukey(ukey):
 	"""
 	Hash for ukey storage to database.
@@ -82,24 +97,27 @@ def hash_ukey(ukey):
 	return hash3x[:ukey_len]
 
 
-def verify_ukey(uid, ukey, difficulty=15):
+def verify_ukey_chksum(uid, ukey):
 	'''
-	Verify user credentials.
+	Verify user credentials checksum.
 	'''
 	assert len(uid) == uid_len
 	assert len(ukey) == ukey_len
 	ukey_parts = ukey.split('.')
 	assert len(ukey_parts) == 3
-
 	nonce_hex = ukey_parts[0]
 	pad = ukey_parts[1]
 	chksum = ukey_parts[2]
-
-	# Hash checksum:
 	chk = hashlib.sha256(bytes.fromhex(uid + pad)).hexdigest()[:8]
 	assert chk == chksum
+	return True
 
-	# Proof of work check:
+
+def verify_ukey_pow(uid, ukey, difficulty=15):
+	'''
+	Verify user credentials proof of work.
+	'''
+	nonce_hex = ukey.split('.')[0]
 	xx = hashlib.sha512(hashlib.sha512(bytes.fromhex(uid)).digest()).hexdigest()
 	hin = bytes.fromhex(xx + nonce_hex)
 	hx = hashlib.sha256(hashlib.sha512(hashlib.sha256(hin).digest()).digest()).hexdigest()
@@ -113,15 +131,17 @@ def gen_ukey_token(uid, ukey):
 	Generate a token based on uid after ukey is checked.
 	"""
 	random_sleep()
-	verify_ukey(uid, ukey)
+	verify_ukey_chksum(uid, ukey)
+	uid_hash = hash_uid(uid)
 	ukey_hash = hash_ukey(ukey)
-	udb_ukey_hash = sqlite.KV("udb").get(f"ukey_hash_{uid}")
+	udb_ukey_hash = sqlite.KV("udb").get(f"ukey_hash_{uid_hash}")
 	if udb_ukey_hash is None:
-		sqlite.KV("udb").put(f"ukey_hash_{uid}", ukey_hash)
+		verify_ukey_pow(uid, ukey)
+		sqlite.KV("udb").put(f"ukey_hash_{uid_hash}", ukey_hash)
 	else:
 		assert udb_ukey_hash == ukey_hash
 	sk = get_ukey_signature_key()
-	ukey_token = sk.sign(uid.encode())
+	ukey_token = sk.sign(uid_hash.encode())
 	ukey_token_b64 = base64.b64encode(ukey_token).decode()
 	return ukey_token_b64
 
@@ -135,7 +155,8 @@ def verify_ukey_token(uid, ukey_token_b64):
 	vk = sk.get_verifying_key()
 	ukey_token = base64.b64decode(ukey_token_b64)
 	try:
-		return vk.verify(ukey_token, uid.encode())
+		uid_hash = hash_uid(uid)
+		return vk.verify(ukey_token, uid_hash.encode())
 	except:
 		return False
 

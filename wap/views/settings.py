@@ -34,13 +34,14 @@ def get_settings():
 		return make_response(redirect("/login", code=302))
 
 	uid = request.cookies.get("uid")
+	uid_hash = auth.hash_uid(uid)
 	ukey_token = request.cookies.get("ukey_token")
 
 	if not auth.verify_ukey_token(uid, ukey_token):
 		return make_response(redirect("/login", code=302))
 
 	udb = sqlite.KV("udb")
-	settings = udb.get(f"usettings_{uid}")
+	settings = udb.get(f"usettings_{uid_hash}")
 	settings = auth.lt_decrypt(settings)
 	if settings is None or settings == "":
 		settings = {}
@@ -58,9 +59,8 @@ def post_settings():
 		return make_response(redirect("/login", code=302))
 
 	uid = request.cookies.get("uid")
-	assert len(uid) == 16
+	uid_hash = auth.hash_uid(uid)
 	ukey_token = request.cookies.get("ukey_token")
-
 	if not auth.verify_ukey_token(uid, ukey_token):
 		return make_response(redirect("/login", code=302))
 
@@ -82,7 +82,7 @@ def post_settings():
 	sdat = auth.lt_encrypt(settings_json)
 
 	udb = sqlite.KV("udb")
-	key = f"usettings_{uid}"
+	key = f"usettings_{uid_hash}"
 
 	udb.put(key, sdat)
 

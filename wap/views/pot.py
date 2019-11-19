@@ -44,9 +44,10 @@ def pot():
 	content = {}
 
 	uid = request.cookies.get("uid")
+	uid_hash = auth.hash_uid(uid)
 
 	udb = sqlite.KV("udb")
-	pot_gold = udb.get(f"pot_gold_{uid}")
+	pot_gold = udb.get(f"pot_gold_{uid_hash}")
 	pot_gold = auth.lt_decrypt(pot_gold)
 	if pot_gold is None or pot_gold == "":
 		pot_gold = []
@@ -54,7 +55,7 @@ def pot():
 		pot_gold = json.loads(pot_gold)
 	content["pot_gold"] = pot_gold
 
-	pot_bitcoin = udb.get(f"pot_bitcoin_{uid}")
+	pot_bitcoin = udb.get(f"pot_bitcoin_{uid_hash}")
 	pot_bitcoin = auth.lt_decrypt(pot_bitcoin)
 	if pot_bitcoin is None or pot_bitcoin == "":
 		pot_bitcoin = []
@@ -76,6 +77,7 @@ def new_gold():
 		return auth.unverified_redirect()
 
 	uid = request.cookies.get("uid")
+	uid_hash = auth.hash_uid(uid)
 
 	datebin = request.args.get("datebin")
 	grams = request.args.get("grams")
@@ -87,7 +89,7 @@ def new_gold():
 	note = request.args.get("note")
 
 	udb = sqlite.KV("udb")
-	key = f"pot_gold_{uid}"
+	key = f"pot_gold_{uid_hash}"
 	pot_json = udb.get(key)
 	if pot_json in {None, ""}:
 		gold_pot = []
@@ -126,6 +128,7 @@ def new_bitcoin():
 		return auth.unverified_redirect()
 
 	uid = request.cookies.get("uid")
+	uid_hash = auth.hash_uid(uid)
 
 	datebin = request.args.get("datebin")
 	sats = request.args.get("sats")
@@ -137,7 +140,7 @@ def new_bitcoin():
 	note = request.args.get("note")
 
 	udb = sqlite.KV("udb")
-	key = f"pot_bitcoin_{uid}"
+	key = f"pot_bitcoin_{uid_hash}"
 	pot_json = udb.get(key)
 	if pot_json in {None, ""}:
 		bitcoin_pot = []
@@ -156,7 +159,6 @@ def new_bitcoin():
 			"note": note,
 		}
 	]
-	bitcoin_pot = sort_pot(bitcoin_pot)
 	pot_json = json.dumps(bitcoin_pot)
 	pot_json = auth.lt_encrypt(pot_json)
 	udb.put(key, pot_json)
