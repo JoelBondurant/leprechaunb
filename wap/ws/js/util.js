@@ -49,7 +49,7 @@ function randomBytes(n) {
 Random hex.
 */
 function randomHex(n) {
-	return util.bytesToHex(randomBytes(Math.floor(n/2+1))).slice(0,n);
+	return bytesToHex(randomBytes(Math.floor(n/2+1))).slice(0,n);
 }
 
 
@@ -163,12 +163,12 @@ function bigIntToBytes(x) {
 Bytes to Base58
 */
 function bytesToBase58(b58) {
-	A = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-	var d = [], s = "", i, j, c, n;
+	A = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+	var d = [], s = '', i, j, c, n;
 	for(i in b58) {
 		j = 0,
 		c = b58[i];
-		s += c || s.length ^ i ? "" : 1;
+		s += c || s.length ^ i ? '' : 1;
 		while(j in d || c) {
 			n = d[j];
 			n = n ? n * 256 + c : c;
@@ -188,7 +188,7 @@ function bytesToBase58(b58) {
 Base58 to Bytes.
 */
 function base58ToBytes(b58) {
-	A = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+	A = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
 	var d = [], b = [], i, j, c, n;
 	for(i in b58) {
 		j = 0,
@@ -481,6 +481,9 @@ function bigAbs(x) {
 }
 
 
+/*
+Proof of work for new account credentials.
+*/
 async function proofOfWork(hx, difficulty=15) {
 	hx = bytesToHex(await sha512(await sha512(hexToBytes(hx))));
 	check = '0'.repeat(difficulty);
@@ -513,7 +516,7 @@ async function generateUserKey(userId, len=32, checkLen=8) {
 	nonceHex = await proofOfWork(userId);
 	padLen = len - nonceHex.length - 2 - checkLen;
 	pad = randomHex(padLen);
-	check = util.bytesToHex(await util.sha256(util.hexToBytes(userId + pad))).slice(0, checkLen);
+	check = bytesToHex(await sha256(hexToBytes(userId + pad))).slice(0, checkLen);
 	key = nonceHex + '.' + pad + '.' + check;
 	return key;
 }

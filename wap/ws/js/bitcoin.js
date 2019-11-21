@@ -51,9 +51,20 @@ async function publicKey(privKey, index=0, mainNet=true) {
 }
 
 
+/*
+Bitcoin key pair.
+*/
+async function keyPair(index=0, mainNet=true) {
+	k = privateKey();
+	pk = await publicKey(k, index=index, mainNet=mainNet);
+	return [k, pk];
+}
+
+
 return {
 	privateKey: privateKey,
 	publicKey: publicKey,
+	keyPair: keyPair,
 	getAddressBalance: getAddressBalance,
 }
 
