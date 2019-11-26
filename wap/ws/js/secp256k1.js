@@ -130,6 +130,9 @@ function ellipticHex(a) {
 Elliptic generator point powers.
 */
 function generatorPower(k) {
+	if (typeof(k) == 'string') {
+		k = util.hexToBigInt(k);
+	}
 	if (k <= 0n) {
 		return ellipticIdentity();
 	}
