@@ -60,10 +60,10 @@ def login_verify():
 	resp = make_response(redirect("/", code=302))
 
 	expires = datetime.datetime.now() + datetime.timedelta(days=180)
-	resp.set_cookie("uid", uid, expires=expires, samesite="strict", domain=".leprechaunb.com")
+	resp.set_cookie("uid", uid, expires=expires, samesite="strict", domain=".leprechaunb.com", secure=True, httponly=True)
 
 	expires = datetime.datetime.now() + datetime.timedelta(days=28)
-	resp.set_cookie("ukey_token", ukey_token, expires=expires, samesite="strict", domain=".leprechaunb.com")
+	resp.set_cookie("ukey_token", ukey_token, expires=expires, samesite="strict", domain=".leprechaunb.com", secure=True, httponly=True)
 
 	return resp
 
@@ -73,8 +73,8 @@ def login_logout():
 
 	resp = make_response(redirect("/", code=302))
 
-	resp.set_cookie("uid", "", expires=0, samesite="strict", domain=".leprechaunb.com")
-	resp.set_cookie("ukey_token", "", expires=0, samesite="strict", domain=".leprechaunb.com")
+	resp.set_cookie("uid", "", expires=0, samesite="strict", domain=".leprechaunb.com", secure=True, httponly=True)
+	resp.set_cookie("ukey_token", "", expires=0, samesite="strict", domain=".leprechaunb.com", secure=True, httponly=True)
 
 	return resp
 
