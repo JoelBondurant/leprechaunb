@@ -156,7 +156,7 @@ secp256k1 private keygen.
 function privateKey() {
 	k0 = crypto.getRandomValues(new Uint8Array(32));
 	k = util.bytesToBigInt(k0);
-	if (k > generatorOrder()) {
+	if (k >= generatorOrder()) {
 		return privateKey();
 	}
 	return k.toString(16);
