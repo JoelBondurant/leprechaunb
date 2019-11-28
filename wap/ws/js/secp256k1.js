@@ -116,13 +116,29 @@ function ellipticPower(a, k) {
 
 
 /*
+Zero pad hex strings to length 64 by default.
+*/
+function zeroPad(hx, len=64, padFrom='left') {
+	if (hx.length < 64) {
+		pad = '0'.repeat(len - hx.length);
+		if (padFrom == 'left') {
+			hx = pad + hx;
+		} else {
+			hx = hx + pad;
+		}
+	}
+	return hx;
+}
+
+
+/*
 Format elliptic curve point as hex.
 */
 function ellipticHex(a) {
 	if (isEllipticIdentity(a)) {
-		return ['0','0'];
+		return [zeroPad(''),zeroPad('')];
 	}
-	return a.map(x=>x.toString(16));
+	return a.map(x=>zeroPad(x.toString(16)));
 }
 
 
@@ -156,10 +172,10 @@ secp256k1 private keygen.
 function privateKey() {
 	k0 = crypto.getRandomValues(new Uint8Array(32));
 	k = util.bytesToBigInt(k0);
-	if (k >= generatorOrder()) {
+	if ((k <= 100n) || (k >= generatorOrder())) {
 		return privateKey();
 	}
-	return k.toString(16);
+	return zeroPad(k.toString(16));
 }
 
 
@@ -172,6 +188,54 @@ function publicKey(privKey, index=0) {
 	}
 	pubKey = generatorPower(privKey);
 	return ellipticHex(pubKey);
+}
+
+
+/*
+Secp256k1 signatures, from hex message digest
+and hex or bigint private key.
+k input for testing.
+*/
+function sign(hexMsg, privKey, k=0n, der=false) {
+	intMsg = util.hexToBigInt(hexMsg);
+	if (typeof(privKey) != 'bigint') {
+		privKey = util.hexToBigInt(privKey);
+	}
+	if (typeof(k) != 'bigint') {
+		k = util.hexToBigInt(k);
+	}
+	if (k == 0n) {
+		k = util.hexToBigInt(privateKey());
+	}
+	r = generatorPower(k)[0];
+	if (r == 0n) {
+		throw 'secp256k1.sign.r.ZeroError';
+	}
+	q = ellipticOrder();
+	s = util.invMod(k, q) * util.mod(intMsg + privKey*r, q);
+	// Something is wrong here, not sure what yet.
+	// These aren't elliptic curve operations and don't match tests.
+	// Development wip, not suitable for production.
+	// Realtime dev status, working on signatures for transactions.
+	s = util.mod(s, q);
+	if (s > q/2n) {
+		console.log('pre-standardizing s:', util.bigIntToHex(s));
+		s = q - s;
+		console.log('post-standardizing s:', util.bigIntToHex(s));
+		if (s > q/2n) {
+			throw 'secp256k1.sign.s.RangeError';
+		}
+	}
+	if (s == 0n) {
+		throw 'secp256k1.sign.s.ZeroError';
+	}
+	result = ellipticHex([r, s]);
+	if (der) {
+		rhx = util.bigIntToHex(r);
+		shx = util.bigIntToHex(s);
+		result = rhx + shx;
+	}
+	return result;
 }
 
 
@@ -189,6 +253,7 @@ return {
 	isOnCurve: isOnCurve,
 	privateKey: privateKey,
 	publicKey: publicKey,
+	sign: sign,
 }
 
 
