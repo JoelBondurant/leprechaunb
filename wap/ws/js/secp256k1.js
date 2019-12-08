@@ -17,8 +17,8 @@ function ellipticOrder() {
 secp256k1 generator point.
 */
 function generatorPoint() {
-	x = 55066263022277343669578718895168534326250603453777594175500187360389116729240n;
-	y = 32670510020758816978083085130507043184471273380659243275938904335757337482424n;
+	var x = 55066263022277343669578718895168534326250603453777594175500187360389116729240n;
+	var y = 32670510020758816978083085130507043184471273380659243275938904335757337482424n;
 	return [x, y];
 }
 
@@ -69,10 +69,10 @@ function ellipticDouble(a) {
 	if (a[1] == 0n) {
 		return ellipticIdentity();
 	}
-	G = ellipticOrder();
-	lam = (3n * a[0] ** 2n) * util.invMod(2n * a[1], G);
-	x = util.mod(lam**2n - 2n*a[0], G);
-	y = util.mod(lam*(a[0] - x) - a[1], G);
+	var G = ellipticOrder();
+	var lam = (3n * a[0] ** 2n) * util.invMod(2n * a[1], G);
+	var x = util.mod(lam**2n - 2n*a[0], G);
+	var y = util.mod(lam*(a[0] - x) - a[1], G);
 	return [x, y];
 }
 
@@ -90,12 +90,12 @@ function ellipticAdd(a, b) {
 	if (a == b) {
 		return ellipticDouble(a);
 	}
-	G = ellipticOrder();
+	var G = ellipticOrder();
 	[x1, y1] = a;
 	[x2, y2] = b;
-	lam = (y1 - y2) * util.invMod(x1 - x2, G);
-	x = (lam**2n) - (x1 + x2);
-	y = lam * (x1 - x) - y1;
+	var lam = (y1 - y2) * util.invMod(x1 - x2, G);
+	var x = (lam**2n) - (x1 + x2);
+	var y = lam * (x1 - x) - y1;
 	return [util.mod(x, G), util.mod(y, G)];
 }
 
@@ -120,7 +120,7 @@ Zero pad hex strings to length 64 by default.
 */
 function zeroPad(hx, len=64, padFrom='left') {
 	if (hx.length < 64) {
-		pad = '0'.repeat(len - hx.length);
+		var pad = '0'.repeat(len - hx.length);
 		if (padFrom == 'left') {
 			hx = pad + hx;
 		} else {
@@ -160,7 +160,7 @@ function generatorPower(k) {
 	if (k <= 0n) {
 		return ellipticIdentity();
 	}
-	g = generatorPoint();
+	var g = generatorPoint();
 	return ellipticPower(g, k);
 }
 
@@ -169,7 +169,7 @@ function generatorPower(k) {
 Is point on secp256k1?
 */
 function isOnCurve(a) {
-	G = ellipticOrder();
+	var G = ellipticOrder();
 	return (util.mod(a[1]**2n - a[0]**3n - 7n, G) == 0n);
 }
 
@@ -178,8 +178,8 @@ function isOnCurve(a) {
 secp256k1 private keygen.
 */
 function privateKey() {
-	k0 = crypto.getRandomValues(new Uint8Array(32));
-	k = util.bytesToBigInt(k0);
+	var k0 = crypto.getRandomValues(new Uint8Array(32));
+	var k = util.bytesToBigInt(k0);
 	if ((k <= 100n) || (k >= generatorOrder())) {
 		return privateKey();
 	}
@@ -194,7 +194,7 @@ function publicKey(privKey, index=0) {
 	if (typeof(privKey) == 'string') {
 		privKey = util.hexToBigInt(privKey);
 	}
-	pubKey = generatorPower(privKey);
+	var pubKey = generatorPower(privKey);
 	return ellipticHex(pubKey);
 }
 
@@ -204,37 +204,32 @@ Secp256k1 signatures, from hex message digest
 and hex or bigint private key.
 k input for testing.
 */
-function sign(hexMsg, privKey, k=0n) {
-	n = generatorOrder();
-	e = util.hexToBigInt(hexMsg);
-	d = privKey;
+function sign(hexMsg, privKey) {
+	var n = generatorOrder();
+	var e = util.hexToBigInt(hexMsg);
+	var d = privKey;
 	if (typeof(privKey) != 'bigint') {
 		d = util.hexToBigInt(privKey);
 	}
-	if (typeof(k) != 'bigint') {
-		k = util.hexToBigInt(k);
-	}
-	if (k == 0n) {
-		k = util.hexToBigInt(privateKey());
-	}
-	r = util.mod(generatorPower(k)[0], n);
+	var k = util.hexToBigInt(privateKey());
+	var r = util.mod(generatorPower(k)[0], n);
 	if (r == 0n) {
 		throw 'secp256k1.sign.r.ZeroError';
 	}
-	s = util.invMod(k, n) * util.mod(e + d*r, n);
+	var s = util.invMod(k, n) * util.mod(e + d*r, n);
 	s = util.mod(s, n);
-	if (s > q/2n) {
+	if (s > n/2n) {
 		console.log('pre-standardizing s:', util.bigIntToHex(s));
-		s = q - s;
+		s = n - s;
 		console.log('post-standardizing s:', util.bigIntToHex(s));
-		if (s > q/2n) {
+		if (s > n/2n) {
 			throw 'secp256k1.sign.s.RangeError';
 		}
 	}
 	if (s == 0n) {
 		throw 'secp256k1.sign.s.ZeroError';
 	}
-	signature = ellipticHex([r, s]);
+	var signature = ellipticHex([r, s]);
 	return signature;
 }
 
@@ -244,24 +239,20 @@ Secp256k1 signature verification, from hex message digest,
 hex or bigint signature and hex or bigint public key.
 */
 function verify(hexMsg, hexSig, pubKey) {
-	e = util.hexToBigInt(hexMsg);
-	intSig = ellipticHexToBigInt(hexSig);
-	r = intSig[0];
-	s = intSig[1];
-	Q = pubKey;
-	if (typeof(pubKey) != 'bigint') {
-		Q = util.hexToBigInt(pubKey);
-	}
-	G = ellipticOrder();
-	n = generatorOrder();
+	var e = util.hexToBigInt(hexMsg);
+	var intSig = ellipticHexToBigInt(hexSig);
+	var r = intSig[0];
+	var s = intSig[1];
+	var Q = ellipticHexToBigInt(pubKey);
+	var n = generatorOrder();
 	if ((r < 1n) || (s < 1n) || (r >= n) || (s >= n)) {
 		return false;
 	}
-	c = util.invMod(s, n);
-	u1 = util.mod(e * c, n);
-	u2 = util.mod(r * c, n);
-	pt = ellipticAdd(generatorPower(u1), ellipticPower(Q, u2));
-	v = util.mod(pt[0], n);
+	var c = util.invMod(s, n);
+	var u1 = util.mod(e * c, n);
+	var u2 = util.mod(r * c, n);
+	var pt = ellipticAdd(generatorPower(u1), ellipticPower(Q, u2));
+	var v = util.mod(pt[0], n);
 	return v == r;
 }
 
