@@ -143,6 +143,14 @@ function ellipticHex(a) {
 
 
 /*
+Format elliptic curve point as BigIntXBigInt.
+*/
+function ellipticHexToBigInt(a) {
+	return a.map(x=>util.hexToBigInt(x));
+}
+
+
+/*
 Elliptic generator point powers.
 */
 function generatorPower(k) {
@@ -196,10 +204,12 @@ Secp256k1 signatures, from hex message digest
 and hex or bigint private key.
 k input for testing.
 */
-function sign(hexMsg, privKey, k=0n, der=false) {
-	intMsg = util.hexToBigInt(hexMsg);
+function sign(hexMsg, privKey, k=0n) {
+	n = generatorOrder();
+	e = util.hexToBigInt(hexMsg);
+	d = privKey;
 	if (typeof(privKey) != 'bigint') {
-		privKey = util.hexToBigInt(privKey);
+		d = util.hexToBigInt(privKey);
 	}
 	if (typeof(k) != 'bigint') {
 		k = util.hexToBigInt(k);
@@ -207,17 +217,12 @@ function sign(hexMsg, privKey, k=0n, der=false) {
 	if (k == 0n) {
 		k = util.hexToBigInt(privateKey());
 	}
-	r = generatorPower(k)[0];
+	r = util.mod(generatorPower(k)[0], n);
 	if (r == 0n) {
 		throw 'secp256k1.sign.r.ZeroError';
 	}
-	q = ellipticOrder();
-	s = util.invMod(k, q) * util.mod(intMsg + privKey*r, q);
-	// Something is wrong here, not sure what yet.
-	// These aren't elliptic curve operations and don't match tests.
-	// Development wip, not suitable for production.
-	// Realtime dev status, working on signatures for transactions.
-	s = util.mod(s, q);
+	s = util.invMod(k, n) * util.mod(e + d*r, n);
+	s = util.mod(s, n);
 	if (s > q/2n) {
 		console.log('pre-standardizing s:', util.bigIntToHex(s));
 		s = q - s;
@@ -229,13 +234,35 @@ function sign(hexMsg, privKey, k=0n, der=false) {
 	if (s == 0n) {
 		throw 'secp256k1.sign.s.ZeroError';
 	}
-	result = ellipticHex([r, s]);
-	if (der) {
-		rhx = util.bigIntToHex(r);
-		shx = util.bigIntToHex(s);
-		result = rhx + shx;
+	signature = ellipticHex([r, s]);
+	return signature;
+}
+
+
+/*
+Secp256k1 signature verification, from hex message digest,
+hex or bigint signature and hex or bigint public key.
+*/
+function verify(hexMsg, hexSig, pubKey) {
+	e = util.hexToBigInt(hexMsg);
+	intSig = ellipticHexToBigInt(hexSig);
+	r = intSig[0];
+	s = intSig[1];
+	Q = pubKey;
+	if (typeof(pubKey) != 'bigint') {
+		Q = util.hexToBigInt(pubKey);
 	}
-	return result;
+	G = ellipticOrder();
+	n = generatorOrder();
+	if ((r < 1n) || (s < 1n) || (r >= n) || (s >= n)) {
+		return false;
+	}
+	c = util.invMod(s, n);
+	u1 = util.mod(e * c, n);
+	u2 = util.mod(r * c, n);
+	pt = ellipticAdd(generatorPower(u1), ellipticPower(Q, u2));
+	v = util.mod(pt[0], n);
+	return v == r;
 }
 
 
@@ -254,6 +281,7 @@ return {
 	privateKey: privateKey,
 	publicKey: publicKey,
 	sign: sign,
+	verify: verify,
 }
 
 

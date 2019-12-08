@@ -1,6 +1,7 @@
 """
 Blockchain.com Data Ingress
 """
+import math
 
 import cachetools.func
 
@@ -18,8 +19,8 @@ def stats():
 	Blockchain.com stats.
 	"""
 	resp = web.get(base_uri + "stats")
-	for kk in ['hash_rate']:
-		resp[kk] = int(resp[kk])
+	resp['log_hash_rate'] = math.log10(int(resp['hash_rate'])) + 12
+	resp['difficulty'] = int(resp['difficulty'])
 	return resp
 
 

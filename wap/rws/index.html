@@ -1,8 +1,5 @@
 {% include "header.html" %}
-	<script src="https://cdn.jsdelivr.net/npm/vega@5.8.0/build/vega.min.js" integrity="sha256-7LAin50jQKEoVvQmxzkgDHzk+xutYEa39tR9gUCjzHI=" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.0-beta.11/build/vega-lite.min.js" integrity="sha256-mHgEkKF6mb5QQrmiaMseChy+JJlrzjF6vcvcN9KzKN8=" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/vega-tooltip@0.19.1/build/vega-tooltip.min.js" integrity="sha256-jfSNVm2HnEPByge2OvjvN/O9WsXiWpLhnZ+USGoiuGQ=" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/vega-embed@6.1.0/build/vega-embed.min.js" integrity="sha256-QLvr2jjA8LT6qtua3rDpDuQUz0tksr8J2rKU0+VAVQM=" crossorigin="anonymous"></script>
+{% include "vega.html" %}
 	<meta http-equiv="refresh" content="3600">
 </head>
 <body id="index">
@@ -246,7 +243,8 @@
 							"offset": 1,
 							"color": "#f7931a"
 						}]
-					}
+					},
+					"tooltip": true,
 				},
 				"encoding": {
 					"x": {
@@ -268,10 +266,10 @@
 						"scale": {"type": "log"},
 						"axis": {
 							"orient": "right",
-							"title": "gm{AU}",
-							"titleFontSize": 14,
+							"title": "grams{AU}",
+							"titleFontSize": 18,
 							"titleAngle": 0,
-							"titleX": -530,
+							"titleX": -510,
 							"titleY": 20,
 							"labelFontSize": 14,
 							"tickSize": 1,
@@ -317,6 +315,7 @@
 				"type": "line",
 				"color": "#f7931a",
 				"strokeWidth": 2,
+				"tooltip": true,
 			},
 			"encoding": {
 				"x": {
@@ -336,10 +335,10 @@
 					"field": "value",
 					"type": "quantitative",
 					"axis": {
-						"title": "gm{AU}",
-						"titleFontSize": 14,
+						"title": "grams{AU}",
+						"titleFontSize": 18,
 						"titleAngle": 0,
-						"titleX": 30,
+						"titleX": 50,
 						"titleY": 20,
 						"labelFontSize": 14,
 						"tickSize": 1,
@@ -383,6 +382,7 @@
 			"mark": {
 				"type": "boxplot",
 				"extent": "min-max",
+				"tooltip": true,
 			},
 			"encoding": {
 				"y": {
@@ -399,11 +399,11 @@
 					"field": "value",
 					"type": "quantitative",
 					"axis": {
-						"title": "gm{AU}",
-						"titleFontSize": 14,
+						"title": "grams{AU}",
+						"titleFontSize": 18,
 						"titleAngle": 0,
-						"titleX": 30,
-						"titleY": -20,
+						"titleX": 50,
+						"titleY": -30,
 						"labelFontSize": 14,
 					},
 					"scale": {
@@ -456,6 +456,7 @@
 			"mark": {
 				"type": "line",
 				"strokeWidth": 2,
+				"tooltip": true,
 			},
 			"encoding": {
 				"x": {
@@ -475,10 +476,10 @@
 					"field": "value",
 					"type": "quantitative",
 					"axis": {
-						"title": "gm{AU}",
-						"titleFontSize": 14,
+						"title": "grams{AU}",
+						"titleFontSize": 18,
 						"titleAngle": 0,
-						"titleX": 30,
+						"titleX": 50,
 						"titleY": 20,
 						"labelFontSize": 14,
 						"tickSize": 1,
@@ -536,6 +537,7 @@
 				"type": "line",
 				"color": "#f00",
 				"strokeWidth": 2,
+				"tooltip": true,
 			},
 			"encoding": {
 				"x": {
@@ -557,7 +559,7 @@
 					"axis": {
 						"orient": "right",
 						"title": "Volume",
-						"titleFontSize": 14,
+						"titleFontSize": 18,
 						"titleAngle": 0,
 						"titleX": -508,
 						"titleY": 20,
@@ -608,6 +610,7 @@
 				"type": "line",
 				"color": "#48f",
 				"strokeWidth": 2,
+				"tooltip": true,
 			},
 			"encoding": {
 				"x": {
@@ -627,10 +630,10 @@
 					"field": "log_hash_rate",
 					"type": "quantitative",
 					"axis": {
-						"title": "Log Hash Rate",
-						"titleFontSize": 14,
+						"title": "Log10 Hash Rate",
+						"titleFontSize": 18,
 						"titleAngle": 0,
-						"titleX": 56,
+						"titleX": 76,
 						"titleY": 20,
 						"labelFontSize": 14,
 						"tickSize": 1,
@@ -682,6 +685,7 @@
 				"type": "line",
 				"color": "#ff0",
 				"strokeWidth": 2,
+				"tooltip": true,
 			},
 			"encoding": {
 				"x": {
@@ -702,10 +706,10 @@
 					"type": "quantitative",
 					"axis": {
 						"orient": "right",
-						"title": "Arrival Rate",
-						"titleFontSize": 14,
+						"title": "Arrival Rate (Seconds)",
+						"titleFontSize": 18,
 						"titleAngle": 0,
-						"titleX": -508,
+						"titleX": -458,
 						"titleY": 20,
 						"labelFontSize": 14,
 						"tickSize": 1,
@@ -716,6 +720,7 @@
 						"clamp": true,
 						"nice": true,
 						"zero": false,
+						"domain": [400, 800],
 					},
 				}
 			},
@@ -756,6 +761,7 @@
 				"type": "line",
 				"color": "#0f0",
 				"strokeWidth": 2,
+				"tooltip": true,
 			},
 			"encoding": {
 				"x": {
@@ -775,10 +781,10 @@
 					"field": "log_difficulty",
 					"type": "quantitative",
 					"axis": {
-						"title": "Log Difficulty",
-						"titleFontSize": 14,
+						"title": "Log10 Difficulty",
+						"titleFontSize": 18,
 						"titleAngle": 0,
-						"titleX": 56,
+						"titleX": 76,
 						"titleY": 20,
 						"labelFontSize": 14,
 						"tickSize": 1,
@@ -801,9 +807,6 @@
 		vegaEmbed("#difficulty", vegaSpec, {"theme":"dark", "actions":false}).then(function(result) {}).catch(console.error);
 	</script>
 	</div>
-
-
-
 
 
 
