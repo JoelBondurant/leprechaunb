@@ -19,7 +19,7 @@ def stats():
 	Blockchain.com stats.
 	"""
 	resp = web.get(base_uri + "stats")
-	resp['log_hash_rate'] = math.log10(int(resp['hash_rate'])) + 12
+	resp['hash_rate'] = int(resp['hash_rate'])
 	resp['difficulty'] = int(resp['difficulty'])
 	return resp
 

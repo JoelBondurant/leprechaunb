@@ -29,6 +29,7 @@ def minute_arrow():
 	]
 	df = df[keep_stats]
 	df["log_difficulty"] = df.difficulty.apply(math.log10)
+	df["log_hash_rate"] = df.hash_rate.apply(math.log10) + 12.0
 	df["arrival_rate"] = (df.minutes_between_blocks * 60).astype(int)
 	racoon.to_csv(df, "/data/adbcsv/stats_minutely.csv")
 	logger.info("</stats_minutely>")
