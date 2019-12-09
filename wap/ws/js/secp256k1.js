@@ -219,9 +219,7 @@ function sign(hexMsg, privKey) {
 	var s = util.invMod(k, n) * util.mod(e + d*r, n);
 	s = util.mod(s, n);
 	if (s > n/2n) {
-		console.log('pre-standardizing s:', util.bigIntToHex(s));
 		s = n - s;
-		console.log('post-standardizing s:', util.bigIntToHex(s));
 		if (s > n/2n) {
 			throw 'secp256k1.sign.s.RangeError';
 		}
