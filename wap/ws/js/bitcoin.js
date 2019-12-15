@@ -61,11 +61,32 @@ async function keyPair(index=0, mainNet=true) {
 }
 
 
+/*
+Bitcoin signature.
+*/
+function sign(msg, privKey) {
+	hexMsg = util.bytesToHex(await util.sha256(msg));
+	signature = secp256k1.sign(hexMsg, privKey);
+	return signature;
+}
+
+
+/*
+Bitcoin signature verification.
+*/
+function verify(msg, signature, pubKey) {
+	hexMsg = util.bytesToHex(await util.sha256(msg));
+	return secp256k1.verify(hexMsg, signature, pubKey);
+}
+
+
 return {
 	privateKey: privateKey,
 	publicKey: publicKey,
 	keyPair: keyPair,
 	getAddressBalance: getAddressBalance,
+	sign: sign,
+	verify: verify,
 }
 
 
