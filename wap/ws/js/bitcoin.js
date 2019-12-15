@@ -10,8 +10,8 @@ var bitcoin = (function () {
 Get Bitcoin unspent output potential of an address.
 */
 async function getAddressBalance(addr, confirmations=6) {
-	base = 'https://blockchain.info/q/addressbalance/';
-	resp = await fetch(base + addr + '?confirmations=' + confirmations);
+	var base = 'https://blockchain.info/q/addressbalance/';
+	var resp = await fetch(base + addr + '?confirmations=' + confirmations);
 	return resp.json();
 }
 
@@ -28,23 +28,23 @@ function privateKey() {
 Bitcoin public keygen.
 */
 async function publicKey(privKey, index=0, mainNet=true) {
-	pubKey = secp256k1.publicKey(privKey, index);
-	y = util.hexToBigInt(pubKey[1]);
-	parity = (util.mod(y, 2n) == 0n);
-	parityHex = '03';
+	var pubKey = secp256k1.publicKey(privKey, index);
+	var y = util.hexToBigInt(pubKey[1]);
+	var parity = (util.mod(y, 2n) == 0n);
+	var parityHex = '03';
 	if (parity) {
 		parityHex = '02';
 	}
-	pubKey = parityHex + pubKey[0]; // compressed key format;
+	var pubKey = parityHex + pubKey[0]; // compressed key format;
 	pubKey = util.bytesToHex(await util.sha256(util.hexToBytes(pubKey)));
 	pubKey = CryptoJS.RIPEMD160(CryptoJS.enc.Hex.parse(pubKey)).toString()
 	if (mainNet) {
-		extendedRipemd = '00' + pubKey;
+		var extendedRipemd = '00' + pubKey;
 		pubKey = extendedRipemd;
 	}
 	pubKey = util.bytesToHex(await util.sha256(util.hexToBytes(pubKey)));
 	pubKey = util.bytesToHex(await util.sha256(util.hexToBytes(pubKey)));
-	chksum = pubKey.slice(0, 8);
+	var chksum = pubKey.slice(0, 8);
 	pubKey = extendedRipemd + chksum;
 	pubKey = util.bytesToBase58(util.hexToBytes(pubKey));
 	return pubKey;
@@ -55,8 +55,8 @@ async function publicKey(privKey, index=0, mainNet=true) {
 Bitcoin key pair.
 */
 async function keyPair(index=0, mainNet=true) {
-	k = privateKey();
-	pk = await publicKey(k, index=index, mainNet=mainNet);
+	var k = privateKey();
+	var pk = await publicKey(k, index=index, mainNet=mainNet);
 	return [k, pk];
 }
 
@@ -64,9 +64,9 @@ async function keyPair(index=0, mainNet=true) {
 /*
 Bitcoin signature.
 */
-function sign(msg, privKey) {
-	hexMsg = util.bytesToHex(await util.sha256(msg));
-	signature = secp256k1.sign(hexMsg, privKey);
+async function sign(msg, privKey) {
+	var hexMsg = util.bytesToHex(await util.sha256(msg));
+	var signature = secp256k1.sign(hexMsg, privKey);
 	return signature;
 }
 
@@ -74,8 +74,8 @@ function sign(msg, privKey) {
 /*
 Bitcoin signature verification.
 */
-function verify(msg, signature, pubKey) {
-	hexMsg = util.bytesToHex(await util.sha256(msg));
+async function verify(msg, signature, pubKey) {
+	var hexMsg = util.bytesToHex(await util.sha256(msg));
 	return secp256k1.verify(hexMsg, signature, pubKey);
 }
 
