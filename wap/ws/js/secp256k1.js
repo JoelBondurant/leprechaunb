@@ -200,6 +200,16 @@ function publicKey(privKey, index=0) {
 
 
 /*
+Secp256k1 key pair [private, public].
+*/
+function keyPair() {
+	var k = privateKey();
+	var pk = publicKey(k);
+	return [k, pk];
+}
+
+
+/*
 Secp256k1 signatures, from hex message digest
 and hex or bigint private key.
 k input for testing.
@@ -269,6 +279,7 @@ return {
 	isOnCurve: isOnCurve,
 	privateKey: privateKey,
 	publicKey: publicKey,
+	keyPair: keyPair,
 	sign: sign,
 	verify: verify,
 }
