@@ -27,7 +27,7 @@ def ts_rsync():
 	zorder = 3
 	if ts_bak_idx == 0:
 		logger.info(f"<ts_rsync backblaze>")
-		sp.call(["b2", "sync", "/data/bak/tsdb", "b2://leprechaunbak/tsdb"])
+		sp.call(["b2", "sync", "/data/bak/tsdb/0/", "b2://leprechaunbak/tsdb"])
 		logger.info(f"</ts_rsync backblaze>")
 	ts_bak_idx = (ts_bak_idx + 1) % zorder
 	logger.info(f"</ts_rsync>")
