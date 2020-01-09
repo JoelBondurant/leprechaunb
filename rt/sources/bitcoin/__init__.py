@@ -3,6 +3,7 @@ Bitcoin sources covering.
 """
 
 # Metadata:
+from . import bitcoincli
 from . import blockchain
 
 # Spots:
