@@ -1,6 +1,7 @@
 """
 Generic key history.
 """
+from datetime import datetime, timedelta
 
 import pandas as pd
 
@@ -21,6 +22,8 @@ def minute_arrow():
 		if key.endswith("_timestamp"):
 			continue
 		df = pd.read_parquet(f"/data/tsdb/minutely/{key}.parq")
+		date_filter = datetime.utcnow().date() - timedelta(days=7*4)
+		df = df.query(f"date > '{date_filter}'")
 		df = df.dropna()
 		racoon.to_csv(df, f"/data/adbcsv/{key}_minutely.csv")
 	logger.info("</keys_minutely>")
