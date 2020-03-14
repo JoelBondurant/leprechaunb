@@ -95,7 +95,9 @@ def write_rt():
 		spots_xaubtc = [x/spot_usdxau for x in spots_usdbtc]
 		spots_btcxau = [1.0/x for x in spots_xaubtc]
 
-		# Network Stats:
+		# System Stats:
+		blockchain_info = bitcoin.bitcoincli.blockchaininfo()
+		bitcoin_info = bitcoin.bitcoincli.info()
 		blockchain_stats = bitcoin.blockchain.stats()
 
 		# Storage:
@@ -117,6 +119,8 @@ def write_rt():
 			("spot_usdbtc",spot_usdbtc),
 			("spot_btcxau", spot_btcxau),
 			("spot_xaubtc", spot_xaubtc),
+			("blockchain_info", blockchain_info),
+			("bitcoin_info", bitcoin_info),
 			("blockchain_stats", blockchain_stats),
 			("rtdb_timestamp", int(time.time())),
 		]

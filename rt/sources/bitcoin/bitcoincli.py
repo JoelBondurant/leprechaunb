@@ -16,7 +16,7 @@ def cli(arg):
 	return json.loads(sp.check_output(['bitcoin-cli', arg]))
 
 
-@cachetools.func.ttl_cache(ttl=30)
+@cachetools.func.ttl_cache(ttl=50)
 def blockchaininfo():
 	"""
 	bitcoin getblockchaininfo.
@@ -24,7 +24,7 @@ def blockchaininfo():
 	return cli('getblockchaininfo')
 
 
-@cachetools.func.ttl_cache(ttl=30)
+@cachetools.func.ttl_cache(ttl=50)
 def info():
 	"""
 	bitcoin -getinfo.
