@@ -45,7 +45,7 @@ def index():
 	"""
 	content = {}
 
-	rainbow = ["#80a", "#48f", "#0f0", "#ff0", "#f7931a", "#f00"]
+	rainbow = list(reversed(["#80a", "#48f", "#0f0", "#ff0", "#f7931a", "#f00"]))
 	content["rainbow"] = rainbow
 
 	content["login_link"] = "<a href='/login'>login</a>"
